@@ -12,7 +12,7 @@ export default function ContactPage() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-5xl font-bold mb-6 text-center">Contact Us</h1>
         <p className="text-xl text-gray-600 mb-12 text-center">
-          Let's discuss your event and how we can help make it unforgettable
+          Let&apos;s discuss your event and how we can help make it unforgettable
         </p>
 
         <div className="grid md:grid-cols-2 gap-12">

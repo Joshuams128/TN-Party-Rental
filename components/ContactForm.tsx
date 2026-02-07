@@ -185,7 +185,7 @@ export default function ContactForm() {
       {/* Status Messages */}
       {status === 'success' && (
         <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
-          Thank you! We've received your message and will contact you within 24 hours.
+          Thank you! We&apos;ve received your message and will contact you within 24 hours.
         </div>
       )}
 

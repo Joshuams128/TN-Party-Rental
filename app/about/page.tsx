@@ -21,9 +21,9 @@ export default function AboutPage() {
               and managing countless details.
             </p>
             <p className="mb-4">
-              Based in Scarborough, we've been serving the Greater Toronto Area for years, building 
+              Based in Scarborough, we&apos;ve been serving the Greater Toronto Area for years, building 
               a reputation for quality equipment, professional service, and genuine care for our 
-              clients' special moments.
+              clients&apos; special moments.
             </p>
             <p className="mb-4">
               What started as a small inventory of tables and chairs has grown into a comprehensive 
@@ -88,7 +88,7 @@ export default function AboutPage() {
         <section className="mb-16 bg-gold-light rounded-lg p-8">
           <h2 className="text-3xl font-bold mb-4">Service Area</h2>
           <p className="text-gray-800 mb-4">
-            While we're proudly based in Scarborough, we serve clients throughout the Greater Toronto Area, including:
+            While we&apos;re proudly based in Scarborough, we serve clients throughout the Greater Toronto Area, including:
           </p>
           <ul className="grid md:grid-cols-2 gap-2 text-gray-800">
             <li className="flex items-center"><span className="text-gold-dark mr-2">•</span> Scarborough</li>
@@ -99,13 +99,13 @@ export default function AboutPage() {
             <li className="flex items-center"><span className="text-gold-dark mr-2">•</span> Whitby</li>
           </ul>
           <p className="text-gray-800 mt-4">
-            Need service outside this area? Contact us - we're often able to accommodate special requests!
+            Need service outside this area? Contact us - we&apos;re often able to accommodate special requests!
           </p>
         </section>
 
         {/* CTA */}
         <section className="text-center">
-          <h2 className="text-3xl font-bold mb-4">Let's Create Something Amazing Together</h2>
+          <h2 className="text-3xl font-bold mb-4">Let&apos;s Create Something Amazing Together</h2>
           <p className="text-xl text-gray-600 mb-6">
             Ready to start planning your event?
           </p>

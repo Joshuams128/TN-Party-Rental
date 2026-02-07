@@ -1,102 +1,60 @@
-import Link from 'next/link'
+'use client'
 
-export default function Footer() {
+import { Heart } from 'lucide-react';
+
+export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div>
-            <h3 className="text-xl font-bold mb-4">
-              True North <span className="text-gold">Party Rentals</span>
+    <footer className="bg-gradient-to-b from-black via-[var(--color-gray-dark)] to-black text-white py-16 border-t border-[var(--color-gold)]/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <div className="mb-8 md:mb-0 text-center md:text-left">
+            <h3 className="text-3xl font-bold mb-3">
+              <span className="gold-gradient-text">True North</span> <span className="text-white">Party Rentals</span>
             </h3>
-            <p className="text-gray-400 mb-4">
-              Creating unforgettable events in Scarborough and the GTA since [Year].
-            </p>
-            <div className="flex space-x-4">
-              <SocialIcon href="https://facebook.com" label="Facebook" />
-              <SocialIcon href="https://instagram.com" label="Instagram" />
-              <SocialIcon href="https://linkedin.com" label="LinkedIn" />
+            <p className="text-gray-400 text-lg">Making your events unforgettable</p>
+            <div className="flex items-center justify-center md:justify-start gap-2 mt-3 text-gray-400">
+              <span>Crafted with</span>
+              <Heart size={16} className="text-[var(--color-gold)] fill-[var(--color-gold)] animate-pulse" />
+              <span>in Scarborough</span>
             </div>
           </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4 text-gold">Quick Links</h4>
-            <ul className="space-y-2">
-              <FooterLink href="/">Home</FooterLink>
-              <FooterLink href="/inventory">Inventory</FooterLink>
-              <FooterLink href="/packages">Packages</FooterLink>
-              <FooterLink href="/about">About Us</FooterLink>
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4 text-gold">Services</h4>
-            <ul className="space-y-2">
-              <FooterLink href="/event-planning">Event Planning</FooterLink>
-              <FooterLink href="/corporate">Corporate Events</FooterLink>
-              <FooterLink href="/contact">Get a Quote</FooterLink>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4 text-gold">Contact</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li>
-                <a href="tel:+14165551234" className="hover:text-gold transition-colors">
-                  (416) 555-1234
-                </a>
-              </li>
-              <li>
-                <a href="mailto:info@truenorthpartyrentals.com" className="hover:text-gold transition-colors">
-                  info@truenorthpartyrentals.com
-                </a>
-              </li>
-              <li>Scarborough, Ontario</li>
-              <li className="mt-4">
-                <Link href="/contact" className="text-gold hover:text-gold-light transition-colors">
-                  Contact Us →
-                </Link>
-              </li>
-            </ul>
+          <div className="text-center md:text-right">
+            <div className="flex flex-col gap-2">
+              <p className="text-gray-300 text-lg">📍 Scarborough, Ontario</p>
+              <p className="text-gray-400">Serving the Greater Toronto Area</p>
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-[var(--color-gold)]/30 to-transparent my-2"></div>
+              <p className="text-gray-500 text-sm">© 2026 True North Party Rentals</p>
+              <p className="text-gray-500 text-sm">All rights reserved.</p>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} True North Party Rentals. All rights reserved.</p>
+        {/* Bottom section */}
+        <div className="pt-8 border-t border-[var(--color-gold)]/20">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
+              <button className="hover:text-[var(--color-gold)] transition-colors">Privacy Policy</button>
+              <span className="text-gray-600">•</span>
+              <button className="hover:text-[var(--color-gold)] transition-colors">Terms of Service</button>
+              <span className="text-gray-600">•</span>
+              <button className="hover:text-[var(--color-gold)] transition-colors">Rental Agreement</button>
+            </div>
+            <div className="flex gap-4">
+              <button className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
+                <span className="text-[var(--color-gold)] group-hover:text-black transition-colors">f</span>
+              </button>
+              <button className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
+                <span className="text-[var(--color-gold)] group-hover:text-black transition-colors">in</span>
+              </button>
+              <button className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
+                <span className="text-[var(--color-gold)] group-hover:text-black transition-colors">📷</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
 
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <li>
-      <Link href={href} className="text-gray-400 hover:text-gold transition-colors">
-        {children}
-      </Link>
-    </li>
-  )
-}
-
-function SocialIcon({ href, label }: { href: string; label: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-gray-400 hover:text-gold transition-colors"
-      aria-label={label}
-    >
-      <span className="sr-only">{label}</span>
-      <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gold-dark transition-colors">
-        {label.charAt(0)}
-      </div>
-    </a>
-  )
-}
+export default Footer;
