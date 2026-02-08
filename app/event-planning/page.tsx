@@ -400,7 +400,7 @@ export default function EventPlanningPage() {
                 </div>
 
                 <div className="p-8">
-                  <h4 className="text-lg font-bold mb-4">What's Included:</h4>
+                  <h4 className="text-lg font-bold mb-4">What&apos;s Included:</h4>
                   <ul className="space-y-3 mb-8">
                     {service.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
@@ -481,7 +481,7 @@ export default function EventPlanningPage() {
             Ready to Start <span className="gold-gradient-text">Planning?</span>
           </h2>
           <p className="text-xl text-gray-300 mb-10 leading-relaxed">
-            Let's bring your vision to life. Schedule your free consultation today and discover how we can make your event planning effortless.
+            Let&apos;s bring your vision to life. Schedule your free consultation today and discover how we can make your event planning effortless.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button 
