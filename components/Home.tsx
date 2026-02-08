@@ -103,7 +103,7 @@ export function Home() {
           <Sparkles size={30} />
         </div>
 
-        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto animate-fade-in-up">
+        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto animate-fade-in-up pt-20">
           <div className="mb-8">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold mb-2 leading-tight">
