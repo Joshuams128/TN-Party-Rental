@@ -78,7 +78,7 @@ export function Home() {
   return (
     <>
       {/* HERO SECTION */}
-      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden pt-40 sm:pt-40">
         {/* Background Image with Parallax Effect */}
         <div className="absolute inset-0 z-0">
           <ImageWithFallback
@@ -103,7 +103,7 @@ export function Home() {
           <Sparkles size={30} />
         </div>
 
-        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto animate-fade-in-up pt-20">
+        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto animate-fade-in-up pt-28 sm:pt-32">
           <div className="mb-8">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold mb-2 leading-tight">
@@ -160,9 +160,6 @@ export function Home() {
             </div>
           </div>
         </div>
-
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-10"></div>
       </section>
 
       {/* SERVICES SECTION */}
@@ -173,7 +170,7 @@ export function Home() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20 animate-fade-in-up">
-            <h2 className="text-5xl sm:text-6xl font-bold mb-6">
+            <h2 className="text-5xl sm:text-6xl font-bold mb-6 text-black">
               Our Complete <span className="gold-gradient-text">Service Catalog</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
@@ -372,7 +369,7 @@ export function Home() {
                 LET&apos;S CONNECT
               </span>
             </div>
-            <h2 className="text-5xl sm:text-6xl font-bold mb-6">
+            <h2 className="text-5xl sm:text-6xl font-bold mb-6 text-black">
               Get In <span className="gold-gradient-text">Touch</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
