@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   title: 'True North Party Rentals | Event Rentals in Scarborough',
   description: 'True North Party Rentals - Premier event rental company in Scarborough. Quality equipment, packages, and event planning services for weddings, corporate events, and parties.',
   keywords: ['party rentals', 'event rentals', 'Scarborough', 'wedding rentals', 'corporate events', 'event planning'],
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     title: 'True North Party Rentals',
     description: 'Premier event rental company in Scarborough',

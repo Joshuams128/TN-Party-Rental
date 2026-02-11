@@ -2,6 +2,7 @@
 
 import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Phone, Mail, MapPin, Clock, Star, Award } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import Link from 'next/link';
 
 const services = [
   {
@@ -278,10 +279,10 @@ export function Home() {
             <p className="text-lg text-gray-600 mb-6">
               Can&apos;t find what you&apos;re looking for? We offer custom solutions for every event.
             </p>
-            <button className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-10 py-4 rounded-full font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-105 overflow-hidden">
+            <Link href="/#contact" className="group relative inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-10 py-4 rounded-full font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-105 overflow-hidden">
               <span className="relative z-10">Request Custom Quote</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -441,7 +442,7 @@ export function Home() {
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] opacity-10 rounded-3xl blur-2xl"></div>
               
               <div className="relative bg-white p-10 rounded-3xl border-2 border-[var(--color-gold)]/30 shadow-2xl">
-                <h3 className="text-3xl font-bold mb-8">Request a <span className="gold-gradient-text">Quote</span></h3>
+                <h3 className="text-3xl font-bold mb-8 text-black">Request a <span className="gold-gradient-text">Quote</span></h3>
                 <form className="space-y-5">
                   <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">

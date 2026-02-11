@@ -250,7 +250,7 @@ export function PackagesPage() {
                   </div>
 
                   <Link 
-                    href="/contact"
+                    href="/#contact"
                     className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-xl text-sm font-bold hover:shadow-xl hover:shadow-[var(--color-gold)]/30 transition-all duration-300 transform hover:scale-105"
                   >
                     Request This Package
@@ -277,7 +277,7 @@ export function PackagesPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link 
-                  href="/contact"
+                  href="/#contact"
                   className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-10 py-4 rounded-full text-base font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
                 >
                   <span className="relative z-10">Build Your Custom Package</span>

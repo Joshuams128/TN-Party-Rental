@@ -3,6 +3,7 @@
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,9 +17,15 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl sm:text-3xl font-bold hover:opacity-90 transition-all duration-300 group">
-              <span className="gold-gradient-text group-hover:scale-105 inline-block transition-transform">True North</span>
-              <span className="ml-2">Party Rentals</span>
+            <Link href="/" className="hover:opacity-90 transition-all duration-300">
+              <Image
+                src="/logo.png"
+                alt="True North Party Rentals"
+                width={240}
+                height={80}
+                className="h-16 w-auto"
+                priority
+              />
             </Link>
           </div>
 
@@ -48,7 +55,7 @@ export function Header() {
               About
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--color-gold)] group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="/contact" className="bg-[var(--color-gold)] text-black px-6 py-2 rounded-full font-semibold hover:bg-[var(--color-gold-light)] hover:shadow-lg hover:scale-105 transition-all duration-300">
+            <Link href="/#contact" className="bg-[var(--color-gold)] text-black px-6 py-2 rounded-full font-semibold hover:bg-[var(--color-gold-light)] hover:shadow-lg hover:scale-105 transition-all duration-300">
               Contact
             </Link>
           </nav>
@@ -83,7 +90,7 @@ export function Header() {
             <Link href="/about" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
               About
             </Link>
-            <Link href="/contact" onClick={closeMenu} className="block w-full text-left py-3 px-4 bg-[var(--color-gold)] text-black rounded-lg font-semibold hover:bg-[var(--color-gold-light)] transition-all duration-300">
+            <Link href="/#contact" onClick={closeMenu} className="block w-full text-left py-3 px-4 bg-[var(--color-gold)] text-black rounded-lg font-semibold hover:bg-[var(--color-gold-light)] transition-all duration-300">
               Contact
             </Link>
           </nav>
