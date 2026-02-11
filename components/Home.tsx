@@ -144,17 +144,17 @@ export function Home() {
           <div className="glass-effect rounded-3xl px-12 py-8 inline-block backdrop-blur-md">
             <p className="text-base text-gray-200 mb-4 uppercase tracking-widest font-semibold">Most Popular Services</p>
             <div className="flex flex-wrap justify-center gap-6 text-lg">
-              <Link href="/inventory" className="text-[var(--color-gold)] font-semibold flex items-center gap-2 hover:text-[var(--color-gold-light)] transition-colors">
+              <Link href="/inventory" className="text-white font-semibold flex items-center gap-2 hover:text-[var(--color-gold)] transition-colors">
                 <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse"></span>
-                360° Camera
+                360° Camera Experience
               </Link>
               <span className="text-gray-400">•</span>
-              <Link href="/inventory" className="text-[var(--color-gold)] font-semibold flex items-center gap-2 hover:text-[var(--color-gold-light)] transition-colors">
+              <Link href="/inventory" className="text-white font-semibold flex items-center gap-2 hover:text-[var(--color-gold)] transition-colors">
                 <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></span>
                 Mirror Photo Booth
               </Link>
               <span className="text-gray-400">•</span>
-              <Link href="/inventory" className="text-[var(--color-gold)] font-semibold flex items-center gap-2 hover:text-[var(--color-gold-light)] transition-colors">
+              <Link href="/inventory" className="text-white font-semibold flex items-center gap-2 hover:text-[var(--color-gold)] transition-colors">
                 <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '1s' }}></span>
                 Custom Balloon Art
               </Link>
@@ -223,7 +223,7 @@ export function Home() {
                         <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-3 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                           <service.icon className="text-black" size={28} />
                         </div>
-                        <h3 className="ml-4 text-xl font-bold">{service.title}</h3>
+                        <h3 className="ml-4 text-xl font-bold text-black">{service.title}</h3>
                       </div>
                       <p className="text-gray-600 leading-relaxed">{service.description}</p>
                     </div>
@@ -265,7 +265,7 @@ export function Home() {
                       <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-3 rounded-xl shadow-md transform group-hover:scale-110 transition-all duration-300">
                         <service.icon className="text-black" size={28} />
                       </div>
-                      <h3 className="ml-4 text-xl font-semibold">{service.title}</h3>
+                      <h3 className="ml-4 text-xl font-semibold text-black">{service.title}</h3>
                     </div>
                     <p className="text-gray-600 leading-relaxed">{service.description}</p>
                   </div>
