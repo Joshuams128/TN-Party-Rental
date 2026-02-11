@@ -3,6 +3,7 @@
 import { Calendar, CheckSquare, Clock, Sparkles, Users, MapPin, DollarSign, Lightbulb, ClipboardList, Phone } from 'lucide-react';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const planningSteps = [
   {
@@ -187,6 +188,20 @@ export default function EventPlanningPage() {
       <section className="relative py-32 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
+        
+        {/* Animated overlay */}
+        <div className="absolute inset-0 animate-shimmer"></div>
+        
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
+          <Sparkles size={40} />
+        </div>
+        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
+          <Sparkles size={50} />
+        </div>
+        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
+          <Sparkles size={30} />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -206,13 +221,13 @@ export default function EventPlanningPage() {
               <p className="text-lg text-gray-400 leading-relaxed mb-8">
                 Our experienced team has helped plan hundreds of successful events across the GTA. Let us make your planning process smooth and stress-free.
               </p>
-              <button 
-                onClick={() => window.location.hash = ''}
-                className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
+              <Link 
+                href="/#contact"
+                className="group relative inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
               >
                 <span className="relative z-10">Schedule Free Consultation</span>
                 <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-              </button>
+              </Link>
             </div>
 
             <div className="relative">
@@ -338,12 +353,12 @@ export default function EventPlanningPage() {
                   <p className="text-gray-300 text-lg leading-relaxed mb-6">
                     Essential checklist for planning a successful {eventTypeGuides[activeGuide].type.toLowerCase()}. Our team can help you with every item on this list.
                   </p>
-                  <button 
-                    onClick={() => window.location.hash = ''}
-                    className="bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  <Link 
+                    href="/#contact"
+                    className="inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                   >
                     Get Planning Help
-                  </button>
+                  </Link>
                 </div>
 
                 <div>
@@ -410,9 +425,9 @@ export default function EventPlanningPage() {
                     ))}
                   </ul>
 
-                  <button className="w-full bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                  <Link href="/#contact" className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
                     {index === 0 ? 'Book Free Consultation' : 'Learn More'}
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -484,19 +499,19 @@ export default function EventPlanningPage() {
             Let&apos;s bring your vision to life. Schedule your free consultation today and discover how we can make your event planning effortless.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button 
-              onClick={() => window.location.hash = ''}
-              className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
+            <Link 
+              href="/#contact"
+              className="group relative inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
             >
               <span className="relative z-10">Schedule Free Consultation</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-            </button>
-            <button 
-              onClick={() => window.location.hash = 'packages'}
-              className="group relative glass-effect text-white border-2 border-[var(--color-gold)] px-12 py-5 rounded-full text-lg font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-110"
+            </Link>
+            <Link 
+              href="/packages"
+              className="group relative inline-block glass-effect text-white border-2 border-[var(--color-gold)] px-12 py-5 rounded-full text-lg font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-110"
             >
               View Packages
-            </button>
+            </Link>
           </div>
         </div>
       </section>

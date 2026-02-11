@@ -3,6 +3,7 @@
 import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Utensils, Wine, Lightbulb, Gift } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const categories = [
   { id: 'all', name: 'All Items', icon: Gift },
@@ -26,7 +27,7 @@ const inventoryItems = [
   {
     id: 2,
     category: 'signature',
-    name: 'Magic Mirror Photo Booth',
+    name: 'Mirror Photo Booth',
     description: 'Full-length interactive mirror with touchscreen interface, voice guidance, and instant prints',
     features: ['Touchscreen interface', 'Voice guidance', 'Instant prints', 'Digital gallery'],
     image: 'https://images.unsplash.com/photo-1766086893043-d38b06175015?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaG90byUyMGJvb3RoJTIwZXZlbnR8ZW58MXx8fHwxNzY5OTcxMzUxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
@@ -137,6 +138,20 @@ export function InventoryPage() {
       <section className="relative py-24 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
+        
+        {/* Animated overlay */}
+        <div className="absolute inset-0 animate-shimmer"></div>
+        
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
+          <Sparkles size={40} />
+        </div>
+        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
+          <Sparkles size={50} />
+        </div>
+        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
+          <Sparkles size={30} />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center animate-fade-in-up">
@@ -234,9 +249,9 @@ export function InventoryPage() {
                     </ul>
                   </div>
 
-                  <button className="w-full bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                  <Link href="/#contact" className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
                     Request Quote
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -253,13 +268,13 @@ export function InventoryPage() {
           <p className="text-xl text-gray-300 mb-8">
             Don&apos;t see what you&apos;re looking for? We offer custom solutions for unique events and special requests.
           </p>
-          <button 
-            onClick={() => window.location.hash = ''}
-            className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
+          <Link 
+            href="/#contact"
+            className="group relative inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
           >
             <span className="relative z-10">Contact Us for Custom Quote</span>
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-          </button>
+          </Link>
         </div>
       </section>
     </div>

@@ -79,7 +79,7 @@ export function Home() {
   return (
     <>
       {/* HERO SECTION */}
-      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden pt-40 sm:pt-40">
+      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 sm:pt-40 pb-16">
         {/* Background Image with Parallax Effect */}
         <div className="absolute inset-0 z-0">
           <ImageWithFallback
@@ -88,19 +88,19 @@ export function Home() {
             className="w-full h-full object-cover scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-black opacity-80"></div>
-          
-          {/* Animated overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-gold)]/5 via-transparent to-[var(--color-gold)]/5 animate-shimmer"></div>
         </div>
+        
+        {/* Animated overlay */}
+        <div className="absolute inset-0 animate-shimmer z-[1]"></div>
 
         {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
+        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float z-[5]">
           <Sparkles size={40} />
         </div>
-        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
+        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float z-[5]" style={{ animationDelay: '1s' }}>
           <Sparkles size={50} />
         </div>
-        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
+        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float z-[5]" style={{ animationDelay: '2s' }}>
           <Sparkles size={30} />
         </div>
 
@@ -141,23 +141,23 @@ export function Home() {
           </div>
           
           {/* Subtle Highlight */}
-          <div className="glass-effect rounded-2xl px-8 py-6 inline-block backdrop-blur-md">
-            <p className="text-sm text-gray-300 mb-3 uppercase tracking-widest">Most Popular Services</p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <span className="text-[var(--color-gold)] font-semibold flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-[var(--color-gold)] rounded-full animate-pulse"></span>
+          <div className="glass-effect rounded-3xl px-12 py-8 inline-block backdrop-blur-md">
+            <p className="text-base text-gray-200 mb-4 uppercase tracking-widest font-semibold">Most Popular Services</p>
+            <div className="flex flex-wrap justify-center gap-6 text-lg">
+              <Link href="/inventory" className="text-[var(--color-gold)] font-semibold flex items-center gap-2 hover:text-[var(--color-gold-light)] transition-colors">
+                <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse"></span>
                 360° Camera
-              </span>
+              </Link>
               <span className="text-gray-400">•</span>
-              <span className="text-[var(--color-gold)] font-semibold flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></span>
-                Mirror Booth
-              </span>
+              <Link href="/inventory" className="text-[var(--color-gold)] font-semibold flex items-center gap-2 hover:text-[var(--color-gold-light)] transition-colors">
+                <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></span>
+                Mirror Photo Booth
+              </Link>
               <span className="text-gray-400">•</span>
-              <span className="text-[var(--color-gold)] font-semibold flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '1s' }}></span>
+              <Link href="/inventory" className="text-[var(--color-gold)] font-semibold flex items-center gap-2 hover:text-[var(--color-gold-light)] transition-colors">
+                <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '1s' }}></span>
                 Custom Balloon Art
-              </span>
+              </Link>
             </div>
           </div>
         </div>

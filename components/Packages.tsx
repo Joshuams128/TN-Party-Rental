@@ -47,7 +47,7 @@ const packages = [
     ],
     addons: [
       '360° Camera Experience (+$500)',
-      'Magic Mirror Photo Booth (+$600)',
+      'Mirror Photo Booth (+$600)',
       'Custom balloon arch (+$300)',
     ]
   },
@@ -76,7 +76,7 @@ const packages = [
       'Day-of assistance',
     ],
     addons: [
-      '360° Camera + Magic Mirror Bundle (+$900)',
+      '360° Camera + Mirror Bundle (+$900)',
       'Custom balloon installation (+$500)',
       'Upgraded lighting (+$300)',
     ]
@@ -124,7 +124,7 @@ const packages = [
       'Complete lighting design',
       'Premium sound system',
       '360° Camera Experience INCLUDED',
-      'Magic Mirror Photo Booth INCLUDED',
+      'Mirror Photo Booth INCLUDED',
       'Custom balloon installation INCLUDED',
       'Dance floor (any size)',
       'Lounge areas & cocktail spaces',
@@ -151,6 +151,20 @@ export function PackagesPage() {
       <section className="relative py-20 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-10 rounded-full blur-3xl animate-pulse-slow"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--color-gold)] opacity-10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        
+        {/* Animated overlay */}
+        <div className="absolute inset-0 animate-shimmer"></div>
+        
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
+          <Sparkles size={40} />
+        </div>
+        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
+          <Sparkles size={50} />
+        </div>
+        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
+          <Sparkles size={30} />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center animate-fade-in-up">
@@ -162,7 +176,7 @@ export function PackagesPage() {
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
               Event <span className="gold-gradient-text">Packages</span>
             </h1>
-            <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
+            <div className="h-1 w-32 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
               Simplified event planning with carefully curated packages designed for every occasion
             </p>

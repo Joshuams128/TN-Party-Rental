@@ -2,6 +2,7 @@
 
 import { Award, Users, Clock, MapPin, Heart, Sparkles, Star, Target, Shield } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import Link from 'next/link';
 
 const values = [
   {
@@ -59,6 +60,20 @@ export function About() {
       <section className="relative py-32 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
+        
+        {/* Animated overlay */}
+        <div className="absolute inset-0 animate-shimmer"></div>
+        
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
+          <Sparkles size={40} />
+        </div>
+        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
+          <Sparkles size={50} />
+        </div>
+        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
+          <Sparkles size={30} />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -228,7 +243,7 @@ export function About() {
                       Unique Signature Services
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Stand out with our exclusive 360° camera, magic mirror photo booth, and professional balloon artistry.
+                      Stand out with our exclusive 360° camera, mirror photo booth, and professional balloon artistry.
                     </p>
                   </div>
                 </div>
@@ -294,13 +309,13 @@ export function About() {
           <p className="text-xl text-gray-600 mb-10 leading-relaxed">
             Let&apos;s make your next event unforgettable. Contact us today to discuss your needs and get a custom quote.
           </p>
-          <button 
-            onClick={() => window.location.href = '/contact'}
-            className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
+          <Link 
+            href="/#contact"
+            className="group relative inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
           >
             <span className="relative z-10">Get In Touch</span>
             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-          </button>
+          </Link>
         </div>
       </section>
     </div>
