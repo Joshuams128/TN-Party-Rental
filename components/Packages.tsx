@@ -299,7 +299,7 @@ export function PackagesPage() {
       <section className="py-16 bg-gradient-to-b from-[var(--color-gray-light)] to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-4xl font-bold mb-4 text-black">
               Choose the <span className="gold-gradient-text">Perfect Package</span>
             </h2>
             <div className="h-1 w-20 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-4"></div>

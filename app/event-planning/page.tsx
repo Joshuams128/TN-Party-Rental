@@ -233,7 +233,7 @@ export default function EventPlanningPage() {
       <section className="py-24 bg-gradient-to-b from-white via-[var(--color-gray-light)] to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-5xl font-bold mb-6 text-black">
               Your Event Planning <span className="gold-gradient-text">Timeline</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
@@ -369,7 +369,7 @@ export default function EventPlanningPage() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-5xl font-bold mb-6 text-black">
               Our Planning <span className="gold-gradient-text">Services</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
@@ -424,7 +424,7 @@ export default function EventPlanningPage() {
       <section className="py-24 bg-gradient-to-b from-[var(--color-gray-light)] to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-5xl font-bold mb-6 text-black">
               Planning <span className="gold-gradient-text">Resources</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
