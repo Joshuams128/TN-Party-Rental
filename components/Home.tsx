@@ -56,7 +56,7 @@ const services = [
   }
 ];
 
-function Home() {
+export function Home() {
   // Add missing state hooks
   const [currentSlide, setCurrentSlide] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
