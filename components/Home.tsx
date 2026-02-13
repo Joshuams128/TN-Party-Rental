@@ -7,15 +7,15 @@ import Link from 'next/link';
 
 const heroImages = [
   {
-    src: 'https://images.unsplash.com/photo-1768508951126-f90917cc510e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwcGFydHklMjBldmVudHxlbnwxfHx8fDE3Njk0MjY3MTl8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    src: '/images/bg1.png',
     alt: 'Elegant party event'
   },
   {
-    src: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    src: '/images/bg2.png',
     alt: 'Wedding reception setup'
   },
   {
-    src: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    src: '/images/bg3.png',
     alt: 'Outdoor event celebration'
   }
 ];
@@ -126,7 +126,7 @@ export function Home() {
       )}
 
       {/* HERO SECTION */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 sm:pt-40 pb-16 bg-black">
+      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-8 bg-black">
         {/* Background Image Slider */}
         <div 
           className={`absolute inset-0 z-0 bg-black transition-opacity duration-500 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
@@ -185,27 +185,27 @@ export function Home() {
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer z-[1]"></div>
 
-        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto animate-fade-in-up pt-28 sm:pt-32">
+        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
           <div className="mb-8">
             <div className="inline-block">
-              <h2 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold mb-2 leading-tight">
+              <h2 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold mb-2 leading-tight animate-hero-fade">
                 <span className="gold-gradient-text drop-shadow-2xl">True North</span>
               </h2>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight animate-hero-fade animation-delay-300">
                 Party Rentals
               </h2>
-              <div className="h-1 w-32 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto"></div>
+              <div className="h-1 w-32 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto animate-hero-fade animation-delay-500"></div>
             </div>
           </div>
           
-          <p className="text-2xl sm:text-3xl mb-4 font-light tracking-wide">
+          <p className="text-2xl sm:text-3xl mb-4 font-light tracking-wide animate-hero-fade animation-delay-600">
             Scarborough&apos;s Premier Event Rental Service
           </p>
-          <p className="text-lg sm:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-300">
+          <p className="text-lg sm:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-300 animate-hero-fade animation-delay-800">
             From tents and tables to our exclusive 360° camera and balloon artistry — everything you need for an unforgettable event.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8 animate-hero-fade animation-delay-1000">
             <button
               onClick={scrollToServices}
               className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-10 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
@@ -313,7 +313,7 @@ export function Home() {
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent flex-1 max-w-xs"></div>
               <div className="px-8">
                 <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                  Complete Rental Inventory
+                   Rental Inventory
                 </span>
               </div>
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent flex-1 max-w-xs"></div>
@@ -348,6 +348,12 @@ export function Home() {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="flex justify-center mt-8">
+              <Link href="/inventory" className="group relative inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-10 py-4 rounded-full font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-105 overflow-hidden">
+                <span className="relative z-10">View All</span>
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              </Link>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { Heart } from 'lucide-react';
+import Link from 'next/link';
 
 export function Footer() {
   return (
@@ -33,11 +34,9 @@ export function Footer() {
         <div className="pt-8 border-t border-[var(--color-gold)]/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
-              <button className="hover:text-[var(--color-gold)] transition-colors">Privacy Policy</button>
+              <Link href="/privacy" className="hover:text-[var(--color-gold)] transition-colors">Privacy Policy</Link>
               <span className="text-gray-600">•</span>
-              <button className="hover:text-[var(--color-gold)] transition-colors">Terms of Service</button>
-              <span className="text-gray-600">•</span>
-              <button className="hover:text-[var(--color-gold)] transition-colors">Rental Agreement</button>
+              <Link href="/terms" className="hover:text-[var(--color-gold)] transition-colors">Terms of Service</Link>
             </div>
             <div className="flex gap-4">
               <button className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
