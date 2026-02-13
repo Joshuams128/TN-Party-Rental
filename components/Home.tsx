@@ -161,8 +161,8 @@ export function Home() {
           </div>
           <div className="w-full h-full">
             <ImageWithFallback
-              src={heroImages[currentSlide]}
-              alt="Hero background"
+              src={heroImages[currentSlide].src}
+              alt={heroImages[currentSlide].alt}
               className="object-cover object-center"
               priority
             />
