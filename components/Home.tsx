@@ -151,20 +151,7 @@ export function Home() {
         </div>
 
         {/* Slider Navigation Arrows */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-[var(--color-gold)] text-white hover:text-black p-2 rounded-full transition-all duration-300 opacity-60 hover:opacity-100"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={28} />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-[var(--color-gold)] text-white hover:text-black p-2 rounded-full transition-all duration-300 opacity-60 hover:opacity-100"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={28} />
-        </button>
+        {/* Removed left and right navigation arrows from hero slider */}
 
         {/* Slider Dots */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
@@ -185,7 +172,7 @@ export function Home() {
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer z-[1]"></div>
 
-        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto pt-12 sm:pt-0">
           <div className="mb-8">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold mb-2 leading-tight animate-hero-fade">
