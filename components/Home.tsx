@@ -219,7 +219,7 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20 animate-fade-in-up">
             <h2 className="text-5xl sm:text-6xl font-bold mb-6 text-black">
-             Everything You Need <span className="gold-gradient-text">All in One Place</span>
+             Everything You Need <br></br> <span className="gold-gradient-text">All in One Place</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
