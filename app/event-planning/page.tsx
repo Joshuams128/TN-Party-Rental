@@ -222,11 +222,13 @@ export default function EventPlanningPage() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] opacity-20 rounded-3xl blur-2xl"></div>
               <div className="relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-8 rounded-3xl border-2 border-[var(--color-gold)]/30">
-                <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxldmVudCUyMHBsYW5uaW5nJTIwbWVldGluZ3xlbnwxfHx8fDE3Mzg0NDU1MDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                  alt="Event planning consultation"
-                  className="w-full h-80 object-cover rounded-2xl"
-                />
+                <div className="relative h-80 w-full overflow-hidden rounded-2xl">
+                  <ImageWithFallback
+                    src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxldmVudCUyMHBsYW5uaW5nJTIwbWVldGluZ3xlbnwxfHx8fDE3Mzg0NDU1MDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                    alt="Event planning consultation"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>

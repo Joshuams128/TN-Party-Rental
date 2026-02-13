@@ -143,6 +143,7 @@ export function Home() {
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover scale-110"
+                priority={index === 0}
               />
             </div>
           ))}
@@ -326,7 +327,7 @@ export function Home() {
                 >
                   {service.image && (
                     <div 
-                      className="h-48 overflow-hidden cursor-pointer"
+                      className="h-48 overflow-hidden relative cursor-pointer"
                       onClick={() => setSelectedImage({ src: service.image, alt: service.title })}
                     >
                       <ImageWithFallback
