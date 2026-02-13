@@ -19,7 +19,7 @@ export function Header() {
           <div className="flex items-center">
             <Link href="/" className="hover:opacity-90 transition-all duration-300">
               <Image
-                src="/logo.png"
+                src="/images/logo.png"
                 alt="True North Party Rentals"
                 width={240}
                 height={80}

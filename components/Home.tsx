@@ -6,31 +6,25 @@ import Link from 'next/link';
 
 const services = [
   {
-    icon: Video,
-    title: '360° Camera Experience',
-    description: 'State-of-the-art 360° camera creating stunning slow-motion videos. Perfect for weddings, corporate events, and celebrations.',
-    image: 'https://images.unsplash.com/photo-1732039244620-dd28937d848e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHwzNjAlMjBwaG90byUyMGJvb3RoJTIwY2FtZXJhfGVufDF8fHx8MTc2OTk3MTM0NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    featured: true
-  },
-  {
     icon: Camera,
     title: 'Mirror Photo Booth',
     description: 'Elegant full-length interactive mirror with touchscreen, voice guidance, and instant prints. A showstopper at any event.',
-    image: 'https://images.unsplash.com/photo-1766086893043-d38b06175015?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaG90byUyMGJvb3RoJTIwZXZlbnR8ZW58MXx8fHwxNzY5OTcxMzUxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    image: '/images/mirror.PNG',
+    objectPosition: 'center 40%',
     featured: true
   },
   {
     icon: Sparkles,
     title: 'Custom Balloon Decorations',
     description: 'Professional balloon artistry including arches, garlands, sculptures, and themed installations to transform your venue.',
-    image: 'https://images.unsplash.com/photo-1768776185742-0cc9a057b195?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYWxsb29uJTIwYXJjaCUyMGV2ZW50fGVufDF8fHx8MTc2OTk3MTM0Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    image: '/images/6.5ft.jpg',
     featured: true
   },
   {
     icon: Tent,
     title: 'Tents & Canopies',
     description: 'Weather-proof tents in various sizes for outdoor events, from small gatherings to large celebrations.',
-    image: 'https://images.unsplash.com/photo-1768179123386-a86a85f1c35c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0eSUyMHRlbnQlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Njk0NTY3NjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    image: '/images/bigtent.png'
   },
   {
     icon: UtensilsCrossed,
@@ -43,18 +37,6 @@ const services = [
     title: 'Chairs & Seating',
     description: 'Comfortable and elegant seating options including chiavari chairs, folding chairs, and lounge furniture.',
     image: 'https://images.unsplash.com/photo-1759124650320-d629a3d73d9f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0eSUyMGNoYWlycyUyMGV2ZW50fGVufDF8fHx8MTc2OTQ2Njk4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  },
-  {
-    icon: Music,
-    title: 'Audio & Lighting',
-    description: 'Professional sound systems, microphones, and ambient lighting to set the perfect mood.',
-    image: null
-  },
-  {
-    icon: PartyPopper,
-    title: 'Party Essentials',
-    description: 'Dishware, glassware, serving equipment, and all the essentials for a successful event.',
-    image: null
   }
 ];
 
@@ -139,27 +121,6 @@ export function Home() {
               Get a Quote
             </button>
           </div>
-          
-          {/* Subtle Highlight */}
-          <div className="glass-effect rounded-3xl px-12 py-8 inline-block backdrop-blur-md">
-            <p className="text-base text-gray-200 mb-4 uppercase tracking-widest font-semibold">Most Popular Services</p>
-            <div className="flex flex-wrap justify-center gap-6 text-lg">
-              <Link href="/inventory" className="text-white font-semibold flex items-center gap-2 hover:text-[var(--color-gold)] transition-colors">
-                <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse"></span>
-                360° Camera Experience
-              </Link>
-              <span className="text-gray-400">•</span>
-              <Link href="/inventory" className="text-white font-semibold flex items-center gap-2 hover:text-[var(--color-gold)] transition-colors">
-                <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></span>
-                Mirror Photo Booth
-              </Link>
-              <span className="text-gray-400">•</span>
-              <Link href="/inventory" className="text-white font-semibold flex items-center gap-2 hover:text-[var(--color-gold)] transition-colors">
-                <span className="w-2 h-2 bg-[var(--color-gold)] rounded-full animate-pulse" style={{ animationDelay: '1s' }}></span>
-                Custom Balloon Art
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -194,7 +155,7 @@ export function Home() {
               <div className="h-px bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent flex-1 max-w-xs"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 max-w-4xl mx-auto">
               {featuredServices.map((service, index) => (
                 <div
                   key={index}
@@ -214,6 +175,7 @@ export function Home() {
                           src={service.image}
                           alt={service.title}
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          style={service.objectPosition ? { objectPosition: service.objectPosition } : undefined}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       </div>
@@ -230,6 +192,14 @@ export function Home() {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="text-center">
+              <Link 
+                href="/inventory"
+                className="inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-3 rounded-full font-bold hover:shadow-lg hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-105"
+              >
+                View Full Inventory
+              </Link>
             </div>
           </div>
 

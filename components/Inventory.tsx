@@ -21,7 +21,7 @@ const inventoryItems = [
     name: '360° Camera Experience',
     description: 'State-of-the-art 360° slow-motion video booth with custom backdrops and instant social sharing',
     features: ['Slow-motion capture', 'Custom branding', 'Social media sharing', 'Professional lighting'],
-    image: 'https://images.unsplash.com/photo-1732039244620-dd28937d848e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHwzNjAlMjBwaG90byUyMGJvb3RoJTIwY2FtZXJhfGVufDF8fHx8MTc2OTk3MTM0NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    image: '/images/360.PNG',
     featured: true
   },
   {
@@ -30,7 +30,8 @@ const inventoryItems = [
     name: 'Mirror Photo Booth',
     description: 'Full-length interactive mirror with touchscreen interface, voice guidance, and instant prints',
     features: ['Touchscreen interface', 'Voice guidance', 'Instant prints', 'Digital gallery'],
-    image: 'https://images.unsplash.com/photo-1766086893043-d38b06175015?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaG90byUyMGJvb3RoJTIwZXZlbnR8ZW58MXx8fHwxNzY5OTcxMzUxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    image: '/images/mirror.PNG',
+    objectPosition: 'center 40%',
     featured: true
   },
   {
@@ -39,7 +40,7 @@ const inventoryItems = [
     name: 'Custom Balloon Decorations',
     description: 'Professional balloon artistry including arches, garlands, columns, and themed sculptures',
     features: ['Balloon arches', 'Garlands', 'Sculptures', 'Themed designs'],
-    image: 'https://images.unsplash.com/photo-1768776185742-0cc9a057b195?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYWxsb29uJTIwYXJjaCUyMGV2ZW50fGVufDF8fHx8MTc2OTk3MTM0Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    image: '/images/6.5ft.jpg',
     featured: true
   },
   {
@@ -48,7 +49,7 @@ const inventoryItems = [
     name: 'Event Tents & Canopies',
     description: 'Weather-proof tents in multiple sizes - from intimate 10x10 to large 40x60 structures',
     features: ['Multiple sizes', 'Weather-proof', 'Sidewalls available', 'Professional setup'],
-    image: 'https://images.unsplash.com/photo-1768179123386-a86a85f1c35c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0eSUyMHRlbnQlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Njk0NTY3NjF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    image: '/images/bigtent.png',
     featured: false
   },
   {
@@ -200,9 +201,7 @@ export function InventoryPage() {
             {filteredItems.map((item, index) => (
               <div
                 key={item.id}
-                className={`group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${
-                  item.featured ? 'border-2 border-[var(--color-gold)]' : 'border-2 border-gray-200 hover:border-[var(--color-gold)]'
-                }`}
+                className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)]"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {item.featured && (
@@ -220,8 +219,11 @@ export function InventoryPage() {
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                      style={item.objectPosition ? { objectPosition: item.objectPosition } : undefined}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                      <h3 className="text-white text-lg font-bold">{item.name}</h3>
+                    </div>
                   </div>
                 )}
 
@@ -232,9 +234,11 @@ export function InventoryPage() {
                     </div>
                   )}
                   
-                  <h3 className="text-2xl font-bold mb-3 group-hover:text-[var(--color-gold)] transition-colors">
-                    {item.name}
-                  </h3>
+                  {!item.image && (
+                    <h3 className="text-2xl font-bold mb-3 text-black">
+                      {item.name}
+                    </h3>
+                  )}
                   <p className="text-gray-600 mb-4 leading-relaxed">{item.description}</p>
                   
                   <div className="space-y-2 mb-4">
