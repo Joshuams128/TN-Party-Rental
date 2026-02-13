@@ -191,17 +191,6 @@ export default function EventPlanningPage() {
         
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer"></div>
-        
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
-          <Sparkles size={40} />
-        </div>
-        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
-          <Sparkles size={50} />
-        </div>
-        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
-          <Sparkles size={30} />
-        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -397,9 +386,7 @@ export default function EventPlanningPage() {
             {planningServices.map((service, index) => (
               <div
                 key={index}
-                className={`group relative bg-white rounded-3xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${
-                  index === 0 ? 'border-4 border-[var(--color-gold)]' : 'border-2 border-gray-200 hover:border-[var(--color-gold)]'
-                }`}
+                className="group relative bg-white rounded-3xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full border-2 border-[var(--color-gold)]"
               >
                 {index === 0 && (
                   <div className="absolute top-4 right-4 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-2 rounded-full shadow-lg z-10">
@@ -414,9 +401,9 @@ export default function EventPlanningPage() {
                   <div className="text-sm text-black/70">{service.duration}</div>
                 </div>
 
-                <div className="p-8">
+                <div className="p-8 flex-1 flex flex-col">
                   <h4 className="text-lg font-bold mb-4">What&apos;s Included:</h4>
-                  <ul className="space-y-3 mb-8">
+                  <ul className="space-y-3 mb-8 flex-1">
                     {service.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
                         <CheckSquare className="text-[var(--color-gold)] flex-shrink-0 mt-1" size={20} />
@@ -425,7 +412,7 @@ export default function EventPlanningPage() {
                     ))}
                   </ul>
 
-                  <Link href="/#contact" className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                  <Link href="/#contact" className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105 mt-auto">
                     {index === 0 ? 'Book Free Consultation' : 'Learn More'}
                   </Link>
                 </div>

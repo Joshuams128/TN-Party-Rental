@@ -1,8 +1,24 @@
 'use client'
 
-import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Phone, Mail, MapPin, Clock, Star, Award } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Phone, Mail, MapPin, Clock, Star, Award, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import Link from 'next/link';
+
+const heroImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1768508951126-f90917cc510e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwcGFydHklMjBldmVudHxlbnwxfHx8fDE3Njk0MjY3MTl8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    alt: 'Elegant party event'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    alt: 'Wedding reception setup'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    alt: 'Outdoor event celebration'
+  }
+];
 
 const services = [
   {
@@ -21,28 +37,56 @@ const services = [
     featured: true
   },
   {
-    icon: Tent,
-    title: 'Tents & Canopies',
-    description: 'Weather-proof tents in various sizes for outdoor events, from small gatherings to large celebrations.',
-    image: '/images/bigtent.png'
+    icon: Music,
+    title: 'Audio & Sound Systems',
+    description: 'Professional PA systems, microphones, and speakers for any venue size.',
+    image: '/images/dj.png'
   },
   {
     icon: UtensilsCrossed,
     title: 'Tables & Linens',
     description: 'Premium tables, tablecloths, and runners in various colors and styles to match your event theme.',
-    image: 'https://images.unsplash.com/photo-1677768061409-3d4fbd0250d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWRkaW5nJTIwcmVjZXB0aW9uJTIwdGFibGVzfGVufDF8fHx8MTc2OTQ2Njk4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    image: '/images/tables-lines.png'
   },
   {
     icon: Armchair,
     title: 'Chairs & Seating',
     description: 'Comfortable and elegant seating options including chiavari chairs, folding chairs, and lounge furniture.',
-    image: 'https://images.unsplash.com/photo-1759124650320-d629a3d73d9f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0eSUyMGNoYWlycyUyMGV2ZW50fGVufDF8fHx8MTc2OTQ2Njk4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
+    image: '/images/chairs.png'
   }
 ];
 
 export function Home() {
   const featuredServices = services.filter(s => s.featured);
   const standardServices = services.filter(s => !s.featured);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Preload hero images
+  useEffect(() => {
+    const imagePromises = heroImages.map((image) => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = image.src;
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    });
+    Promise.all(imagePromises).then(() => setImagesLoaded(true));
+  }, []);
+
+  // Auto-rotate hero images
+  useEffect(() => {
+    if (!imagesLoaded) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [imagesLoaded]);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
 
   const scrollToContact = () => {
     const element = document.getElementById('contact');
@@ -60,31 +104,85 @@ export function Home() {
 
   return (
     <>
-      {/* HERO SECTION */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 sm:pt-40 pb-16">
-        {/* Background Image with Parallax Effect */}
-        <div className="absolute inset-0 z-0">
-          <ImageWithFallback
-            src="https://images.unsplash.com/photo-1768508951126-f90917cc510e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwcGFydHklMjBldmVudHxlbnwxfHx8fDE3Njk0MjY3MTl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-            alt="Elegant party event"
-            className="w-full h-full object-cover scale-110"
+      {/* Image Lightbox Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button 
+            className="absolute top-4 right-4 text-white hover:text-[var(--color-gold)] transition-colors z-50"
+            onClick={() => setSelectedImage(null)}
+          >
+            <X size={32} />
+          </button>
+          <img 
+            src={selectedImage.src} 
+            alt={selectedImage.alt}
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
           />
+        </div>
+      )}
+
+      {/* HERO SECTION */}
+      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-40 sm:pt-40 pb-16 bg-black">
+        {/* Background Image Slider */}
+        <div 
+          className={`absolute inset-0 z-0 bg-black transition-opacity duration-500 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
+        >
+          {heroImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{ transition: 'opacity 1000ms ease-in-out' }}
+            >
+              <ImageWithFallback
+                src={image.src}
+                alt={image.alt}
+                className="w-full h-full object-cover scale-110"
+              />
+            </div>
+          ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-black opacity-80"></div>
+        </div>
+
+        {/* Slider Navigation Arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-[var(--color-gold)] text-white hover:text-black p-2 rounded-full transition-all duration-300 opacity-60 hover:opacity-100"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={28} />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-[var(--color-gold)] text-white hover:text-black p-2 rounded-full transition-all duration-300 opacity-60 hover:opacity-100"
+          aria-label="Next slide"
+        >
+          <ChevronRight size={28} />
+        </button>
+
+        {/* Slider Dots */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? 'bg-[var(--color-gold)] w-8'
+                  : 'bg-white/50 hover:bg-white/80'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
         
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer z-[1]"></div>
-
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float z-[5]">
-          <Sparkles size={40} />
-        </div>
-        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float z-[5]" style={{ animationDelay: '1s' }}>
-          <Sparkles size={50} />
-        </div>
-        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float z-[5]" style={{ animationDelay: '2s' }}>
-          <Sparkles size={30} />
-        </div>
 
         <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto animate-fade-in-up pt-28 sm:pt-32">
           <div className="mb-8">
@@ -133,11 +231,13 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20 animate-fade-in-up">
             <h2 className="text-5xl sm:text-6xl font-bold mb-6 text-black">
-              Our Complete <span className="gold-gradient-text">Service Catalog</span>
+             Everything You Need <span className="gold-gradient-text">All in One Place</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Everything you need for your perfect event — from signature experiences to essential rentals
+              Your perfect event starts with the right pieces — we have them all
+
+
             </p>
           </div>
 
@@ -167,7 +267,10 @@ export function Home() {
                   
                   <div className="relative border-2 border-[var(--color-gold)] rounded-2xl overflow-hidden bg-white">
                     {service.image && (
-                      <div className="h-56 overflow-hidden relative">
+                      <div 
+                        className="h-56 overflow-hidden relative cursor-pointer"
+                        onClick={() => setSelectedImage({ src: service.image, alt: service.title })}
+                      >
                         <div className="absolute top-3 right-3 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-2 rounded-full z-10 shadow-lg">
                           ⭐ FEATURED
                         </div>
@@ -222,7 +325,10 @@ export function Home() {
                   className="group bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-smooth hover:border-[var(--color-gold)] hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2"
                 >
                   {service.image && (
-                    <div className="h-48 overflow-hidden">
+                    <div 
+                      className="h-48 overflow-hidden cursor-pointer"
+                      onClick={() => setSelectedImage({ src: service.image, alt: service.title })}
+                    >
                       <ImageWithFallback
                         src={service.image}
                         alt={service.title}

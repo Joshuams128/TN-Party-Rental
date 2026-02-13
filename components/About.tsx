@@ -34,25 +34,6 @@ const stats = [
   { number: '1000+', label: 'Rental Items' },
 ];
 
-const team = [
-  {
-    role: 'Founder & CEO',
-    description: 'With over 15 years in the event industry, bringing vision and expertise to every celebration'
-  },
-  {
-    role: 'Event Coordinators',
-    description: 'Our dedicated team of professionals who ensure your event runs flawlessly'
-  },
-  {
-    role: 'Setup Crew',
-    description: 'Experienced technicians who handle delivery, setup, and teardown with precision'
-  },
-  {
-    role: 'Customer Service',
-    description: 'Always available to answer questions and provide support throughout your event planning'
-  },
-];
-
 export function About() {
   return (
     <div className="pt-20">
@@ -63,17 +44,6 @@ export function About() {
         
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer"></div>
-        
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
-          <Sparkles size={40} />
-        </div>
-        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
-          <Sparkles size={50} />
-        </div>
-        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
-          <Sparkles size={30} />
-        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -124,14 +94,14 @@ export function About() {
       </section>
 
       {/* Values Section */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6 text-black">
+            <h2 className="text-5xl font-bold mb-6">
               Our <span className="gold-gradient-text">Values</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               The principles that guide everything we do
             </p>
           </div>
@@ -140,15 +110,18 @@ export function About() {
             {values.map((value, index) => (
               <div
                 key={index}
-                className="group relative bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2"
+                className="group relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-8 rounded-2xl border-2 border-[var(--color-gold)]/30 hover:border-[var(--color-gold)] transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-[var(--color-gold)]/20"
               >
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                  <value.icon className="text-black" size={32} />
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <div className="relative z-10">
+                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                    <value.icon className="text-black" size={32} />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-[var(--color-gold)]">
+                    {value.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed">{value.description}</p>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 group-hover:text-[var(--color-gold)] transition-colors">
-                  {value.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">{value.description}</p>
               </div>
             ))}
           </div>
@@ -173,7 +146,7 @@ export function About() {
                     <Award className="text-black" size={28} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">
+                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
                       Premium Quality Equipment
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
@@ -189,7 +162,7 @@ export function About() {
                     <Users className="text-black" size={28} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">
+                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
                       Expert Event Support
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
@@ -205,7 +178,7 @@ export function About() {
                     <Clock className="text-black" size={28} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">
+                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
                       Flexible & Reliable
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
@@ -223,7 +196,7 @@ export function About() {
                     <MapPin className="text-black" size={28} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">
+                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
                       Local Expertise
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
@@ -239,7 +212,7 @@ export function About() {
                     <Sparkles className="text-black" size={28} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">
+                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
                       Unique Signature Services
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
@@ -255,7 +228,7 @@ export function About() {
                     <Target className="text-black" size={28} />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">
+                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
                       Custom Solutions
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
@@ -265,37 +238,6 @@ export function About() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-24 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6">
-              Meet Our <span className="gold-gradient-text">Team</span>
-            </h2>
-            <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Dedicated professionals committed to making your event perfect
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <div
-                key={index}
-                className="group relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-6 rounded-2xl border-2 border-[var(--color-gold)]/30 hover:border-[var(--color-gold)] transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-[var(--color-gold)]/20"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-                <div className="relative z-10">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-full mb-4"></div>
-                  <h3 className="text-xl font-bold mb-3 text-[var(--color-gold)]">{member.role}</h3>
-                  <p className="text-gray-300 leading-relaxed">{member.description}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>

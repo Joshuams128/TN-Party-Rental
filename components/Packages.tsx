@@ -154,17 +154,6 @@ export function PackagesPage() {
         
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer"></div>
-        
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
-          <Sparkles size={40} />
-        </div>
-        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
-          <Sparkles size={50} />
-        </div>
-        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
-          <Sparkles size={30} />
-        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center animate-fade-in-up">
@@ -195,10 +184,8 @@ export function PackagesPage() {
             {packages.map((pkg, index) => (
               <div
                 key={pkg.id}
-                className={`group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2 ${
-                  pkg.popular || pkg.featured 
-                    ? 'shadow-2xl border-2 border-[var(--color-gold)]' 
-                    : 'shadow-lg border border-gray-200 hover:border-[var(--color-gold)] hover:shadow-2xl'
+                className={`group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full shadow-lg border-2 border-[var(--color-gold)] hover:shadow-2xl ${
+                  pkg.popular || pkg.featured ? 'shadow-2xl' : ''
                 }`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -232,7 +219,7 @@ export function PackagesPage() {
                 </div>
 
                 {/* Package Content */}
-                <div className="p-6">
+                <div className="p-6 flex-1 flex flex-col">
                   <div className="mb-4">
                     <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-1">
                       <Check className="text-[var(--color-gold)]" size={14} />
@@ -265,7 +252,7 @@ export function PackagesPage() {
 
                   <Link 
                     href="/#contact"
-                    className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-xl text-sm font-bold hover:shadow-xl hover:shadow-[var(--color-gold)]/30 transition-all duration-300 transform hover:scale-105"
+                    className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-xl text-sm font-bold hover:shadow-xl hover:shadow-[var(--color-gold)]/30 transition-all duration-300 transform hover:scale-105 mt-auto"
                   >
                     Request This Package
                   </Link>
@@ -323,31 +310,31 @@ export function PackagesPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="group bg-white p-6 rounded-2xl border border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-smooth">
+              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg">
                 <span className="text-2xl">💰</span>
               </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">Flexible Pricing</h3>
+              <h3 className="text-xl font-bold mb-2 text-black">Flexible Pricing</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 All packages are customizable. Add or remove items to fit your budget perfectly.
               </p>
             </div>
 
-            <div className="group bg-white p-6 rounded-2xl border border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-smooth">
+              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg">
                 <span className="text-2xl">📞</span>
               </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">Free Consultation</h3>
+              <h3 className="text-xl font-bold mb-2 text-black">Free Consultation</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Talk to our team to discuss your needs and get personalized recommendations.
               </p>
             </div>
 
-            <div className="group bg-white p-6 rounded-2xl border border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-smooth">
+              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg">
                 <span className="text-2xl">✨</span>
               </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">Quality Guaranteed</h3>
+              <h3 className="text-xl font-bold mb-2 text-black">Quality Guaranteed</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Premium equipment, professional service, and on-time delivery — every time.
               </p>

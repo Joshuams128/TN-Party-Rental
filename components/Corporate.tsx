@@ -92,17 +92,6 @@ export function Corporate() {
         
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer"></div>
-        
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
-          <Sparkles size={40} />
-        </div>
-        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
-          <Sparkles size={50} />
-        </div>
-        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
-          <Sparkles size={30} />
-        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -164,7 +153,7 @@ export function Corporate() {
                 <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                   <type.icon className="text-black" size={32} />
                 </div>
-                <h3 className="text-xl font-bold mb-3 group-hover:text-[var(--color-gold)] transition-colors">
+                <h3 className="text-xl font-bold mb-3 text-[var(--color-gold)]">
                   {type.title}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">{type.description}</p>
@@ -191,9 +180,7 @@ export function Corporate() {
             {packages.map((pkg, index) => (
               <div
                 key={index}
-                className={`group relative bg-white rounded-3xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 ${
-                  pkg.popular ? 'border-4 border-[var(--color-gold)] lg:-mt-4 lg:mb-4' : 'border-2 border-gray-200 hover:border-[var(--color-gold)]'
-                }`}
+                className="group relative bg-white rounded-3xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
               >
                 {pkg.popular && (
                   <div className="absolute top-4 right-4 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-2 rounded-full shadow-lg z-10">
@@ -208,8 +195,8 @@ export function Corporate() {
                   <div className="text-sm text-black/70">{pkg.attendees}</div>
                 </div>
 
-                <div className="p-8">
-                  <ul className="space-y-4 mb-8">
+                <div className="p-8 flex-1 flex flex-col">
+                  <ul className="space-y-4 mb-8 flex-1">
                     {pkg.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
                         <CheckCircle className="text-[var(--color-gold)] flex-shrink-0 mt-1" size={20} />
@@ -218,7 +205,7 @@ export function Corporate() {
                     ))}
                   </ul>
 
-                  <Link href="/#contact" className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                  <Link href="/#contact" className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105 mt-auto">
                     Get Quote
                   </Link>
                 </div>

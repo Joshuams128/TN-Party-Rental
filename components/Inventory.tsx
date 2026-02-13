@@ -1,6 +1,6 @@
 'use client'
 
-import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Utensils, Wine, Lightbulb, Gift } from 'lucide-react';
+import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Utensils, Wine, Lightbulb, Gift, X } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -55,10 +55,10 @@ const inventoryItems = [
   {
     id: 5,
     category: 'furniture',
-    name: 'Tables - Round & Rectangular',
+    name: 'Tables & Linens',
     description: 'Premium banquet tables in various sizes with professional-grade construction',
     features: ['60" & 72" rounds', '6ft & 8ft rectangles', 'Cocktail tables', 'Folding tables'],
-    image: 'https://images.unsplash.com/photo-1677768061409-3d4fbd0250d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWRkaW5nJTIwcmVjZXB0aW9uJTIwdGFibGVzfGVufDF8fHx8MTc2OTQ2Njk4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    image: '/images/tables-lines.png',
     featured: false
   },
   {
@@ -67,16 +67,7 @@ const inventoryItems = [
     name: 'Chairs & Seating',
     description: 'Elegant seating options including chiavari, folding, and lounge furniture',
     features: ['Chiavari chairs', 'Folding chairs', 'Lounge furniture', 'Cushions available'],
-    image: 'https://images.unsplash.com/photo-1759124650320-d629a3d73d9f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXJ0eSUyMGNoYWlycyUyMGV2ZW50fGVufDF8fHx8MTc2OTQ2Njk4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    featured: false
-  },
-  {
-    id: 7,
-    category: 'tableware',
-    name: 'Linens & Table Covers',
-    description: 'High-quality tablecloths, runners, and napkins in a wide range of colors',
-    features: ['Multiple colors', 'Various sizes', 'Table runners', 'Cloth napkins'],
-    image: null,
+    image: '/images/chairs.png',
     featured: false
   },
   {
@@ -85,7 +76,7 @@ const inventoryItems = [
     name: 'Dishware & Glassware',
     description: 'Complete place settings including plates, glasses, and flatware',
     features: ['Dinner plates', 'Wine glasses', 'Flatware sets', 'Serving platters'],
-    image: null,
+    image: '/images/dishware.png',
     featured: false
   },
   {
@@ -94,7 +85,7 @@ const inventoryItems = [
     name: 'Audio & Sound Systems',
     description: 'Professional PA systems, microphones, and speakers for any venue size',
     features: ['PA systems', 'Wireless mics', 'Speakers', 'Audio mixing'],
-    image: null,
+    image: '/images/dj.png',
     featured: false
   },
   {
@@ -103,7 +94,7 @@ const inventoryItems = [
     name: 'Lighting & Ambiance',
     description: 'Uplighting, string lights, and decorative lighting to set the perfect mood',
     features: ['LED uplighting', 'String lights', 'Spotlights', 'Color options'],
-    image: null,
+    image: '/images/lighting.png',
     featured: false
   },
   {
@@ -112,7 +103,7 @@ const inventoryItems = [
     name: 'Dance Floors',
     description: 'Portable dance floors in various sizes with professional installation',
     features: ['Multiple sizes', 'Black & white', 'Professional install', 'Indoor/outdoor'],
-    image: null,
+    image: '/images/dance.png',
     featured: false
   },
   {
@@ -121,13 +112,14 @@ const inventoryItems = [
     name: 'Serving Equipment',
     description: 'Chafing dishes, beverage dispensers, and serving utensils',
     features: ['Chafing dishes', 'Beverage dispensers', 'Serving utensils', 'Coolers'],
-    image: null,
+    image: '/images/serving.png',
     featured: false
   },
 ];
 
 export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
 
   const filteredItems = selectedCategory === 'all' 
     ? inventoryItems 
@@ -135,6 +127,27 @@ export function InventoryPage() {
 
   return (
     <div className="pt-20">
+      {/* Image Lightbox Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button 
+            className="absolute top-4 right-4 text-white hover:text-[var(--color-gold)] transition-colors z-50"
+            onClick={() => setSelectedImage(null)}
+          >
+            <X size={32} />
+          </button>
+          <img 
+            src={selectedImage.src} 
+            alt={selectedImage.alt}
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative py-24 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
@@ -142,17 +155,6 @@ export function InventoryPage() {
         
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer"></div>
-        
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 left-10 text-[var(--color-gold)] opacity-20 animate-float">
-          <Sparkles size={40} />
-        </div>
-        <div className="absolute bottom-32 right-16 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '1s' }}>
-          <Sparkles size={50} />
-        </div>
-        <div className="absolute top-40 right-24 text-[var(--color-gold)] opacity-20 animate-float" style={{ animationDelay: '2s' }}>
-          <Sparkles size={30} />
-        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center animate-fade-in-up">
@@ -209,7 +211,10 @@ export function InventoryPage() {
                 )}
 
                 {item.image && (
-                  <div className="h-56 overflow-hidden relative">
+                  <div 
+                    className="h-56 overflow-hidden relative cursor-pointer"
+                    onClick={() => setSelectedImage({ src: item.image!, alt: item.name })}
+                  >
                     {item.featured && (
                       <div className="absolute top-3 right-3 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-2 rounded-full z-10 shadow-lg">
                         ⭐ SIGNATURE
