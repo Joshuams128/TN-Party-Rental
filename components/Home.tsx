@@ -56,12 +56,14 @@ const services = [
   }
 ];
 
-export function Home() {
-  const featuredServices = services.filter(s => s.featured);
-  const standardServices = services.filter(s => !s.featured);
-  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+function Home() {
+  // Add missing state hooks
   const [currentSlide, setCurrentSlide] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  // Split services into featured and standard
+  const featuredServices = services.filter((service) => service.featured);
+  const standardServices = services.filter((service) => !service.featured);
 
   // Preload hero images
   useEffect(() => {
@@ -150,40 +152,50 @@ export function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-black opacity-80"></div>
         </div>
 
-        {/* Slider Navigation Arrows */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-[var(--color-gold)] text-white hover:text-black p-2 rounded-full transition-all duration-300 opacity-60 hover:opacity-100"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={28} />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-[var(--color-gold)] text-white hover:text-black p-2 rounded-full transition-all duration-300 opacity-60 hover:opacity-100"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={28} />
-        </button>
-
-        {/* Slider Dots */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
-          {heroImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? 'bg-[var(--color-gold)] w-8'
-                  : 'bg-white/50 hover:bg-white/80'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
+        {/* Hero Images */}
+        <div className="relative w-full h-[400px] md:h-[600px] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center pointer-events-none">
+            <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg leading-tight mt-8 md:mt-0">
+              True North<br />Party Rentals
+            </h1>
+          </div>
+          <div className="w-full h-full">
+            <ImageWithFallback
+              src={heroImages[currentSlide]}
+              alt="Hero background"
+              className="object-cover object-center"
+              priority
             />
-          ))}
+          </div>
+          {/* Bottom Slide Selector */}
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+            {heroImages.map((_, idx) => (
+              <button
+                key={idx}
+                className={`w-3 h-3 rounded-full border border-white transition-all ${currentSlide === idx ? 'bg-white' : 'bg-transparent'}`}
+                onClick={() => setCurrentSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+          {/* Slider Dots */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+            {heroImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? 'bg-[var(--color-gold)] w-8'
+                    : 'bg-white/50 hover:bg-white/80'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+          {/* Animated overlay */}
+          <div className="absolute inset-0 animate-shimmer z-[1]"></div>
         </div>
-        
-        {/* Animated overlay */}
-        <div className="absolute inset-0 animate-shimmer z-[1]"></div>
 
         <div className="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
           <div className="mb-8">

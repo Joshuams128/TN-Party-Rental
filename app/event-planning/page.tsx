@@ -270,7 +270,7 @@ export default function EventPlanningPage() {
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-bold mb-3 group-hover:text-[var(--color-gold)] transition-colors">
+                <h3 className="text-2xl font-bold mb-3 text-[var(--color-gold)]">
                   {step.title}
                 </h3>
                 <p className="text-gray-600 mb-4 leading-relaxed">{step.description}</p>
