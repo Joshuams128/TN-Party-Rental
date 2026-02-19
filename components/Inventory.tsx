@@ -121,6 +121,30 @@ export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
 
+  const handleCheckout = async (itemName: string, price: number) => {
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        body: JSON.stringify({ itemName, price })
+      })
+      const data = await res.json()
+      
+      if (!res.ok) {
+        alert(`Error: ${data.error}`)
+        return
+      }
+      
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert('No checkout URL received')
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Failed to start checkout. Please try again.')
+    }
+  }
+
   const filteredItems = selectedCategory === 'all' 
     ? inventoryItems 
     : inventoryItems.filter(item => item.category === selectedCategory);
@@ -258,9 +282,12 @@ export function InventoryPage() {
                     </ul>
                   </div>
 
-                  <Link href="/#contact" className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-                    Request Quote
-                  </Link>
+                  <button
+                    onClick={() => handleCheckout(item.name, 50000)}
+                    className="w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  >
+                    Checkout
+                  </button>
                 </div>
               </div>
             ))}
