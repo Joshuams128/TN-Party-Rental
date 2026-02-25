@@ -43,8 +43,8 @@ export function Header() {
               Packages
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--color-gold)] group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="/event-planning" className="relative hover:text-[var(--color-gold)] transition-all duration-300 group">
-              Event Planning
+            <Link href="/event-design-styling" className="relative hover:text-[var(--color-gold)] transition-all duration-300 group">
+              Event Design and Styling
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--color-gold)] group-hover:w-full transition-all duration-300"></span>
             </Link>
             <Link href="/corporate" className="relative hover:text-[var(--color-gold)] transition-all duration-300 group">
@@ -85,8 +85,8 @@ export function Header() {
             <Link href="/packages" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
               Packages
             </Link>
-            <Link href="/event-planning" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
-              Event Planning
+            <Link href="/event-design-styling" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
+              Event Design and Styling
             </Link>
             <Link href="/corporate" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
               Corporate

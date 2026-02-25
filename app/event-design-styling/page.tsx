@@ -201,14 +201,14 @@ export default function EventPlanningPage() {
                 </span>
               </div>
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                Event <span className="gold-gradient-text">Planning</span> Made Easy
+                Event <span className="gold-gradient-text">Design and Styling</span> Made Easy
               </h1>
               <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mb-8"></div>
               <p className="text-xl text-gray-300 leading-relaxed mb-6">
-                From concept to celebration, we guide you through every step of planning your perfect event with expert advice and comprehensive support.
+                From initial concept to final setup, we design and style your event to create a clean, cohesive look that fits your vision. Our team handles delivery, installation, and takedown so your space is fully prepared and you can focus on enjoying the celebration.
               </p>
               <p className="text-lg text-gray-400 leading-relaxed mb-8">
-                Our experienced team has helped plan hundreds of successful events across the GTA. Let us make your planning process smooth and stress-free.
+                We&apos;ve created memorable setups for birthdays, baby showers, weddings, and corporate events across the GTA, providing reliable service and polished presentations our clients can trust.
               </p>
               <Link 
                 href="/#contact"
@@ -225,7 +225,7 @@ export default function EventPlanningPage() {
                 <div className="relative h-80 w-full overflow-hidden rounded-2xl">
                   <ImageWithFallback
                     src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxldmVudCUyMHBsYW5uaW5nJTIwbWVldGluZ3xlbnwxfHx8fDE3Mzg0NDU1MDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                    alt="Event planning consultation"
+                    alt="Event design and styling consultation"
                     className="object-cover"
                   />
                 </div>
@@ -240,7 +240,7 @@ export default function EventPlanningPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold mb-6 text-black">
-              Your Event Planning <span className="gold-gradient-text">Timeline</span>
+              Your Event Design and Styling <span className="gold-gradient-text">Timeline</span>
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -380,7 +380,7 @@ export default function EventPlanningPage() {
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Professional support at every stage of your event planning journey
+              Professional support at every stage of your event design and styling journey
             </p>
           </div>
 
@@ -482,10 +482,10 @@ export default function EventPlanningPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Phone className="text-[var(--color-gold)] mx-auto mb-6" size={64} />
           <h2 className="text-5xl font-bold mb-6">
-            Ready to Start <span className="gold-gradient-text">Planning?</span>
+            Ready to Start <span className="gold-gradient-text">Designing?</span>
           </h2>
           <p className="text-xl text-gray-300 mb-10 leading-relaxed">
-            Let&apos;s bring your vision to life. Schedule your free consultation today and discover how we can make your event planning effortless.
+            Let&apos;s bring your vision to life. Schedule your free consultation today and discover how we can make your event design and styling effortless.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link 

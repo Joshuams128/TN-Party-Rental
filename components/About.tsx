@@ -1,6 +1,6 @@
 'use client';
 
-import { Award, Users, Clock, MapPin, Heart, Sparkles, Star, Target, Shield } from 'lucide-react';
+import { Award, Clock, Heart, Sparkles, Star, Target, Shield, Users } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import Link from 'next/link';
 
@@ -57,12 +57,40 @@ export function About() {
                 About <span className="gold-gradient-text">True North</span>
               </h1>
               <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mb-8"></div>
-              <p className="text-xl text-gray-300 leading-relaxed mb-6">
-                True North Party Rentals was founded with a simple mission: to make every celebration in Scarborough and the Greater Toronto Area truly unforgettable.
-              </p>
-              <p className="text-lg text-gray-400 leading-relaxed">
-                What started as a small local rental service has grown into one of the region&apos;s most trusted names in event equipment and services, all while maintaining our commitment to personalized service and attention to detail.
-              </p>
+              
+              <div className="space-y-6">
+                <p className="text-xl text-gray-300 leading-relaxed font-semibold">
+                  True North Party Rentals started with a simple idea — celebrations should feel special, not stressful.
+                </p>
+                
+                <p className="text-lg text-gray-400 leading-relaxed">
+                  What began as helping friends and family decorate small gatherings quickly grew into something bigger. We realized people weren&apos;t just looking for rentals… they were looking for someone they could trust to help bring their vision to life. Someone reliable. Someone who actually cared about the details.
+                </p>
+                
+                <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
+                  We built True North around that mindset.
+                </p>
+                
+                <p className="text-lg text-gray-400 leading-relaxed">
+                  We are a GTA-based, family-run business focused on creating memorable event experiences through modern decor, custom balloon designs, and interactive photo booth services. Every setup is handled with care, professionalism, and attention to detail — because we understand these moments matter. Whether it&apos;s a child&apos;s first birthday, a baby shower, a wedding, or a milestone celebration, these are memories people keep forever.
+                </p>
+                
+                <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
+                  Our goal isn&apos;t just to drop off equipment.<br/>Our goal is to help create moments.
+                </p>
+                
+                <p className="text-lg text-gray-400 leading-relaxed">
+                  From the first message to the final takedown, we work closely with our clients to make the process easy, organized, and enjoyable. We pride ourselves on clear communication, on-time service, and clean, polished setups that elevate any space.
+                </p>
+                
+                <p className="text-lg text-gray-400 leading-relaxed italic border-l-4 border-[var(--color-gold)] pl-4">
+                  At True North Party Rentals, we believe a great event isn&apos;t about how big it is — it&apos;s about how it feels. And if your guests walk into the room and say "wow"… we&apos;ve done our job.
+                </p>
+                
+                <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
+                  We&apos;d be honoured to be part of your celebration.
+                </p>
+              </div>
             </div>
 
             <div className="relative">
@@ -140,103 +168,83 @@ export function About() {
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Award className="text-black" size={28} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                      Premium Quality Equipment
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      All our rentals are professionally maintained, regularly inspected, and replaced to ensure you always get the best quality equipment for your event.
-                    </p>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <Award className="text-black" size={28} />
                 </div>
-              </div>
-
-              <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Users className="text-black" size={28} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                      Expert Event Support
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Our experienced team provides personalized guidance and support throughout your planning process, ensuring every detail is perfect.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Clock className="text-black" size={28} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                      Flexible & Reliable
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      We work around your schedule with flexible delivery times and extended rental periods. Our on-time delivery rate is 99.8%.
-                    </p>
-                  </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                    Family-Owned GTA Business
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    As a locally operated family business, we take pride in every event we service. We treat each setup with care and attention to detail because our reputation in the community matters to us.
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-6">
-              <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <MapPin className="text-black" size={28} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                      Local Expertise
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Based in Scarborough, we know the GTA&apos;s venues, weather patterns, and local requirements inside and out.
-                    </p>
-                  </div>
+            <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <Star className="text-black" size={28} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                    5-Star Rated Service
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Our clients consistently trust us for professional communication, clean setups, and dependable service. We aim to make every experience smooth from your first message to the final takedown.
+                  </p>
                 </div>
               </div>
+            </div>
 
-              <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Sparkles className="text-black" size={28} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                      Unique Signature Services
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Stand out with our exclusive 360° camera, mirror photo booth, and professional balloon artistry.
-                    </p>
-                  </div>
+            <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <Sparkles className="text-black" size={28} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                    Full Setup and Takedown Included
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    We handle the delivery, installation, and removal of all rentals and decor so everything is ready before your guests arrive. You won&apos;t need to assemble, move, or return any equipment.
+                  </p>
                 </div>
               </div>
+            </div>
 
-              <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-                <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Target className="text-black" size={28} />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                      Custom Solutions
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Every event is unique. We create custom packages and solutions tailored to your specific vision and budget.
-                    </p>
-                  </div>
+            <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <Target className="text-black" size={28} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                    Custom Packages
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Every event is different, so we offer flexible packages tailored to your space, theme, and budget. We work with you to create a setup that fits your vision.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <Clock className="text-black" size={28} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                    Reliable and On-Time Service
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    We arrive on schedule and complete setups within the agreed timeframe so your event stays on track. Our goal is to give you peace of mind on the day of your celebration.
+                  </p>
                 </div>
               </div>
             </div>

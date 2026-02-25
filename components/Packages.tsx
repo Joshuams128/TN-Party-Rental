@@ -167,7 +167,7 @@ export function PackagesPage() {
             </h1>
             <div className="h-1 w-32 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Simplified event planning with carefully curated packages designed for every occasion
+              Simplified event design and styling with carefully curated packages designed for every occasion
             </p>
           </div>
         </div>
@@ -285,7 +285,7 @@ export function PackagesPage() {
                   <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </Link>
                 <Link 
-                  href="/event-planning"
+                  href="/event-design-styling"
                   className="group relative glass-effect text-white border-2 border-[var(--color-gold)] px-10 py-4 rounded-full text-base font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-110"
                 >
                   View Planning Services

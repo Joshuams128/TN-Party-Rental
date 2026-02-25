@@ -189,7 +189,7 @@ export function Home() {
             Scarborough&apos;s Premier Event Rental Service
           </p>
           <p className="text-lg sm:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-300 animate-hero-fade animation-delay-800">
-            From tents and tables to our exclusive 360° camera and balloon artistry — everything you need for an unforgettable event.
+            Luxury event rentals, photo booths & custom balloon decor for unforgettable celebrations.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8 animate-hero-fade animation-delay-1000">
@@ -369,7 +369,7 @@ export function Home() {
             </h2>
             <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              We&apos;re more than just a rental company — we&apos;re your event success partners
+              At True North, we&apos;re more than a rental company — we handle the setup, styling, and details so you can actually enjoy your own event.
             </p>
           </div>
 
@@ -458,9 +458,8 @@ export function Home() {
                     <Phone className="text-black" size={24} />
                   </div>
                   <div className="ml-6">
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">Phone</h3>
-                    <p className="text-gray-600 text-lg">(416) 555-RENT</p>
-                    <p className="text-gray-500">(416) 555-7368</p>
+                    <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Phone</h3>
+                    <p className="text-gray-600 text-lg">647-906-3400</p>
                   </div>
                 </div>
               </div>
@@ -471,9 +470,8 @@ export function Home() {
                     <Mail className="text-black" size={24} />
                   </div>
                   <div className="ml-6">
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">Email</h3>
-                    <p className="text-gray-600 text-lg">info@truenorthrentals.ca</p>
-                    <p className="text-gray-500">quotes@truenorthrentals.ca</p>
+                    <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Email</h3>
+                    <p className="text-gray-600 text-lg">truenorthpartyrentals@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -484,9 +482,9 @@ export function Home() {
                     <MapPin className="text-black" size={24} />
                   </div>
                   <div className="ml-6">
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">Location</h3>
-                    <p className="text-gray-600 text-lg">Scarborough, Ontario</p>
-                    <p className="text-gray-500">Serving the Greater Toronto Area</p>
+                    <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Address</h3>
+                    <p className="text-gray-600 text-lg">30-1275 Morningside Ave.</p>
+                    <p className="text-gray-600 text-lg">Scarborough, ON. M1B3W1</p>
                   </div>
                 </div>
               </div>
@@ -497,7 +495,7 @@ export function Home() {
                     <Clock className="text-black" size={24} />
                   </div>
                   <div className="ml-6">
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--color-gold)] transition-colors">Business Hours</h3>
+                    <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Business Hours</h3>
                     <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
                     <p className="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
                     <p className="text-gray-600">Sunday: By Appointment</p>
