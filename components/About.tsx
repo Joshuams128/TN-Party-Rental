@@ -84,7 +84,7 @@ export function About() {
                 </p>
                 
                 <p className="text-lg text-gray-400 leading-relaxed italic border-l-4 border-[var(--color-gold)] pl-4">
-                  At True North Party Rentals, we believe a great event isn&apos;t about how big it is — it&apos;s about how it feels. And if your guests walk into the room and say "wow"… we&apos;ve done our job.
+                  At True North Party Rentals, we believe a great event isn&apos;t about how big it is — it&apos;s about how it feels. And if your guests walk into the room and say &quot;wow&quot;… we&apos;ve done our job.
                 </p>
                 
                 <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
