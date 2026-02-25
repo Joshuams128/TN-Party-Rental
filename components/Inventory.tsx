@@ -80,15 +80,6 @@ const inventoryItems = [
     featured: false
   },
   {
-    id: 9,
-    category: 'entertainment',
-    name: 'Audio & Sound Systems',
-    description: 'Professional PA systems, microphones, and speakers for any venue size',
-    features: ['PA systems', 'Wireless mics', 'Speakers', 'Audio mixing'],
-    image: '/images/dj.png',
-    featured: false
-  },
-  {
     id: 10,
     category: 'entertainment',
     name: 'Lighting & Ambiance',

@@ -37,12 +37,6 @@ const services = [
     featured: true
   },
   {
-    icon: Music,
-    title: 'Audio & Sound Systems',
-    description: 'Professional PA systems, microphones, and speakers for any venue size.',
-    image: '/images/dj.png'
-  },
-  {
     icon: UtensilsCrossed,
     title: 'Tables & Linens',
     description: 'Premium tables, tablecloths, and runners in various colors and styles to match your event theme.',
