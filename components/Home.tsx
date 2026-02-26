@@ -111,6 +111,7 @@ export function Home() {
           >
             <X size={32} />
           </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
             src={selectedImage.src} 
             alt={selectedImage.alt}

@@ -31,6 +31,7 @@ export function ProductDetailPage({ product }: Props) {
           >
             ✕
           </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={selectedImage.src}
             alt={selectedImage.alt}
@@ -107,7 +108,7 @@ export function ProductDetailPage({ product }: Props) {
               <h3 className="text-3xl font-bold mb-4">Request a Quote</h3>
               <p className="text-gray-300 mb-8">
                 Pricing for {product.name.toLowerCase()} is customized based on your event details.
-                Contact us today and we'll get back to you quickly.
+                Contact us today and we&apos;ll get back to you quickly.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
