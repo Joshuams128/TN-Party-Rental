@@ -1,6 +1,6 @@
 'use client'
 
-import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Utensils, Wine, Lightbulb, Gift, X } from 'lucide-react';
+import { Tent, Armchair, Music, Sparkles, Utensils, Gift, X, Palette, Package } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -8,6 +8,8 @@ import Link from 'next/link';
 const categories = [
   { id: 'all', name: 'All Items', icon: Gift },
   { id: 'signature', name: 'Signature', icon: Sparkles },
+  { id: 'packages', name: 'Packages', icon: Package },
+  { id: 'decor', name: 'Décor', icon: Palette },
   { id: 'structures', name: 'Structures', icon: Tent },
   { id: 'furniture', name: 'Furniture', icon: Armchair },
   { id: 'tableware', name: 'Tableware', icon: Utensils },
@@ -17,6 +19,7 @@ const categories = [
 const inventoryItems = [
   {
     id: 1,
+    slug: '360-camera',
     category: 'signature',
     name: '360° Camera Experience',
     description: 'State-of-the-art 360° slow-motion video booth with custom backdrops and instant social sharing',
@@ -26,70 +29,88 @@ const inventoryItems = [
   },
   {
     id: 2,
+    slug: 'mirror-photobooth',
     category: 'signature',
     name: 'Mirror Photo Booth',
     description: 'Full-length interactive mirror with touchscreen interface, voice guidance, and instant prints',
     features: ['Touchscreen interface', 'Voice guidance', 'Instant prints', 'Digital gallery'],
-    image: '/images/mirror.PNG',
+    image: '/images/mirrorp.png',
     objectPosition: 'center 40%',
     featured: true
   },
   {
     id: 3,
+    slug: 'custom-balloons',
     category: 'signature',
     name: 'Custom Balloon Decorations',
     description: 'Professional balloon artistry including arches, garlands, columns, and themed sculptures',
     features: ['Balloon arches', 'Garlands', 'Sculptures', 'Themed designs'],
-    image: '/images/6.5ft.jpg',
+    image: '/images/Custom_Balloon_Decorations_Image.PNG',
     featured: true
   },
   {
+    id: 13,
+    slug: 'premium-packages',
+    category: 'packages',
+    name: 'Premium Packages',
+    description: 'Curated all-in-one event packages for proposals, celebrations, and special occasions',
+    features: ['Proposal packages', 'LED décor packages', 'Marquee setups', 'All-inclusive'],
+    image: '/images/Home_Page_1.png',
+    featured: true
+  },
+  {
+    id: 14,
+    slug: 'backdrop-packages',
+    category: 'decor',
+    name: 'Backdrop Packages',
+    description: 'Stunning backdrop options for any theme — florals, characters, custom designs, and more',
+    features: ['30+ themes available', 'Character backdrops', 'Floral designs', 'Custom wording'],
+    image: '/images/eventspace.jpeg',
+    featured: false
+  },
+  {
+    id: 15,
+    slug: 'marquee-letters',
+    category: 'decor',
+    name: 'Marquee Letters & Signs',
+    description: 'Illuminated marquee letters, numbers, and neon signs to spell out your celebration',
+    features: ['LED letters & numbers', 'Neon signs', 'Heart & ring shapes', 'Custom wording'],
+    image: '/images/eventspace.jpeg',
+    featured: false
+  },
+  {
+    id: 16,
+    slug: 'decor-props',
+    category: 'decor',
+    name: 'Décor & Props',
+    description: 'Elegant props and décor pieces to elevate any event space with a personal touch',
+    features: ['Cherry blossom trees', 'Rose hearts', 'White arches', 'Champagne walls'],
+    image: '/images/eventspace.jpeg',
+    featured: false
+  },
+  {
+    id: 17,
+    slug: 'carpet-ropes',
+    category: 'decor',
+    name: 'Carpet & Ropes',
+    description: 'Make a grand entrance with red carpet and velvet rope packages for VIP-style arrivals',
+    features: ['8ft red carpet', 'Velvet ropes', 'VIP entrance', 'Photo-ready'],
+    image: '/images/eventspace.jpeg',
+    featured: false
+  },
+  {
     id: 4,
+    slug: 'event-tents',
     category: 'structures',
     name: 'Event Tents & Canopies',
-    description: 'Weather-proof tents in multiple sizes - from intimate 10x10 to large 40x60 structures',
+    description: 'Weather-proof pop-up canopy tents in multiple sizes — perfect for outdoor events',
     features: ['Multiple sizes', 'Weather-proof', 'Sidewalls available', 'Professional setup'],
     image: '/images/bigtent.png',
     featured: false
   },
   {
-    id: 5,
-    category: 'furniture',
-    name: 'Tables & Linens',
-    description: 'Premium banquet tables in various sizes with professional-grade construction',
-    features: ['60" & 72" rounds', '6ft & 8ft rectangles', 'Cocktail tables', 'Folding tables'],
-    image: '/images/tables-lines.png',
-    featured: false
-  },
-  {
-    id: 6,
-    category: 'furniture',
-    name: 'Chairs & Seating',
-    description: 'Elegant seating options including chiavari, folding, and lounge furniture',
-    features: ['Chiavari chairs', 'Folding chairs', 'Lounge furniture', 'Cushions available'],
-    image: '/images/chairs.png',
-    featured: false
-  },
-  {
-    id: 8,
-    category: 'tableware',
-    name: 'Dishware & Glassware',
-    description: 'Complete place settings including plates, glasses, and flatware',
-    features: ['Dinner plates', 'Wine glasses', 'Flatware sets', 'Serving platters'],
-    image: '/images/dishware.png',
-    featured: false
-  },
-  {
-    id: 10,
-    category: 'entertainment',
-    name: 'Lighting & Ambiance',
-    description: 'Uplighting, string lights, and decorative lighting to set the perfect mood',
-    features: ['LED uplighting', 'String lights', 'Spotlights', 'Color options'],
-    image: '/images/lighting.png',
-    featured: false
-  },
-  {
     id: 11,
+    slug: 'dance-floors',
     category: 'structures',
     name: 'Dance Floors',
     description: 'Portable dance floors in various sizes with professional installation',
@@ -98,7 +119,58 @@ const inventoryItems = [
     featured: false
   },
   {
+    id: 18,
+    slug: 'inflatables',
+    category: 'structures',
+    name: 'Inflatables & Bounce Houses',
+    description: 'Fun and safe inflatable entertainment for kids and adults at any event',
+    features: ['Bouncy houses', 'Inflatable igloos', 'Party houses', 'Safe & clean'],
+    image: '/images/bigtent.png',
+    featured: false
+  },
+  {
+    id: 5,
+    slug: 'tables-linens',
+    category: 'furniture',
+    name: 'Tables & Linens',
+    description: 'Premium banquet tables in various sizes with professional-grade construction',
+    features: ['60" & 72" rounds', '6ft & 8ft rectangles', 'Cocktail tables', 'Cake stands'],
+    image: '/images/Tables_and_Linen_Image.png',
+    featured: false
+  },
+  {
+    id: 6,
+    slug: 'chairs-seating',
+    category: 'furniture',
+    name: 'Chairs & Seating',
+    description: 'Elegant seating options including chiavari, folding, throne, and lounge furniture',
+    features: ['Chiavari chairs', 'Throne chairs', 'Folding chairs', 'LED benches'],
+    image: '/images/Chairs_and_Seating_Image.png',
+    featured: false
+  },
+  {
+    id: 19,
+    slug: 'linens-covers',
+    category: 'furniture',
+    name: 'Linens & Covers',
+    description: 'Professional-grade tablecloths and chair covers in a variety of colours and sizes',
+    features: ['Multiple colours', 'All table sizes', 'Chair covers', 'LED furniture'],
+    image: '/images/Tables_and_Linen_Image.png',
+    featured: false
+  },
+  {
+    id: 8,
+    slug: 'dishware',
+    category: 'tableware',
+    name: 'Dishware & Glassware',
+    description: 'Complete place settings including plates, glasses, and flatware',
+    features: ['Dinner plates', 'Wine glasses', 'Flatware sets', 'Serving platters'],
+    image: '/images/dishware.png',
+    featured: false
+  },
+  {
     id: 12,
+    slug: 'serving-equipment',
     category: 'tableware',
     name: 'Serving Equipment',
     description: 'Chafing dishes, beverage dispensers, and serving utensils',
@@ -106,35 +178,21 @@ const inventoryItems = [
     image: '/images/serving.png',
     featured: false
   },
+  {
+    id: 10,
+    slug: 'lighting',
+    category: 'entertainment',
+    name: 'Lighting & Ambiance',
+    description: 'Uplighting, string lights, and decorative lighting to set the perfect mood',
+    features: ['LED uplighting', 'String lights', 'Spotlights', 'Color options'],
+    image: '/images/lighting.png',
+    featured: false
+  },
 ];
 
 export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
-
-  const handleCheckout = async (itemName: string, price: number) => {
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        body: JSON.stringify({ itemName, price })
-      })
-      const data = await res.json()
-      
-      if (!res.ok) {
-        alert(`Error: ${data.error}`)
-        return
-      }
-      
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        alert('No checkout URL received')
-      }
-    } catch (error) {
-      console.error('Checkout error:', error)
-      alert('Failed to start checkout. Please try again.')
-    }
-  }
 
   const filteredItems = selectedCategory === 'all' 
     ? inventoryItems 
@@ -273,12 +331,12 @@ export function InventoryPage() {
                     </ul>
                   </div>
 
-                  <button
-                    onClick={() => handleCheckout(item.name, 50000)}
-                    className="w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  <Link
+                    href={`/inventory/${(item as any).slug}`}
+                    className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                   >
-                    Checkout
-                  </button>
+                    View Details & Pricing
+                  </Link>
                 </div>
               </div>
             ))}

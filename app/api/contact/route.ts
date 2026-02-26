@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     const resend = new Resend(apiKey)
     const body = await request.json()
-    const { name, email, phone, eventType, eventDate, guestCount, message } = body
+    const { name, email, phone, eventType, eventDate, guestCount, message, addedItems } = body
 
     // Validate required fields
     if (!name || !email || !eventType || !message) {
@@ -40,6 +40,11 @@ export async function POST(request: NextRequest) {
         <p><strong>Event Type:</strong> ${eventType}</p>
         <p><strong>Event Date:</strong> ${eventDate || 'Not specified'}</p>
         <p><strong>Guest Count:</strong> ${guestCount || 'Not specified'}</p>
+        ${addedItems && addedItems.length > 0
+          ? `<p><strong>Items Requested:</strong></p><ul>${(addedItems as Array<{name: string, variants: string[]}>).map(
+              (item) => `<li><strong>${item.name}</strong>${item.variants && item.variants.length > 0 ? `<br/>${item.variants.join('<br/>')}` : ''}</li>`
+            ).join('')}</ul>`
+          : ''}
         <p><strong>Message:</strong></p>
         <p>${message}</p>
       `,

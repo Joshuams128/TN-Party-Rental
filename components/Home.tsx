@@ -4,18 +4,19 @@ import { useState, useEffect } from 'react';
 import { Tent, Armchair, UtensilsCrossed, Music, Sparkles, PartyPopper, Camera, Video, Phone, Mail, MapPin, Clock, Star, Award, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import Link from 'next/link';
+import ContactForm from './ContactForm';
 
 const heroImages = [
   {
-    src: '/images/bg1.png',
+    src: '/images/Home_Page_1.png',
     alt: 'Elegant party event'
   },
   {
-    src: '/images/bg2.png',
+    src: '/images/Home_Page_2.png',
     alt: 'Wedding reception setup'
   },
   {
-    src: '/images/bg3.png',
+    src: '/images/Home_Page_3.png',
     alt: 'Outdoor event celebration'
   }
 ];
@@ -25,7 +26,7 @@ const services = [
     icon: Camera,
     title: 'Mirror Photo Booth',
     description: 'Elegant full-length interactive mirror with touchscreen, voice guidance, and instant prints. A showstopper at any event.',
-    image: '/images/mirror.PNG',
+    image: '/images/mirrorp.png',
     objectPosition: 'center 40%',
     featured: true
   },
@@ -33,20 +34,20 @@ const services = [
     icon: Sparkles,
     title: 'Custom Balloon Decorations',
     description: 'Professional balloon artistry including arches, garlands, sculptures, and themed installations to transform your venue.',
-    image: '/images/6.5ft.jpg',
+    image: '/images/Custom_Balloon_Decorations_Image.PNG',
     featured: true
   },
   {
     icon: UtensilsCrossed,
     title: 'Tables & Linens',
     description: 'Premium tables, tablecloths, and runners in various colors and styles to match your event theme.',
-    image: '/images/tables-lines.png'
+    image: '/images/Tables_and_Linen_Image.png'
   },
   {
     icon: Armchair,
     title: 'Chairs & Seating',
     description: 'Comfortable and elegant seating options including chiavari chairs, folding chairs, and lounge furniture.',
-    image: '/images/chairs.png'
+    image: '/images/Chairs_and_Seating_Image.png'
   }
 ];
 
@@ -505,99 +506,7 @@ export function Home() {
               
               <div className="relative bg-white p-10 rounded-3xl border-2 border-[var(--color-gold)]/30 shadow-2xl">
                 <h3 className="text-3xl font-bold mb-8 text-black">Request a <span className="gold-gradient-text">Quote</span></h3>
-                <form className="space-y-5">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-gold)] focus:border-[var(--color-gold)] transition-all duration-300"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-gold)] focus:border-[var(--color-gold)] transition-all duration-300"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-gold)] focus:border-[var(--color-gold)] transition-all duration-300"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor="eventDate" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Event Date
-                      </label>
-                      <input
-                        type="date"
-                        id="eventDate"
-                        name="eventDate"
-                        className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-gold)] focus:border-[var(--color-gold)] transition-all duration-300"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="eventType" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Event Type
-                      </label>
-                      <select
-                        id="eventType"
-                        name="eventType"
-                        className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-gold)] focus:border-[var(--color-gold)] transition-all duration-300"
-                      >
-                        <option value="">Select event type</option>
-                        <option value="wedding">Wedding</option>
-                        <option value="corporate">Corporate Event</option>
-                        <option value="birthday">Birthday Party</option>
-                        <option value="graduation">Graduation</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Message *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      className="w-full px-5 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[var(--color-gold)] focus:border-[var(--color-gold)] transition-all duration-300"
-                      placeholder="Tell us about your event and what you need..."
-                      required
-                    ></textarea>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="group relative w-full bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-105 overflow-hidden"
-                  >
-                    <span className="relative z-10">Submit Request</span>
-                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                  </button>
-                </form>
+                <ContactForm />
               </div>
             </div>
           </div>

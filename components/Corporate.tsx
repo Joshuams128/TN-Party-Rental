@@ -122,7 +122,7 @@ export function Corporate() {
               <div className="relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-8 rounded-3xl border-2 border-[var(--color-gold)]/30">
                 <div className="relative h-80 w-full overflow-hidden rounded-2xl">
                   <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1511578314322-379afb476865?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBldmVudHxlbnwxfHx8fDE3Mzg0NDU1MDB8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                    src="/images/Corporate_Tab_Image.png"
                     alt="Corporate event setup"
                     className="object-cover"
                   />

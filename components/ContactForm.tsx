@@ -1,6 +1,20 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
+import { productDetails } from '@/lib/inventory-data'
+import { ChevronDown, X } from 'lucide-react'
+
+// Build option map: slug -> { name, options: string[] }
+const productOptions = productDetails.map((p) => ({
+  slug: p.slug,
+  name: p.name,
+  options:
+    p.pricingType === 'tiered'
+      ? (p.tiers ?? []).map((t) => `${t.label} – ${t.price}`)
+      : p.pricingType === 'variants'
+      ? (p.variants ?? []).map((v) => `${v.name} – ${v.price}`)
+      : [],
+}))
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -12,8 +26,40 @@ export default function ContactForm() {
     guestCount: '',
     message: '',
   })
+  const [selectedProduct, setSelectedProduct] = useState('')
+  const [customItemText, setCustomItemText] = useState('')
+  const [selectedVariants, setSelectedVariants] = useState<string[]>([])
+  const [addedItems, setAddedItems] = useState<{ id: string; name: string; variants: string[] }[]>([])
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+
+  const activeProduct = productOptions.find((p) => p.slug === selectedProduct)
+
+  const handleVariantToggle = (option: string) => {
+    setSelectedVariants((prev) =>
+      prev.includes(option) ? prev.filter((v) => v !== option) : [...prev, option]
+    )
+  }
+
+  const handleAddItem = () => {
+    if (!selectedProduct) return
+    const itemName = selectedProduct === 'other' ? customItemText : activeProduct?.name
+    if (!itemName) return
+
+    const newItem = {
+      id: `${selectedProduct}-${Date.now()}`,
+      name: itemName,
+      variants: selectedVariants,
+    }
+    setAddedItems([...addedItems, newItem])
+    setSelectedProduct('')
+    setCustomItemText('')
+    setSelectedVariants([])
+  }
+
+  const handleRemoveItem = (id: string) => {
+    setAddedItems(addedItems.filter((item) => item.id !== id))
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -33,7 +79,13 @@ export default function ContactForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          addedItems: addedItems.map((item) => ({
+            name: item.name,
+            variants: item.variants,
+          })),
+        }),
       })
 
       if (response.ok) {
@@ -47,6 +99,10 @@ export default function ContactForm() {
           guestCount: '',
           message: '',
         })
+        setSelectedProduct('')
+        setCustomItemText('')
+        setSelectedVariants([])
+        setAddedItems([])
       } else {
         const data = await response.json()
         setStatus('error')
@@ -72,7 +128,7 @@ export default function ContactForm() {
           required
           value={formData.name}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
           placeholder="John Doe"
         />
       </div>
@@ -89,7 +145,7 @@ export default function ContactForm() {
           required
           value={formData.email}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
           placeholder="john@example.com"
         />
       </div>
@@ -105,7 +161,7 @@ export default function ContactForm() {
           name="phone"
           value={formData.phone}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
           placeholder="(416) 555-1234"
         />
       </div>
@@ -121,7 +177,7 @@ export default function ContactForm() {
           required
           value={formData.eventType}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
         >
           <option value="">Select an event type</option>
           <option value="wedding">Wedding</option>
@@ -132,6 +188,143 @@ export default function ContactForm() {
           <option value="other">Other</option>
         </select>
       </div>
+
+      {/* Item of Interest */}
+      <div>
+        <label htmlFor="interestedItem" className="block text-sm font-medium text-gray-700 mb-1">
+          Item of Interest
+        </label>
+        <div className="relative">
+          <select
+            id="interestedItem"
+            value={selectedProduct}
+            onChange={(e) => {
+              setSelectedProduct(e.target.value)
+              setCustomItemText('')
+              setSelectedVariants([])
+            }}
+            className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent appearance-none text-black"
+          >
+            <option value="">Select an item (optional)</option>
+            {productOptions.map((p) => (
+              <option key={p.slug} value={p.slug}>{p.name}</option>
+            ))}
+            <option value="other">Other (please specify)</option>
+          </select>
+          <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+        </div>
+      </div>
+
+      {/* Custom item text input — shown when "Other" is selected */}
+      {selectedProduct === 'other' && (
+        <div>
+          <label htmlFor="customItem" className="block text-sm font-medium text-gray-700 mb-1">
+            Please describe the item *
+          </label>
+          <input
+            type="text"
+            id="customItem"
+            value={customItemText}
+            onChange={(e) => setCustomItemText(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
+            placeholder="e.g., custom decorations, special equipment, etc."
+          />
+        </div>
+      )}
+
+      {/* Variant multi-select — shown only when the selected product (not "other") has options */}
+      {activeProduct && activeProduct.options.length > 0 && selectedProduct !== 'other' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Options <span className="text-gray-400 font-normal">(choose all that apply)</span>
+          </label>
+          <div className="border border-gray-300 rounded-lg overflow-hidden divide-y divide-gray-100 max-h-64 overflow-y-auto">
+            {activeProduct.options.map((option) => {
+              const checked = selectedVariants.includes(option)
+              return (
+                <label
+                  key={option}
+                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
+                    checked ? 'bg-amber-50' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <div
+                    className={`w-5 h-5 shrink-0 rounded border-2 flex items-center justify-center transition-colors ${
+                      checked
+                        ? 'bg-[var(--color-gold)] border-[var(--color-gold)]'
+                        : 'border-gray-300'
+                    }`}
+                    onClick={() => handleVariantToggle(option)}
+                  >
+                    {checked && (
+                      <svg className="w-3 h-3 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                  <span
+                    className="text-sm text-gray-700 flex-1"
+                    onClick={() => handleVariantToggle(option)}
+                  >
+                    {option}
+                  </span>
+                </label>
+              )
+            })}
+          </div>
+          {selectedVariants.length > 0 && (
+            <p className="text-xs text-[var(--color-gold)] mt-2 font-medium">
+              {selectedVariants.length} option{selectedVariants.length > 1 ? 's' : ''} selected
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Add Item Button */}
+      {selectedProduct && (
+        <button
+          type="button"
+          onClick={handleAddItem}
+          className="w-full bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-4 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+        >
+          Add Item to Request
+        </button>
+      )}
+
+      {/* Added Items List */}
+      {addedItems.length > 0 && (
+        <div className="border-2 border-[var(--color-gold)]/30 rounded-lg overflow-hidden bg-amber-50">
+          <div className="bg-gradient-to-r from-[var(--color-gold)]/20 to-transparent px-4 py-3 border-b border-[var(--color-gold)]/20">
+            <p className="font-semibold text-gray-800 text-sm">
+              Items Requested ({addedItems.length})
+            </p>
+          </div>
+          <div className="divide-y divide-[var(--color-gold)]/20">
+            {addedItems.map((item) => (
+              <div key={item.id} className="px-4 py-3 flex items-start justify-between gap-3 hover:bg-amber-100/50 transition-colors">
+                <div className="flex-1">
+                  <p className="font-medium text-gray-800 text-sm">{item.name}</p>
+                  {item.variants.length > 0 && (
+                    <ul className="text-xs text-gray-600 mt-1 space-y-0.5">
+                      {item.variants.map((v, idx) => (
+                        <li key={idx} className="ml-2">• {v}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveItem(item.id)}
+                  className="shrink-0 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                  title="Remove item"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Event Date */}
       <div>
@@ -144,7 +337,7 @@ export default function ContactForm() {
           name="eventDate"
           value={formData.eventDate}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
         />
       </div>
 
@@ -159,7 +352,7 @@ export default function ContactForm() {
           name="guestCount"
           value={formData.guestCount}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
           placeholder="50"
           min="1"
         />
@@ -177,7 +370,7 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent text-black"
           placeholder="Tell us about your event and what you need..."
         />
       </div>
