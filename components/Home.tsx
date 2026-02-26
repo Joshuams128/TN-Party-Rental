@@ -467,7 +467,7 @@ export function Home() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Email</h3>
-                    <p className="text-gray-600 text-lg">truenorthpartyrentals@gmail.com</p>
+                    <p className="text-gray-600 text-sm sm:text-lg break-words">truenorthpartyrentals@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -492,9 +492,13 @@ export function Home() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Business Hours</h3>
-                    <p className="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p className="text-gray-600">Saturday: 10:00 AM - 4:00 PM</p>
-                    <p className="text-gray-600">Sunday: By Appointment</p>
+                    <p className="text-gray-600">Monday: 12–4 p.m.</p>
+                    <p className="text-gray-600">Tuesday: 12–4 p.m.</p>
+                    <p className="text-gray-600">Wednesday: 12–4 p.m.</p>
+                    <p className="text-gray-600">Thursday: 12–4 p.m.</p>
+                    <p className="text-gray-600">Friday: 12–4 p.m.</p>
+                    <p className="text-gray-600">Saturday: 10 a.m.–2 p.m.</p>
+                    <p className="text-gray-600">Sunday: Closed</p>
                   </div>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Tent, Armchair, Music, Sparkles, Utensils, Gift, X, Palette, Package } from 'lucide-react';
+import { Tent, Armchair, Music, Sparkles, Utensils, Gift, X, Palette, Package, Menu } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -193,6 +193,7 @@ const inventoryItems = [
 export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const filteredItems = selectedCategory === 'all' 
     ? inventoryItems 
@@ -251,7 +252,19 @@ export function InventoryPage() {
       {/* Category Filter */}
       <section className="py-12 bg-white sticky top-20 z-40 shadow-lg border-b-2 border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-4">
+          {/* Mobile Hamburger Menu */}
+          <div className="md:hidden flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-700">Filter by Category</h3>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+            >
+              <Menu size={24} className="text-gray-700" />
+            </button>
+          </div>
+
+          {/* Desktop Category Buttons */}
+          <div className="hidden md:flex flex-wrap justify-center gap-4">
             {categories.map((category) => (
               <button
                 key={category.id}
@@ -267,6 +280,29 @@ export function InventoryPage() {
               </button>
             ))}
           </div>
+
+          {/* Mobile Dropdown Menu */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden mt-4 space-y-2 bg-gray-50 rounded-lg p-4">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    setSelectedCategory(category.id);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
+                    selectedCategory === category.id
+                      ? 'bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <category.icon size={20} />
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
