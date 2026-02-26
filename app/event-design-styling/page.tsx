@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, CheckSquare, Clock, Sparkles, Users, MapPin, DollarSign, Lightbulb, ClipboardList, Phone } from 'lucide-react';
+import { Calendar, CheckSquare, Clock, Sparkles, Users, MapPin, DollarSign, Lightbulb, ClipboardList, Phone, Truck, Wrench } from 'lucide-react';
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -473,6 +473,122 @@ export default function EventPlanningPage() {
               <p className="text-gray-600 mb-4">Track RSVPs and manage your guest list efficiently</p>
               <button className="text-[var(--color-gold)] font-semibold hover:underline">Download →</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Delivery & Setup Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-6 text-black">
+              Delivery & <span className="gold-gradient-text">Setup</span>
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mx-auto mb-6"></div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Convenient delivery and professional setup services to get your event ready
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Delivery Section */}
+            <div className="bg-gradient-to-br from-[var(--color-gray-light)] to-white p-10 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500">
+              <div className="flex items-center mb-8">
+                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg">
+                  <Truck className="text-black" size={32} />
+                </div>
+                <h3 className="text-3xl font-bold text-black ml-4">Delivery Options</h3>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-xl border-l-4 border-[var(--color-gold)]">
+                  <h4 className="text-xl font-bold text-black mb-4">Standard Delivery — Varies by Location</h4>
+                  <div className="space-y-3 text-gray-700">
+                    <div className="flex justify-between items-center">
+                      <span>Scarborough</span>
+                      <span className="font-semibold text-[var(--color-gold)]">$50.00</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Markham, Pickering, Ajax, Whitby, Oshawa</span>
+                      <span className="font-semibold text-[var(--color-gold)]">$80.00</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Downtown Toronto, Etobicoke, Mississauga, Brampton</span>
+                      <span className="font-semibold text-[var(--color-gold)]">$125.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-sm text-gray-600 italic">
+                  Delivery fees are based on distance and location. Contact us for quotes on areas not listed.
+                </p>
+              </div>
+            </div>
+
+            {/* Setup Section */}
+            <div className="bg-gradient-to-br from-[var(--color-gold)]/10 to-white p-10 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500">
+              <div className="flex items-center mb-8">
+                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg">
+                  <Wrench className="text-black" size={32} />
+                </div>
+                <h3 className="text-3xl font-bold text-black ml-4">Setup & Breakdown</h3>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-xl border-l-4 border-[var(--color-gold)]">
+                  <h4 className="text-xl font-bold text-black mb-4">Labor On-Site</h4>
+                  <p className="text-gray-700 mb-4">
+                    Professional setup and breakdown services are customized to your event needs and requirements.
+                  </p>
+                  <div className="bg-[var(--color-gold)]/10 p-4 rounded-lg border border-[var(--color-gold)]/30">
+                    <p className="text-black font-semibold mb-2">Setup & Breakdown (Labor) — Request Quote</p>
+                    <p className="text-sm text-gray-700">
+                      Our team will work with you to provide a detailed quote based on your specific event requirements, including the scope of setup, number of items, and timeline.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <p className="text-sm text-blue-900">
+                    <span className="font-semibold">💡 Tip:</span> Include setup and breakdown in your initial consultation for the most accurate quote.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Info */}
+          <div className="mt-12 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white p-10 rounded-2xl border-2 border-[var(--color-gold)]/30">
+            <h3 className="text-2xl font-bold mb-4">What&apos;s Included in Delivery &amp; Setup?</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3">
+                <CheckSquare className="text-[var(--color-gold)] flex-shrink-0 mt-1" size={20} />
+                <span>Professional vehicle transport to your venue</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckSquare className="text-[var(--color-gold)] flex-shrink-0 mt-1" size={20} />
+                <span>Careful equipment handling and protection</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckSquare className="text-[var(--color-gold)] flex-shrink-0 mt-1" size={20} />
+                <span>Experienced setup crew (labor available)</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckSquare className="text-[var(--color-gold)] flex-shrink-0 mt-1" size={20} />
+                <span>Complete breakdown and cleanup after event</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Request Quote Button */}
+          <div className="mt-16 text-center">
+            <Link 
+              href="/#contact"
+              className="group relative inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
+            >
+              <span className="relative z-10">Request a Quote</span>
+              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+            </Link>
           </div>
         </div>
       </section>

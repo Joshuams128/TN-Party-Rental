@@ -149,16 +149,6 @@ const inventoryItems = [
     featured: false
   },
   {
-    id: 19,
-    slug: 'linens-covers',
-    category: 'furniture',
-    name: 'Linens & Covers',
-    description: 'Professional-grade tablecloths and chair covers in a variety of colours and sizes',
-    features: ['Multiple colours', 'All table sizes', 'Chair covers', 'LED furniture'],
-    image: '/images/Tables_and_Linen_Image.png',
-    featured: false
-  },
-  {
     id: 8,
     slug: 'dishware',
     category: 'tableware',
@@ -250,7 +240,7 @@ export function InventoryPage() {
       </section>
 
       {/* Category Filter */}
-      <section className="py-12 bg-white sticky top-20 z-40 shadow-lg border-b-2 border-gray-200">
+      <section className="py-6 bg-white sticky top-20 z-40 shadow-lg border-b-2 border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Hamburger Menu */}
           <div className="md:hidden flex items-center justify-between">
@@ -264,18 +254,18 @@ export function InventoryPage() {
           </div>
 
           {/* Desktop Category Buttons */}
-          <div className="hidden md:flex flex-wrap justify-center gap-4">
+          <div className="hidden md:flex flex-wrap justify-center gap-2">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`group flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 ${
+                className={`group flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
                   selectedCategory === category.id
                     ? 'bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                <category.icon size={20} />
+                <category.icon size={18} />
                 {category.name}
               </button>
             ))}

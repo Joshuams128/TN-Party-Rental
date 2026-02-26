@@ -4,8 +4,11 @@ import { useState, FormEvent } from 'react'
 import { productDetails } from '@/lib/inventory-data'
 import { ChevronDown, X } from 'lucide-react'
 
-// Build option map: slug -> { name, options: string[] }
-const productOptions = productDetails.map((p) => ({
+// ── Area of Interest categories ──────────────────────────────────────────
+// Each category has sub-items the user can pick from.
+
+// 1. Inventory Items – built from the detailed inventory data
+const inventorySubItems = productDetails.map((p) => ({
   slug: p.slug,
   name: p.name,
   options:
@@ -15,6 +18,39 @@ const productOptions = productDetails.map((p) => ({
       ? (p.variants ?? []).map((v) => `${v.name} – ${v.price}`)
       : [],
 }))
+
+// 2. Event Packages
+const eventPackageSubItems = [
+  { slug: 'pkg-intimate', name: 'Intimate Gathering', options: [] },
+  { slug: 'pkg-celebration', name: 'Celebration Package', options: [] },
+  { slug: 'pkg-premium-wedding', name: 'Premium Wedding', options: [] },
+  { slug: 'pkg-corporate-event', name: 'Corporate Event', options: [] },
+  { slug: 'pkg-ultimate', name: 'Ultimate Experience', options: [] },
+]
+
+// 3. Event Design & Styling
+const eventDesignSubItems = [
+  { slug: 'eds-consultation', name: 'Planning Consultation', options: [] },
+  { slug: 'eds-rental-planning', name: 'Rental Planning Package', options: [] },
+  { slug: 'eds-day-of', name: 'Day-Of Coordination', options: [] },
+  { slug: 'eds-delivery', name: 'Delivery & Setup', options: [] },
+]
+
+// 4. Corporate Packages
+const corporateSubItems = [
+  { slug: 'corp-essential', name: 'Essential Package', options: [] },
+  { slug: 'corp-professional', name: 'Professional Package', options: [] },
+  { slug: 'corp-executive', name: 'Executive Package', options: [] },
+]
+
+type SubItem = { slug: string; name: string; options: string[] }
+
+const interestCategories: { id: string; label: string; items: SubItem[] }[] = [
+  { id: 'inventory', label: 'Inventory Items', items: inventorySubItems },
+  { id: 'event-packages', label: 'Event Packages', items: eventPackageSubItems },
+  { id: 'event-design', label: 'Event Design & Styling', items: eventDesignSubItems },
+  { id: 'corporate', label: 'Corporate Packages', items: corporateSubItems },
+]
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -26,14 +62,16 @@ export default function ContactForm() {
     guestCount: '',
     message: '',
   })
+  const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedProduct, setSelectedProduct] = useState('')
   const [customItemText, setCustomItemText] = useState('')
   const [selectedVariants, setSelectedVariants] = useState<string[]>([])
-  const [addedItems, setAddedItems] = useState<{ id: string; name: string; variants: string[] }[]>([])
+  const [addedItems, setAddedItems] = useState<{ id: string; category: string; name: string; variants: string[] }[]>([])
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const activeProduct = productOptions.find((p) => p.slug === selectedProduct)
+  const activeCategory = interestCategories.find((c) => c.id === selectedCategory)
+  const activeProduct = activeCategory?.items.find((p) => p.slug === selectedProduct)
 
   const handleVariantToggle = (option: string) => {
     setSelectedVariants((prev) =>
@@ -45,9 +83,11 @@ export default function ContactForm() {
     if (!selectedProduct) return
     const itemName = selectedProduct === 'other' ? customItemText : activeProduct?.name
     if (!itemName) return
+    const categoryLabel = activeCategory?.label || 'Other'
 
     const newItem = {
       id: `${selectedProduct}-${Date.now()}`,
+      category: categoryLabel,
       name: itemName,
       variants: selectedVariants,
     }
@@ -82,6 +122,7 @@ export default function ContactForm() {
         body: JSON.stringify({
           ...formData,
           addedItems: addedItems.map((item) => ({
+            category: item.category,
             name: item.name,
             variants: item.variants,
           })),
@@ -99,6 +140,7 @@ export default function ContactForm() {
           guestCount: '',
           message: '',
         })
+        setSelectedCategory('')
         setSelectedProduct('')
         setCustomItemText('')
         setSelectedVariants([])
@@ -189,31 +231,59 @@ export default function ContactForm() {
         </select>
       </div>
 
-      {/* Item of Interest */}
+      {/* Area of Interest */}
       <div>
-        <label htmlFor="interestedItem" className="block text-sm font-medium text-gray-700 mb-1">
-          Item of Interest
+        <label htmlFor="interestCategory" className="block text-sm font-medium text-gray-700 mb-1">
+          Area of Interest
         </label>
         <div className="relative">
           <select
-            id="interestedItem"
-            value={selectedProduct}
+            id="interestCategory"
+            value={selectedCategory}
             onChange={(e) => {
-              setSelectedProduct(e.target.value)
+              setSelectedCategory(e.target.value)
+              setSelectedProduct('')
               setCustomItemText('')
               setSelectedVariants([])
             }}
             className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent appearance-none text-black"
           >
-            <option value="">Select an item (optional)</option>
-            {productOptions.map((p) => (
-              <option key={p.slug} value={p.slug}>{p.name}</option>
+            <option value="">Select an area (optional)</option>
+            {interestCategories.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.label}</option>
             ))}
-            <option value="other">Other (please specify)</option>
           </select>
           <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
         </div>
       </div>
+
+      {/* Sub-item dropdown – shown when a category is selected */}
+      {selectedCategory && (
+        <div>
+          <label htmlFor="interestedItem" className="block text-sm font-medium text-gray-700 mb-1">
+            Select Item / Package
+          </label>
+          <div className="relative">
+            <select
+              id="interestedItem"
+              value={selectedProduct}
+              onChange={(e) => {
+                setSelectedProduct(e.target.value)
+                setCustomItemText('')
+                setSelectedVariants([])
+              }}
+              className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent appearance-none text-black"
+            >
+              <option value="">Select an option</option>
+              {activeCategory?.items.map((p) => (
+                <option key={p.slug} value={p.slug}>{p.name}</option>
+              ))}
+              <option value="other">Other (please specify)</option>
+            </select>
+            <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          </div>
+        </div>
+      )}
 
       {/* Custom item text input — shown when "Other" is selected */}
       {selectedProduct === 'other' && (
@@ -303,6 +373,7 @@ export default function ContactForm() {
             {addedItems.map((item) => (
               <div key={item.id} className="px-4 py-3 flex items-start justify-between gap-3 hover:bg-amber-100/50 transition-colors">
                 <div className="flex-1">
+                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{item.category}</p>
                   <p className="font-medium text-gray-800 text-sm">{item.name}</p>
                   {item.variants.length > 0 && (
                     <ul className="text-xs text-gray-600 mt-1 space-y-0.5">

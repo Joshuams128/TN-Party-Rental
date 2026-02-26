@@ -212,8 +212,7 @@ export function PackagesPage() {
                       <pkg.icon className="text-white" size={24} />
                     </div>
                   </div>
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-2xl font-bold text-[var(--color-gold)]">{pkg.price}</span>
+                  <div className="flex items-baseline justify-start">
                     <span className="text-xs text-gray-400">{pkg.guests}</span>
                   </div>
                 </div>

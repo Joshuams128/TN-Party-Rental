@@ -286,36 +286,6 @@ export const productDetails: ProductDetail[] = [
     ],
     note: 'All prices in CAD. HST extra.',
   },
-  {
-    slug: 'linens-covers',
-    name: 'Linens & Covers',
-    description:
-      'Professional-grade tablecloths and chair covers in a variety of colours and sizes.',
-    category: 'furniture',
-    image: '/images/Tables_and_Linen_Image.png',
-    pricingType: 'variants',
-    variants: [
-      { name: 'Cruiser Table Cloths', price: '$4.00' },
-      { name: 'Rectangle Table Cloths 4ft', price: '$10.00' },
-      { name: 'Rectangle Table Cloths 6ft', price: '$13.00' },
-      { name: 'Rectangle Table Cloths 8ft', price: '$16.00' },
-      { name: 'Round Table Cloths (White)', price: '$16.00' },
-      { name: 'Round Table Cloths (Red)', price: '$13.00' },
-      {
-        name: 'Spandex Chair Covers (90" × 143")',
-        price: '$3.00 each',
-      },
-      { name: 'LED Lounge Table', price: '$60.00' },
-      { name: 'LED Bar', price: '$250.00' },
-    ],
-    features: [
-      'Multiple colours',
-      'All table sizes',
-      'Chair covers',
-      'LED furniture',
-    ],
-    note: 'All prices in CAD. HST extra.',
-  },
 
   // ─── STRUCTURES ───────────────────────────────────────────────────────────
   {
