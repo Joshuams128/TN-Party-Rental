@@ -13,7 +13,7 @@ const categories = [
   { id: 'structures', name: 'Structures', icon: Tent },
   { id: 'furniture', name: 'Furniture', icon: Armchair },
   { id: 'tableware', name: 'Tableware', icon: Utensils },
-  { id: 'entertainment', name: 'Entertainment', icon: Music },
+  { id: 'entertainment', name: 'TN Social', icon: Music },
 ];
 
 const inventoryItems = [
@@ -42,9 +42,9 @@ const inventoryItems = [
     id: 3,
     slug: 'custom-balloons',
     category: 'signature',
-    name: 'Custom Balloon Decorations',
-    description: 'Professional balloon artistry including arches, garlands, columns, and themed sculptures',
-    features: ['Balloon arches', 'Garlands', 'Sculptures', 'Themed designs'],
+    name: 'Balloon Garlands',
+    description: 'Professional balloon garland artistry in various sizes for stunning event décor',
+    features: ['Custom colors', 'Professional installation', 'Long-lasting design', 'Theme coordination'],
     image: '/images/Custom_Balloon_Decorations_Image.PNG',
     featured: true
   },

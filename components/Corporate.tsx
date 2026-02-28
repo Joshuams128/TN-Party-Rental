@@ -32,7 +32,7 @@ const packages = [
       'Advanced audio/visual system',
       'Podium & presentation equipment',
       'Cocktail tables for networking',
-      'Custom balloon decorations',
+      'Balloon garlands',
       'Setup, coordination & breakdown'
     ],
     popular: true

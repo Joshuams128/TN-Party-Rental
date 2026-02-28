@@ -48,7 +48,7 @@ const packages = [
     addons: [
       '360° Camera Experience (+$500)',
       'Mirror Photo Booth (+$600)',
-      'Custom balloon arch (+$300)',
+      'Balloon garland arch (+$300)',
     ]
   },
   {
@@ -77,7 +77,7 @@ const packages = [
     ],
     addons: [
       '360° Camera + Mirror Bundle (+$900)',
-      'Custom balloon installation (+$500)',
+      'Balloon garland installation (+$500)',
       'Upgraded lighting (+$300)',
     ]
   },
@@ -125,7 +125,7 @@ const packages = [
       'Premium sound system',
       '360° Camera Experience INCLUDED',
       'Mirror Photo Booth INCLUDED',
-      'Custom balloon installation INCLUDED',
+      'Balloon garland installation INCLUDED',
       'Dance floor (any size)',
       'Lounge areas & cocktail spaces',
       'Full bar setup',
@@ -283,11 +283,6 @@ export function PackagesPage() {
                   <span className="relative z-10">Build Your Custom Package</span>
                   <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </Link>
-                <Link 
-                  href="/event-design-styling"
-                  className="group relative glass-effect text-white border-2 border-[var(--color-gold)] px-10 py-4 rounded-full text-base font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-110"
-                >
-                  View Planning Services
                 </Link>
               </div>
             </div>

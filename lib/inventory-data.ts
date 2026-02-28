@@ -73,21 +73,25 @@ export const productDetails: ProductDetail[] = [
   },
   {
     slug: 'custom-balloons',
-    name: 'Custom Balloon Decorations',
+    name: 'Balloon Garlands',
     description:
-      'Professional balloon artistry including arches, garlands, columns, and themed sculptures.',
+      'Professional balloon garland artistry in various sizes for stunning event décor.',
     category: 'signature',
     image: '/images/Custom_Balloon_Decorations_Image.PNG',
-    pricingType: 'quote',
-    features: [
-      'Balloon arches',
-      'Garlands',
-      'Sculptures',
-      'Themed designs',
-      'Stuffed balloons',
-      'Balloon bouquets',
+    pricingType: 'variants',
+    variants: [
+      { name: 'Mini Garland — 7 ft', price: '$150.00' },
+      { name: 'Classic Garland — 10 ft', price: '$250.00' },
+      { name: 'Deluxe Garland — 12 ft', price: '$350.00' },
+      { name: 'Luxury Garland — 14–16 ft', price: '$450.00' },
     ],
-    note: 'Custom pricing based on size, style, and quantity. Contact us for a quote.',
+    features: [
+      'Custom colors',
+      'Professional installation',
+      'Long-lasting design',
+      'Theme coordination',
+    ],
+    note: 'HST extra. Delivery & setup included.',
   },
 
   // ─── PACKAGES ─────────────────────────────────────────────────────────────

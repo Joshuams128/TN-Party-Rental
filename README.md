@@ -23,7 +23,6 @@ A modern, responsive website for True North Party Rentals - a premier event rent
 - **Home** (`/`) - Hero section, services overview, CTAs
 - **Inventory** (`/inventory`) - Available rental items and equipment
 - **Packages** (`/packages`) - Pre-curated event packages
-- **Event Design and Styling** (`/event-design-styling`) - Event design and styling services
 - **Corporate** (`/corporate`) - Corporate event solutions
 - **About** (`/about`) - Company story and team
 - **Contact** (`/contact`) - Contact form with location info
@@ -99,8 +98,6 @@ TN-Party-Rental/
 │   │   └── page.tsx              # Contact page
 │   ├── corporate/
 │   │   └── page.tsx              # Corporate events page
-│   ├── event-design-styling/
-│   │   └── page.tsx              # Event design and styling page
 │   ├── inventory/
 │   │   └── page.tsx              # Inventory page
 │   ├── packages/

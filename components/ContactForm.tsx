@@ -28,15 +28,7 @@ const eventPackageSubItems = [
   { slug: 'pkg-ultimate', name: 'Ultimate Experience', options: [] },
 ]
 
-// 3. Event Design & Styling
-const eventDesignSubItems = [
-  { slug: 'eds-consultation', name: 'Planning Consultation', options: [] },
-  { slug: 'eds-rental-planning', name: 'Rental Planning Package', options: [] },
-  { slug: 'eds-day-of', name: 'Day-Of Coordination', options: [] },
-  { slug: 'eds-delivery', name: 'Delivery & Setup', options: [] },
-]
-
-// 4. Corporate Packages
+// 3. Corporate Packages
 const corporateSubItems = [
   { slug: 'corp-essential', name: 'Essential Package', options: [] },
   { slug: 'corp-professional', name: 'Professional Package', options: [] },
@@ -48,7 +40,6 @@ type SubItem = { slug: string; name: string; options: string[] }
 const interestCategories: { id: string; label: string; items: SubItem[] }[] = [
   { id: 'inventory', label: 'Inventory Items', items: inventorySubItems },
   { id: 'event-packages', label: 'Event Packages', items: eventPackageSubItems },
-  { id: 'event-design', label: 'Event Design & Styling', items: eventDesignSubItems },
   { id: 'corporate', label: 'Corporate Packages', items: corporateSubItems },
 ]
 

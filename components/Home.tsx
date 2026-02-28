@@ -32,7 +32,7 @@ const services = [
   },
   {
     icon: Sparkles,
-    title: 'Custom Balloon Decorations',
+    title: 'Balloon Garlands',
     description: 'Professional balloon artistry including arches, garlands, sculptures, and themed installations to transform your venue.',
     image: '/images/Custom_Balloon_Decorations_Image.PNG',
     featured: true
@@ -191,7 +191,7 @@ export function Home() {
             Stylish Event Decor & Experiences Across the GTA
           </p>
           <p className="text-lg sm:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-300 animate-hero-fade animation-delay-800">
-            Luxury event rentals, photo booths & custom balloon decor for unforgettable celebrations.
+            Luxury event rentals, photo booths & balloon garlands for unforgettable celebrations.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8 animate-hero-fade animation-delay-1000">
@@ -410,7 +410,7 @@ export function Home() {
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-[var(--color-gold)]">Unique Offerings</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Stand out with our exclusive 360° camera, mirror booth, and custom balloon artistry that wow your guests.
+                  Stand out with our exclusive 360° camera, mirror booth, and professional balloon garlands that wow your guests.
                 </p>
               </div>
             </div>
@@ -498,11 +498,7 @@ export function Home() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Business Hours</h3>
-                    <p className="text-gray-600">Monday: 12–4 p.m.</p>
-                    <p className="text-gray-600">Tuesday: 12–4 p.m.</p>
-                    <p className="text-gray-600">Wednesday: 12–4 p.m.</p>
-                    <p className="text-gray-600">Thursday: 12–4 p.m.</p>
-                    <p className="text-gray-600">Friday: 12–4 p.m.</p>
+                    <p className="text-gray-600">Monday–Friday: 12–4 p.m.</p>
                     <p className="text-gray-600">Saturday: 10 a.m.–2 p.m.</p>
                     <p className="text-gray-600">Sunday: Closed</p>
                   </div>

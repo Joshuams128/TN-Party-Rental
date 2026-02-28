@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'True North Party Rentals | Event Rentals in Scarborough',
-  description: 'True North Party Rentals - Premier event rental company in Scarborough. Quality equipment, packages, and event design and styling services for weddings, corporate events, and parties.',
-  keywords: ['party rentals', 'event rentals', 'Scarborough', 'wedding rentals', 'corporate events', 'event design', 'event styling'],
+  description: 'True North Party Rentals - Premier event rental company in Scarborough. Quality equipment and packages for weddings, corporate events, and parties.',
+  keywords: ['party rentals', 'event rentals', 'Scarborough', 'wedding rentals', 'corporate events'],
   icons: {
     icon: '/images/logo.png',
     apple: '/images/logo.png',

@@ -72,7 +72,7 @@ export function About() {
                 </p>
                 
                 <p className="text-lg text-gray-400 leading-relaxed">
-                  We are a GTA-based, family-run business focused on creating memorable event experiences through modern decor, custom balloon designs, and interactive photo booth services. Every setup is handled with care, professionalism, and attention to detail — because we understand these moments matter. Whether it&apos;s a child&apos;s first birthday, a baby shower, a wedding, or a milestone celebration, these are memories people keep forever.
+                  We are a GTA-based, family-run business focused on creating memorable event experiences through modern decor, balloon garlands, and interactive photo booth services. Every setup is handled with care, professionalism, and attention to detail — because we understand these moments matter. Whether it’s a child’s first birthday, a baby shower, a wedding, or a milestone celebration, these are memories people keep forever.
                 </p>
                 
                 <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
