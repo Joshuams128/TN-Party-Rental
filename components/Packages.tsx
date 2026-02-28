@@ -283,7 +283,6 @@ export function PackagesPage() {
                   <span className="relative z-10">Build Your Custom Package</span>
                   <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </Link>
-                </Link>
               </div>
             </div>
           </div>
