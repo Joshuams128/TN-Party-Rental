@@ -32,14 +32,14 @@ export const productDetails: ProductDetail[] = [
     slug: '360-camera',
     name: '360° Camera Experience',
     description:
-      'State-of-the-art 360° slow-motion video booth with custom backdrops and instant social sharing.',
+      'State-of-the-art 360° slow-motion video booth with custom backdrops and instant social sharing.\n\nCapture every angle with our 360 Camera Photo Booth, delivering smooth HD slow-motion videos perfect for parties, weddings, corporate events, and celebrations. Guests stand on the platform while the camera rotates to create high-energy, share-worthy clips. Book our 360 camera rental in the GTA for unforgettable, modern event content.',
     category: 'signature',
     image: '/images/360.PNG',
     pricingType: 'tiered',
     tiers: [
-      { label: '2 Hours', price: '$350.00' },
-      { label: '3 Hours', price: '$425.00' },
-      { label: '4 Hours', price: '$480.00' },
+      { label: '2 Hours', price: '$360.00' },
+      { label: '3 Hours', price: '$475.00' },
+      { label: '4 Hours', price: '$575.00' },
     ],
     features: [
       'Slow-motion capture',
@@ -59,9 +59,9 @@ export const productDetails: ProductDetail[] = [
     objectPosition: 'center 40%',
     pricingType: 'tiered',
     tiers: [
-      { label: '2 Hours', price: '$350.00' },
-      { label: '3 Hours', price: '$450.00' },
-      { label: '4 Hours', price: '$550.00' },
+      { label: '2 Hours', price: '$360.00' },
+      { label: '3 Hours', price: '$475.00' },
+      { label: '4 Hours', price: '$575.00' },
     ],
     features: [
       'Touchscreen interface',
@@ -72,6 +72,27 @@ export const productDetails: ProductDetail[] = [
     note: 'HST extra. Delivery & setup included.',
   },
   {
+    slug: 'photo-booth-add-ons',
+    name: 'Photo Booth Add-ons',
+    description:
+      'Exclusive premium add-ons to enhance your luxury photo booth & 360 experiences.',
+    category: 'signature',
+    image: '/images/eventspace.jpeg',
+    pricingType: 'variants',
+    variants: [
+      { name: 'Luxury White Rose Wall', price: '$200.00', image: '/images/secondary/whiterose.png' },
+      { name: 'Signature Red Rose Wall', price: '$200.00', image: '/images/secondary/redrose.png' },
+      { name: 'Digital Print with Logo', price: '$80.00', image: '/images/secondary/yourlogohere.png' },
+    ],
+    features: [
+      'Premium backdrops',
+      'Custom branding',
+      'Professional installation',
+      'Instant digital sharing',
+    ],
+    note: 'HST extra. Perfect complement to any photo booth experience.',
+  },
+  {
     slug: 'custom-balloons',
     name: 'Balloon Garlands',
     description:
@@ -80,10 +101,10 @@ export const productDetails: ProductDetail[] = [
     image: '/images/Custom_Balloon_Decorations_Image.PNG',
     pricingType: 'variants',
     variants: [
-      { name: 'Mini Garland — 7 ft', price: '$150.00' },
-      { name: 'Classic Garland — 10 ft', price: '$250.00' },
-      { name: 'Deluxe Garland — 12 ft', price: '$350.00' },
-      { name: 'Luxury Garland — 14–16 ft', price: '$450.00' },
+      { name: 'Mini Garland — 7 ft', price: '$150.00', image: '/images/secondary/8ftgarland.png', description: 'Create a picture-perfect setup with our 7-Foot Mini Balloon Garland, available for rent across the Greater Toronto Area (GTA)! Featuring 2 beautiful balloon colours, this garland is perfect for weddings, birthdays, baby showers, and corporate events that need a clean and modern look.' },
+      { name: 'Classic Garland — 10 ft', price: '$250.00', image: '/images/secondary/10lux.png', description: 'Create a picture-perfect setup with our 10-Foot Basic Balloon Arch, available for rent across the Greater Toronto Area (GTA)! Featuring 2 beautiful balloon colours, this arch is perfect for weddings, birthdays, baby showers, and corporate events that need a clean and modern look. Includes 2 balloon colours, 10-foot organic balloon arch, and delivery, setup, and teardown available anywhere in the GTA.' },
+      { name: 'Deluxe Garland — 12 ft', price: '$350.00', image: '/images/secondary/12ftballoon.png', description: '🎈✨ 12-Foot Premium Balloon Arch – Event Rentals in the GTA. Add a show-stopping touch to your celebration with our 12-Foot Premium Balloon Arch, available for rent throughout the GTA! 💎 Crafted with 3 luxurious balloon colours, this elegant arch creates a perfect focal point for stages, entrances, and photo walls. Includes 3 premium balloon colours, 12-foot organic balloon arch with professional layout, and delivery, setup, and teardown available anywhere in the GTA.' },
+      { name: 'Luxury Garland — 14–16 ft', price: '$450.00', image: '/images/secondary/16ftballoon.png', description: '🎈✨ 14-16-Foot Premium Balloon Arch – Event Rentals in the GTA. Go big with our 14-16-Foot Premium Balloon Arch, available for rent across the Greater Toronto Area (GTA)! 💖 Designed with 3 premium balloon colours, this oversized, elegant arch is perfect for weddings, outdoor festivals, grand openings, and large-scale events.' },
     ],
     features: [
       'Custom colors',
@@ -101,20 +122,24 @@ export const productDetails: ProductDetail[] = [
     description:
       'Curated all-in-one event packages for proposals, celebrations, and special occasions.',
     category: 'packages',
-    image: '/images/Home_Page_1.png',
+    image: '/images/ballonsbg.png',
     pricingType: 'variants',
     variants: [
-      { name: '"Will You Marry Me" Package', price: '$650.00' },
-      { name: 'Proposal Package', price: '$400.00' },
+      { name: '"Will You Marry Me" Package', price: '$650.00', image: '/images/secondary/marry.png', description: 'These "Will You Marry Me" White Marquee Letters include large 4-foot freestanding letters with warm LED lighting, plus an optional marquee ring or red rose heart add-on, creating a bright, romantic proposal display for events across the GTA.' },
+      { name: 'Proposal Package', price: '$400.00', image: '/images/secondary/proposal.jpg', description: '💐 What This Package Includes: ✨ Red Rose Heart Backdrop, ✨ "Will You Marry Me?" LED Neon Sign, ✨ Red Carpet Walkway Runner, ✨ Hurricane Vases with LED Candles (aisle setup), ✨ Romantic Ambient Lighting. Note: Fresh flowers, rose petals, floral centerpieces, and delivery/setup/takedown are not included.' },
       {
         name: 'Red Heart + "Will You Marry Me" Marquee Letters',
         price: '$750.00',
+        image: '/images/secondary/redheart.png',
+        description: '💡 Features: • Complete "WILL YOU MARRY ME" marquee letter setup • Red rose heart backdrop',
       },
       {
         name: 'Marquee Heart + "Will You Marry Me" Marquee Letters',
         price: '$700.00',
+        image: '/images/secondary/MarqueeHeart.png',
+        description: '💡 Features: • Stunning white marquee letters spelling out "WILL YOU MARRY ME" • Beautiful marquee heart or ring (your choice!) that glows with warm LED lighting for the perfect romantic touch',
       },
-      { name: 'LED Furniture Décor Package', price: '$750.00' },
+      { name: 'LED Furniture Décor Package', price: '$750.00', image: '/images/secondary/ledL.png', description: 'This LED Lounge Furniture Package includes LED curved benches, LED cruiser tables, and LED podium barstools, featuring multicolor LED lighting, cordless battery-powered design, and weather-resistant materials.' },
     ],
     features: ['All-inclusive setup', 'Premium décor', 'Delivery & breakdown'],
     note: 'HST extra where applicable.',
@@ -130,11 +155,11 @@ export const productDetails: ProductDetail[] = [
     image: '/images/eventspace.jpeg',
     pricingType: 'variants',
     variants: [
-      { name: 'White Circle Backdrop Package', price: '$200.00' },
-      { name: 'Red Rose Backdrop Package', price: '$250.00' },
-      { name: 'White Rose Backdrop Package', price: '$250.00' },
-      { name: 'Gold Metal Backdrop Package', price: '$200.00' },
-      { name: 'Grass Backdrop Package', price: '$250.00' },
+      { name: 'White Circle Backdrop Package', price: '$200.00', image: '/images/secondary/whitebackdrop.png',         description: 'This White Circle Backdrop Package includes circular backdrop stands with premium white covers, creating a clean and elegant base for customizable event décor across the GTA.' },
+      { name: 'Red Rose Backdrop Package', price: '$250.00', image: '/images/secondary/redbackdrop.png', description: 'This Red Rose Backdrop Package includes a premium backdrop stand and a red rose backdrop panel with rich, realistic floral textures, creating a luxurious and romantic display for events across the GTA.' },
+      { name: 'White Rose Backdrop Package', price: '$250.00', image: '/images/secondary/whiterose2.jpeg', description: 'This White Rose Backdrop Package includes a premium backdrop stand and a white rose floral panel with realistic high-quality blooms, creating an elegant and timeless display for events across the GTA.' },
+      { name: 'Gold Metal Backdrop Package', price: '$200.00', image: '/images/secondary/goldbackdrop.png', description: 'This Gold Metal Backdrop package includes a premium gold metal stand with a sleek reflective finish, creating a modern and elegant base for event décor across the GTA.' },
+      { name: 'Grass Backdrop Package', price: '$250.00', image: '/images/secondary/grassbackdrop.png', description: 'This Grass Backdrop Package includes a premium grass wall panel with a vibrant green finish and a backdrop stand for secure, professional setup—perfect for natural-themed décor across the GTA.' },
       { name: 'Summer Floral Backdrop Package', price: '$200.00' },
       { name: 'Shimmer Panel Backdrop Package', price: '$200.00' },
       { name: 'Frozen Backdrop Package', price: '$200.00' },
@@ -256,7 +281,7 @@ export const productDetails: ProductDetail[] = [
       { name: 'High Back Throne Chair (Gold)', price: '$150.00' },
       { name: 'High Back Throne Chair (Silver)', price: '$150.00' },
       { name: 'Boho Peacock Chair', price: '$100.00' },
-      { name: 'LED Curved Benches', price: '$55.00' },
+      { name: 'Glow Furniture', price: '$55.00' },
     ],
     features: [
       'Chiavari chairs',
@@ -349,58 +374,6 @@ export const productDetails: ProductDetail[] = [
       'Multiple styles',
     ],
     note: 'All prices in CAD. HST extra. Delivery & setup included.',
-  },
-
-  // ─── TABLEWARE ────────────────────────────────────────────────────────────
-  {
-    slug: 'dishware',
-    name: 'Dishware & Glassware',
-    description:
-      'Complete place settings including plates, glasses, and flatware for a polished table presentation.',
-    category: 'tableware',
-    image: '/images/dishware.png',
-    pricingType: 'quote',
-    features: [
-      'Dinner plates',
-      'Wine glasses',
-      'Flatware sets',
-      'Serving platters',
-    ],
-    note: 'Pricing based on quantity. Contact us for a custom quote.',
-  },
-  {
-    slug: 'serving-equipment',
-    name: 'Serving Equipment',
-    description:
-      'Chafing dishes, beverage dispensers, and serving utensils to keep your food service seamless.',
-    category: 'tableware',
-    image: '/images/serving.png',
-    pricingType: 'quote',
-    features: [
-      'Chafing dishes',
-      'Beverage dispensers',
-      'Serving utensils',
-      'Coolers',
-    ],
-    note: 'Pricing based on quantity and duration. Contact us for a quote.',
-  },
-
-  // ─── ENTERTAINMENT ────────────────────────────────────────────────────────
-  {
-    slug: 'lighting',
-    name: 'Lighting & Ambiance',
-    description:
-      'Uplighting, string lights, and decorative lighting to set the perfect mood for your event.',
-    category: 'entertainment',
-    image: '/images/lighting.png',
-    pricingType: 'quote',
-    features: [
-      'LED uplighting',
-      'String lights',
-      'Spotlights',
-      'Color options',
-    ],
-    note: 'Pricing based on venue size and lighting requirements. Contact us for a quote.',
   },
 ];
 

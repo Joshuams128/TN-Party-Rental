@@ -55,7 +55,7 @@ const inventoryItems = [
     name: 'Premium Packages',
     description: 'Curated all-in-one event packages for proposals, celebrations, and special occasions',
     features: ['Proposal packages', 'LED décor packages', 'Marquee setups', 'All-inclusive'],
-    image: '/images/Home_Page_1.png',
+    image: '/images/ballonsbg.png',
     featured: true
   },
   {
@@ -144,38 +144,8 @@ const inventoryItems = [
     category: 'furniture',
     name: 'Chairs & Seating',
     description: 'Elegant seating options including chiavari, folding, throne, and lounge furniture',
-    features: ['Chiavari chairs', 'Throne chairs', 'Folding chairs', 'LED benches'],
+    features: ['Chiavari chairs', 'Throne chairs', 'Folding chairs', 'Glow Furniture'],
     image: '/images/Chairs_and_Seating_Image.png',
-    featured: false
-  },
-  {
-    id: 8,
-    slug: 'dishware',
-    category: 'tableware',
-    name: 'Dishware & Glassware',
-    description: 'Complete place settings including plates, glasses, and flatware',
-    features: ['Dinner plates', 'Wine glasses', 'Flatware sets', 'Serving platters'],
-    image: '/images/dishware.png',
-    featured: false
-  },
-  {
-    id: 12,
-    slug: 'serving-equipment',
-    category: 'tableware',
-    name: 'Serving Equipment',
-    description: 'Chafing dishes, beverage dispensers, and serving utensils',
-    features: ['Chafing dishes', 'Beverage dispensers', 'Serving utensils', 'Coolers'],
-    image: '/images/serving.png',
-    featured: false
-  },
-  {
-    id: 10,
-    slug: 'lighting',
-    category: 'entertainment',
-    name: 'Lighting & Ambiance',
-    description: 'Uplighting, string lights, and decorative lighting to set the perfect mood',
-    features: ['LED uplighting', 'String lights', 'Spotlights', 'Color options'],
-    image: '/images/lighting.png',
     featured: false
   },
 ];

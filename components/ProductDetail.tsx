@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ChevronLeft, Phone, Mail, Tag, ImageIcon } from 'lucide-react';
 import type { ProductDetail } from '@/lib/inventory-data';
+import { getProductBySlug } from '@/lib/inventory-data';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
 
@@ -62,6 +63,16 @@ export function ProductDetailPage({ product }: Props) {
                 <span className="gold-gradient-text">{product.name}</span>
               </h1>
               <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mt-4" />
+              {product.slug === '360-camera' && (
+                <p className="max-w-2xl mt-6 text-lg text-gray-300">
+                  Capture every angle with our 360 Camera Photo Booth, delivering smooth HD slow-motion videos perfect for parties, weddings, corporate events, and celebrations. Guests stand on the platform while the camera rotates to create high-energy, share-worthy clips. Book our 360 camera rental in the GTA for unforgettable, modern event content.
+                </p>
+              )}
+              {product.slug === 'mirror-photobooth' && (
+                <p className="max-w-2xl mt-6 text-lg text-gray-300">
+                  This Full Body Mirror Photo Booth features a touchscreen interactive mirror display, full-body photo capture, and custom digital overlays with instant prints, creating a modern and engaging photo experience for events across the GTA.
+                </p>
+              )}
             </div>
 
             {/* Image */}
@@ -129,41 +140,50 @@ export function ProductDetailPage({ product }: Props) {
 
           {/* Tiered pricing */}
           {product.pricingType === 'tiered' && product.tiers && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              {product.tiers.map((tier, i) => (
-                <div
-                  key={tier.label}
-                  className={`relative rounded-2xl border-2 p-8 text-center shadow-smooth hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
-                    i === 1
-                      ? 'border-[var(--color-gold)] bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white'
-                      : 'border-[var(--color-gold)]/40 bg-white text-black'
-                  }`}
-                >
-                  {i === 1 && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-1 rounded-full">
-                      POPULAR
-                    </div>
-                  )}
-                  <p className={`text-sm font-semibold mb-2 ${i === 1 ? 'text-[var(--color-gold)]' : 'text-gray-500'}`}>
-                    {tier.label}
-                  </p>
-                  <p className="text-4xl font-bold mb-2">{tier.price}</p>
-                  {tier.note && (
-                    <p className={`text-xs mt-2 ${i === 1 ? 'text-gray-300' : 'text-gray-500'}`}>{tier.note}</p>
-                  )}
-                  <button
-                    onClick={handleQuoteClick}
-                    className={`mt-6 w-full py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105 ${
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                {product.tiers.map((tier, i) => (
+                  <div
+                    key={tier.label}
+                    className={`relative rounded-2xl border-2 p-8 text-center shadow-smooth hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
                       i === 1
-                        ? 'bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black hover:shadow-xl'
-                        : 'border-2 border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-black'
+                        ? 'border-[var(--color-gold)] bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white'
+                        : 'border-[var(--color-gold)]/40 bg-white text-black'
                     }`}
                   >
-                    Book Now
-                  </button>
+                    {i === 1 && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-1 rounded-full">
+                        POPULAR
+                      </div>
+                    )}
+                    <p className={`text-sm font-semibold mb-2 ${i === 1 ? 'text-[var(--color-gold)]' : 'text-gray-500'}`}>
+                      {tier.label}
+                    </p>
+                    <p className="text-4xl font-bold mb-2">{tier.price}</p>
+                    {tier.note && (
+                      <p className={`text-xs mt-2 ${i === 1 ? 'text-gray-300' : 'text-gray-500'}`}>{tier.note}</p>
+                    )}
+                    <button
+                      onClick={handleQuoteClick}
+                      className={`mt-6 w-full py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105 ${
+                        i === 1
+                          ? 'bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black hover:shadow-xl'
+                          : 'border-2 border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-black'
+                      }`}
+                    >
+                      Book Now
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {product.slug === '360-camera' && (
+                <div className="max-w-3xl mx-auto mt-10 text-center">
+                  <p className="text-lg text-gray-700 bg-white rounded-xl shadow p-6">
+                    Capture every angle with our 360 Camera Photo Booth, delivering smooth HD slow-motion videos perfect for parties, weddings, corporate events, and celebrations. Guests stand on the platform while the camera rotates to create high-energy, share-worthy clips. Book our 360 camera rental in the GTA for unforgettable, modern event content.
+                  </p>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
 
           {/* Variants pricing — card grid */}
@@ -172,11 +192,11 @@ export function ProductDetailPage({ product }: Props) {
               {product.variants.map((variant) => (
                 <div
                   key={variant.name}
-                  className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)]"
+                  className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col"
                 >
                   {/* Image area */}
                   <div
-                    className="h-52 overflow-hidden relative cursor-pointer"
+                    className="h-52 overflow-hidden relative cursor-pointer bg-black"
                     onClick={() =>
                       variant.image
                         ? setSelectedImage({ src: variant.image, alt: variant.name })
@@ -188,7 +208,7 @@ export function ProductDetailPage({ product }: Props) {
                         <ImageWithFallback
                           src={variant.image}
                           alt={variant.name}
-                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          className="w-full h-full object-contain p-2 transform group-hover:scale-110 transition-transform duration-700"
                         />
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                           <h3 className="text-white text-base font-bold leading-tight">{variant.name}</h3>
@@ -203,13 +223,14 @@ export function ProductDetailPage({ product }: Props) {
                   </div>
 
                   {/* Card body */}
-                  <div className="p-5">
+                  <div className="p-5 flex flex-col flex-grow">
                     {!variant.image && (
                       <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
                     )}
                     {variant.description && (
                       <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
                     )}
+                    <div className="flex-grow" />
                     <div className="flex items-center justify-between gap-3 mt-2">
                       <span className="text-2xl font-bold text-[var(--color-gold)] whitespace-nowrap">{variant.price}</span>
                       <button
@@ -226,6 +247,86 @@ export function ProductDetailPage({ product }: Props) {
           )}
         </div>
       </section>
+
+      {/* Add-ons Section for Mirror Photo Booth */}
+      {product.slug === 'mirror-photobooth' && (() => {
+        const addOnsProduct = getProductBySlug('photo-booth-add-ons');
+        if (addOnsProduct && addOnsProduct.variants) {
+          return (
+            <section className="py-20 bg-gray-50">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-14">
+                  <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-black">
+                    Enhance Your Experience
+                  </h2>
+                  <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mt-4" />
+                  <p className="text-gray-600 text-lg max-w-xl mx-auto">
+                    Add premium upgrades to make your photo booth experience even more memorable
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {addOnsProduct.variants.map((variant) => (
+                    <div
+                      key={variant.name}
+                      className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col"
+                    >
+                      {/* Image area */}
+                      <div
+                        className="h-52 overflow-hidden relative cursor-pointer bg-black"
+                        onClick={() =>
+                          variant.image
+                            ? setSelectedImage({ src: variant.image, alt: variant.name })
+                            : undefined
+                        }
+                      >
+                        {variant.image ? (
+                          <>
+                            <ImageWithFallback
+                              src={variant.image}
+                              alt={variant.name}
+                              className="w-full h-full object-contain p-2 transform group-hover:scale-110 transition-transform duration-700"
+                            />
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                              <h3 className="text-white text-base font-bold leading-tight">{variant.name}</h3>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-[var(--color-gray-dark)] to-black flex flex-col items-center justify-center gap-3">
+                            <ImageIcon size={36} className="text-[var(--color-gold)] opacity-50" />
+                            <span className="text-xs text-gray-500 font-medium">Image Coming Soon</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Card body */}
+                      <div className="p-5 flex flex-col flex-grow">
+                        {!variant.image && (
+                          <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
+                        )}
+                        {variant.description && (
+                          <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
+                        )}
+                        <div className="flex-grow" />
+                        <div className="flex items-center justify-between gap-3 mt-2">
+                          <span className="text-2xl font-bold text-[var(--color-gold)] whitespace-nowrap">{variant.price}</span>
+                          <button
+                            onClick={handleQuoteClick}
+                            className="text-sm bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-5 py-2 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap"
+                          >
+                            Inquire
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        }
+        return null;
+      })()}
 
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white">

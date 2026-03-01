@@ -8,15 +8,15 @@ import ContactForm from './ContactForm';
 
 const heroImages = [
   {
-    src: '/images/Home_Page_1.png',
+    src: '/images/ballonsbg.png',
     alt: 'Elegant party event'
   },
   {
-    src: '/images/Home_Page_2.png',
+    src: '/images/background33.png',
     alt: 'Wedding reception setup'
   },
   {
-    src: '/images/Home_Page_3.png',
+    src: '/images/background22.png',
     alt: 'Outdoor event celebration'
   }
 ];
