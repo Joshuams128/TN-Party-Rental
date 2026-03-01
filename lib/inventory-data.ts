@@ -122,7 +122,7 @@ export const productDetails: ProductDetail[] = [
     description:
       'Curated all-in-one event packages for proposals, celebrations, and special occasions.',
     category: 'packages',
-    image: '/images/ballonsbg.png',
+    image: '/images/secondary/proposal.jpg',
     pricingType: 'variants',
     variants: [
       { name: '"Will You Marry Me" Package', price: '$650.00', image: '/images/secondary/marry.png', description: 'These "Will You Marry Me" White Marquee Letters include large 4-foot freestanding letters with warm LED lighting, plus an optional marquee ring or red rose heart add-on, creating a bright, romantic proposal display for events across the GTA.' },
@@ -152,7 +152,7 @@ export const productDetails: ProductDetail[] = [
     description:
       'Stunning backdrop options for any theme — from elegant florals to beloved characters and custom designs.',
     category: 'decor',
-    image: '/images/eventspace.jpeg',
+    image: '/images/secondary/spiderman1.png',
     pricingType: 'variants',
     variants: [
       { name: 'White Circle Backdrop Package', price: '$200.00', image: '/images/secondary/whitebackdrop.png',         description: 'This White Circle Backdrop Package includes circular backdrop stands with premium white covers, creating a clean and elegant base for customizable event décor across the GTA.' },
@@ -160,15 +160,60 @@ export const productDetails: ProductDetail[] = [
       { name: 'White Rose Backdrop Package', price: '$250.00', image: '/images/secondary/whiterose2.jpeg', description: 'This White Rose Backdrop Package includes a premium backdrop stand and a white rose floral panel with realistic high-quality blooms, creating an elegant and timeless display for events across the GTA.' },
       { name: 'Gold Metal Backdrop Package', price: '$200.00', image: '/images/secondary/goldbackdrop.png', description: 'This Gold Metal Backdrop package includes a premium gold metal stand with a sleek reflective finish, creating a modern and elegant base for event décor across the GTA.' },
       { name: 'Grass Backdrop Package', price: '$250.00', image: '/images/secondary/grassbackdrop.png', description: 'This Grass Backdrop Package includes a premium grass wall panel with a vibrant green finish and a backdrop stand for secure, professional setup—perfect for natural-themed décor across the GTA.' },
-      { name: 'Summer Floral Backdrop Package', price: '$200.00' },
-      { name: 'Shimmer Panel Backdrop Package', price: '$200.00' },
-      { name: 'Frozen Backdrop Package', price: '$200.00' },
-      { name: 'Mickey Mouse Circle Backdrop Set', price: '$200.00' },
-      { name: 'Bat-Man Backdrop Package', price: '$200.00' },
-      { name: 'Trolls Backdrop Package', price: '$200.00' },
-      { name: 'Princesses Backdrop Package', price: '$200.00' },
-      { name: 'Spider-Man 1 Backdrop Package', price: '$200.00' },
-      { name: 'Spider-Man 2 Backdrop Package', price: '$200.00' },
+      {
+        name: 'Summer Floral Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/summerbackdrop.png',
+        description: 'This Summer Floral Backdrop Package includes a full floral backdrop panel bursting with vibrant, colorful summer blooms, designed to create a bright and elegant statement at any event. The panel is crafted with premium artificial flowers for a lush, natural look and is perfect for wall-mounted setups, photo areas, and floral-themed décor across the Greater Toronto Area.'
+      },
+      {
+        name: 'Shimmer Panel Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/shimmer.png',
+        description: 'This Shimmer Panel Backdrop Package includes an 8x10ft shimmer backdrop and a sturdy backdrop stand, creating a sparkling, eye-catching display perfect for photos and event décor across the GTA.'
+      },
+      {
+        name: 'Frozen Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/frozenbackdrop.png',
+        description: 'This Frozen Backdrop Package includes circular backdrop stands with Frozen-themed covers featuring Elsa, Anna, and icy designs, creating a magical winter display for themed events across the GTA.'
+      },
+      {
+        name: 'Mickey Mouse Circle Backdrop Set',
+        price: '$200.00',
+        image: '/images/secondary/mickybackdrop.png',
+        description: 'This Mickey Mouse Backdrop Package includes circular backdrop stands with Mickey Mouse–themed covers in classic red, black, and yellow designs, creating a vibrant and cheerful display for kids’ events across the GTA.'
+      },
+      {
+        name: 'Bat-Man Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/batmanabackdrop.png',
+        description: 'This Batman Backdrop Package includes circular backdrop stands with Batman-themed covers featuring iconic logos and cityscape designs, creating a bold superhero display for themed events across the GTA.'
+      },
+      {
+        name: 'Trolls Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/trollsbackdrop.png',
+        description: 'This Trolls Backdrop Package includes circular backdrop stands with Trolls-themed covers featuring Poppy, Branch, and vibrant rainbow designs, creating a colorful and joyful display for themed events across the GTA.'
+      },
+      {
+        name: 'Princesses Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/princessbackdrop.png',
+        description: 'This Princesses Backdrop Package includes circular backdrop stands with princess-themed covers featuring castle and character designs, creating a magical and elegant display for themed events across the GTA.'
+      },
+      {
+        name: 'Spider-Man 1 Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/spiderman1.png',
+        description: 'This Spiderman Backdrop Package includes circular backdrop stands with Spiderman-themed covers featuring cityscape and hero designs, creating a bold and action-packed display for themed events across the GTA.'
+      },
+      {
+        name: 'Spider-Man 2 Backdrop Package',
+        price: '$200.00',
+        image: '/images/secondary/spiderman2.png',
+        description: 'This Spiderman Backdrop Package includes circular backdrop stands with Spiderman-themed covers featuring cityscape and hero designs, creating a bold and action-packed display for themed events across the GTA.'
+      },
       { name: 'Soccer Backdrop Package', price: '$200.00' },
       { name: 'Mermaid Backdrop Package', price: '$200.00' },
       { name: 'Moana Circle Backdrop Package', price: '$200.00' },

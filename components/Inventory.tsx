@@ -55,7 +55,7 @@ const inventoryItems = [
     name: 'Premium Packages',
     description: 'Curated all-in-one event packages for proposals, celebrations, and special occasions',
     features: ['Proposal packages', 'LED décor packages', 'Marquee setups', 'All-inclusive'],
-    image: '/images/ballonsbg.png',
+    image: '/images/secondary/proposal.jpg',
     featured: true
   },
   {
@@ -65,7 +65,7 @@ const inventoryItems = [
     name: 'Backdrop Packages',
     description: 'Stunning backdrop options for any theme — florals, characters, custom designs, and more',
     features: ['30+ themes available', 'Character backdrops', 'Floral designs', 'Custom wording'],
-    image: '/images/eventspace.jpeg',
+    image: '/images/secondary/spiderman1.png',
     featured: false
   },
   {
