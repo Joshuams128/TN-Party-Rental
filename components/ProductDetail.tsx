@@ -63,16 +63,6 @@ export function ProductDetailPage({ product }: Props) {
                 <span className="gold-gradient-text">{product.name}</span>
               </h1>
               <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mt-4" />
-              {product.slug === '360-camera' && (
-                <p className="max-w-2xl mt-6 text-lg text-gray-300">
-                  Capture every angle with our 360 Camera Photo Booth, delivering smooth HD slow-motion videos perfect for parties, weddings, corporate events, and celebrations. Guests stand on the platform while the camera rotates to create high-energy, share-worthy clips. Book our 360 camera rental in the GTA for unforgettable, modern event content.
-                </p>
-              )}
-              {product.slug === 'mirror-photobooth' && (
-                <p className="max-w-2xl mt-6 text-lg text-gray-300">
-                  This Full Body Mirror Photo Booth features a touchscreen interactive mirror display, full-body photo capture, and custom digital overlays with instant prints, creating a modern and engaging photo experience for events across the GTA.
-                </p>
-              )}
             </div>
 
             {/* Image */}
@@ -138,6 +128,29 @@ export function ProductDetailPage({ product }: Props) {
             </div>
           )}
 
+          {/* Fixed pricing */}
+          {product.pricingType === 'fixed' && product.price && (
+            <div className="max-w-3xl mx-auto">
+              <div className="bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white rounded-3xl p-12 border-2 border-[var(--color-gold)]/40 text-center">
+                <p className="text-sm font-semibold text-[var(--color-gold)] mb-4 uppercase tracking-wider">2-Hour Package</p>
+                <p className="text-6xl font-bold mb-8 text-[var(--color-gold)]">{product.price}</p>
+                <button
+                  onClick={handleQuoteClick}
+                  className="bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-4 rounded-full font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+                >
+                  Book Now
+                </button>
+              </div>
+              {product.description && (
+                <div className="max-w-3xl mx-auto mt-10">
+                  <p className="text-lg text-gray-700 bg-white rounded-xl shadow p-6 border-l-4 border-[var(--color-gold)]">
+                    {product.description}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Tiered pricing */}
           {product.pricingType === 'tiered' && product.tiers && (
             <>
@@ -176,10 +189,10 @@ export function ProductDetailPage({ product }: Props) {
                   </div>
                 ))}
               </div>
-              {product.slug === '360-camera' && (
-                <div className="max-w-3xl mx-auto mt-10 text-center">
-                  <p className="text-lg text-gray-700 bg-white rounded-xl shadow p-6">
-                    Capture every angle with our 360 Camera Photo Booth, delivering smooth HD slow-motion videos perfect for parties, weddings, corporate events, and celebrations. Guests stand on the platform while the camera rotates to create high-energy, share-worthy clips. Book our 360 camera rental in the GTA for unforgettable, modern event content.
+              {product.description && (
+                <div className="max-w-3xl mx-auto mt-10">
+                  <p className="text-lg text-gray-700 bg-white rounded-xl shadow p-6 border-l-4 border-[var(--color-gold)]">
+                    {product.description}
                   </p>
                 </div>
               )}
@@ -188,11 +201,11 @@ export function ProductDetailPage({ product }: Props) {
 
           {/* Variants pricing — card grid */}
           {product.pricingType === 'variants' && product.variants && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
               {product.variants.map((variant) => (
                 <div
                   key={variant.name}
-                  className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col"
+                  className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
                 >
                   {/* Image area */}
                   <div
@@ -223,15 +236,16 @@ export function ProductDetailPage({ product }: Props) {
                   </div>
 
                   {/* Card body */}
-                  <div className="p-5 flex flex-col flex-grow">
-                    {!variant.image && (
-                      <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
-                    )}
-                    {variant.description && (
-                      <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
-                    )}
-                    <div className="flex-grow" />
-                    <div className="flex items-center justify-between gap-3 mt-2">
+                  <div className="p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                      {!variant.image && (
+                        <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
+                      )}
+                      {variant.description && (
+                        <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between gap-3 mt-4">
                       <span className="text-2xl font-bold text-[var(--color-gold)] whitespace-nowrap">{variant.price}</span>
                       <button
                         onClick={handleQuoteClick}
@@ -265,11 +279,11 @@ export function ProductDetailPage({ product }: Props) {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
                   {addOnsProduct.variants.map((variant) => (
                     <div
                       key={variant.name}
-                      className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col"
+                      className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
                     >
                       {/* Image area */}
                       <div
@@ -300,15 +314,16 @@ export function ProductDetailPage({ product }: Props) {
                       </div>
 
                       {/* Card body */}
-                      <div className="p-5 flex flex-col flex-grow">
-                        {!variant.image && (
-                          <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
-                        )}
-                        {variant.description && (
-                          <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
-                        )}
-                        <div className="flex-grow" />
-                        <div className="flex items-center justify-between gap-3 mt-2">
+                      <div className="p-5 flex flex-col flex-grow justify-between">
+                        <div>
+                          {!variant.image && (
+                            <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
+                          )}
+                          {variant.description && (
+                            <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between gap-3 mt-4">
                           <span className="text-2xl font-bold text-[var(--color-gold)] whitespace-nowrap">{variant.price}</span>
                           <button
                             onClick={handleQuoteClick}
@@ -326,6 +341,75 @@ export function ProductDetailPage({ product }: Props) {
           );
         }
         return null;
+      })()}
+
+      {/* Add-ons Section for Premium Packages - Will You Marry Me */}
+      {product.slug === 'premium-packages' && (() => {
+        const addOns = [
+          { name: 'Marquee Ring', price: '+$50.00', image: '/images/secondary/MarqueeHeart.png' },
+          { name: 'Red Rose Heart', price: '+$100.00', image: '/images/secondary/redheart.png' },
+        ];
+        return (
+          <section className="py-20 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-14">
+                <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-black">
+                  Add-on Options
+                </h2>
+                <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mt-4" />
+                <p className="text-gray-600 text-lg max-w-xl mx-auto">
+                  Enhance your "Will You Marry Me" Package with premium add-ons
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-2xl mx-auto auto-rows-fr">
+                {addOns.map((addOn) => (
+                  <div
+                    key={addOn.name}
+                    className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
+                  >
+                    {/* Image area */}
+                    <div
+                      className="h-52 overflow-hidden relative cursor-pointer bg-black"
+                      onClick={() =>
+                        addOn.image
+                          ? setSelectedImage({ src: addOn.image, alt: addOn.name })
+                          : undefined
+                      }
+                    >
+                      {addOn.image ? (
+                        <ImageWithFallback
+                          src={addOn.image}
+                          alt={addOn.name}
+                          className="w-full h-full object-contain p-2 transform group-hover:scale-110 transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[var(--color-gray-dark)] to-black flex flex-col items-center justify-center gap-3">
+                          <ImageIcon size={36} className="text-[var(--color-gold)] opacity-50" />
+                          <span className="text-xs text-gray-500 font-medium">Image Coming Soon</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Card body */}
+                    <div className="p-5 flex flex-col flex-grow justify-between">
+                      <h3 className="text-base font-bold text-black mb-3 leading-tight">{addOn.name}</h3>
+                      <div className="flex items-center justify-between gap-3 mt-4">
+                        <span className="text-2xl font-bold text-[var(--color-gold)] whitespace-nowrap">{addOn.price}</span>
+                        <button
+                          onClick={handleQuoteClick}
+                          className="text-sm bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-5 py-2 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
       })()}
 
       {/* CTA */}

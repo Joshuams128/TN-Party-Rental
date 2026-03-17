@@ -22,7 +22,7 @@ const inventoryItems = [
     slug: '360-camera',
     category: 'signature',
     name: '360° Camera Experience',
-    description: 'State-of-the-art 360° slow-motion video booth with custom backdrops and instant social sharing',
+    description: '360 Camera Photo Booth with rotating camera platform capturing HD slow-motion videos of guests from every angle. Additional hours beyond the 2-hour rental are $125 per hour.',
     features: ['Slow-motion capture', 'Custom branding', 'Social media sharing', 'Professional lighting'],
     image: '/images/360.PNG',
     featured: true
@@ -32,8 +32,8 @@ const inventoryItems = [
     slug: 'mirror-photobooth',
     category: 'signature',
     name: 'Mirror Photo Booth',
-    description: 'Full-length interactive mirror with touchscreen interface, voice guidance, and instant prints',
-    features: ['Touchscreen interface', 'Voice guidance', 'Instant prints', 'Digital gallery'],
+    description: 'Features an interactive full-length mirror with instant picture captures for guests. Additional hours beyond the 4-hour rental are $125 per hour.',
+    features: ['Touchscreen interface', 'Instant prints', 'Digital gallery'],
     image: '/images/mirrorp.png',
     objectPosition: 'center 40%',
     featured: true
@@ -269,11 +269,11 @@ export function InventoryPage() {
       {/* Inventory Grid */}
       <section className="py-20 bg-gradient-to-b from-white via-[var(--color-gray-light)] to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
             {filteredItems.map((item, index) => (
               <div
                 key={item.id}
-                className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)]"
+                className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {item.featured && (
@@ -302,7 +302,7 @@ export function InventoryPage() {
                   </div>
                 )}
 
-                <div className={`p-6 ${!item.image ? 'pt-12' : ''}`}>
+                <div className={`p-6 flex flex-col flex-grow ${!item.image ? 'pt-12' : ''}`}>
                   {!item.image && item.featured && (
                     <div className="absolute top-3 right-3 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-2 rounded-full shadow-lg">
                       ⭐ SIGNATURE
@@ -328,12 +328,14 @@ export function InventoryPage() {
                     </ul>
                   </div>
 
-                  <Link
-                    href={`/inventory/${(item as any).slug}`}
-                    className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                  >
-                    View Details & Pricing
-                  </Link>
+                  <div className="mt-auto">
+                    <Link
+                      href={`/inventory/${(item as any).slug}`}
+                      className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    >
+                      View Details & Pricing
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
