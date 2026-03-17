@@ -197,7 +197,7 @@ export const productDetails: ProductDetail[] = [
         image: '/images/secondary/spiderman2.png',
         description: 'Circular backdrop stands with Spiderman-themed covers.'
       },
-      { name: 'Avengers Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with Avengers-themed covers.' },
+      { name: 'Avengers Backdrop Package', price: '$200.00', image: '/images/secondary/avengers.JPG', description: 'Circular backdrop stands with Avengers-themed covers.' },
       { name: 'Soccer Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with soccer-themed covers.' },
       { name: 'Mermaid Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with mermaid-themed covers.' },
       { name: 'Moana Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with Moana-themed covers.' },

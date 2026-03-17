@@ -1,6 +1,6 @@
 'use client'
 
-import { Tent, Armchair, Music, Sparkles, Utensils, Gift, X, Palette, Package, Menu } from 'lucide-react';
+import { Tent, Armchair, Music, Sparkles, Gift, X, Palette, Package, Menu } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -12,7 +12,6 @@ const categories = [
   { id: 'decor', name: 'Décor', icon: Palette },
   { id: 'structures', name: 'Structures', icon: Tent },
   { id: 'furniture', name: 'Furniture', icon: Armchair },
-  { id: 'tableware', name: 'Tableware', icon: Utensils },
   { id: 'entertainment', name: 'TN Social', icon: Music },
 ];
 
