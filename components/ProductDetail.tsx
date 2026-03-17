@@ -358,7 +358,7 @@ export function ProductDetailPage({ product }: Props) {
                 </h2>
                 <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mt-4" />
                 <p className="text-gray-600 text-lg max-w-xl mx-auto">
-                  Enhance your "Will You Marry Me" Package with premium add-ons
+                  Enhance your &quot;Will You Marry Me&quot; Package with premium add-ons
                 </p>
               </div>
 
