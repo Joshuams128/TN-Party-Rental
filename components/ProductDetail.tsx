@@ -199,9 +199,34 @@ export function ProductDetailPage({ product }: Props) {
             </>
           )}
 
-          {/* Variants pricing — card grid */}
+          {/* Variants pricing with base price option */}
           {product.pricingType === 'variants' && product.variants && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
+            <>
+              {/* Base Price Section (if available) */}
+              {product.price && product.slug === '360-camera' && (
+                <div className="max-w-3xl mx-auto mb-16">
+                  <div className="bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white rounded-3xl p-12 border-2 border-[var(--color-gold)]/40 text-center">
+                    <p className="text-sm font-semibold text-[var(--color-gold)] mb-4 uppercase tracking-wider">2-Hour Package</p>
+                    <p className="text-6xl font-bold mb-8 text-[var(--color-gold)]">{product.price}</p>
+                    <button
+                      onClick={handleQuoteClick}
+                      className="bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-4 rounded-full font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+                    >
+                      Book Now
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Variants as Add-ons */}
+              <div>
+                {product.variants.length > 0 && product.slug === '360-camera' && (
+                  <div className="text-center mb-8">
+                    <h3 className="text-2xl font-bold text-black mb-2">Optional Add-ons</h3>
+                    <p className="text-gray-600">Enhance your experience with premium backdrops</p>
+                  </div>
+                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
               {product.variants.map((variant) => (
                 <div
                   key={variant.name}
@@ -257,7 +282,9 @@ export function ProductDetailPage({ product }: Props) {
                   </div>
                 </div>
               ))}
-            </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
       </section>

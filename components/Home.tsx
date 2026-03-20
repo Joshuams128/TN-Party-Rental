@@ -8,7 +8,7 @@ import ContactForm from './ContactForm';
 
 const heroImages = [
   {
-    src: '/images/ballonsbg.png',
+    src: '/images/ballonsbg2.png',
     alt: 'Elegant party event'
   },
   {

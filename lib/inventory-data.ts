@@ -35,8 +35,14 @@ export const productDetails: ProductDetail[] = [
       '360 Camera Photo Booth with rotating camera platform capturing HD slow-motion videos of guests from every angle. Additional hours beyond the 2-hour rental are $125 per hour.',
     category: 'signature',
     image: '/images/360.PNG',
-    pricingType: 'fixed',
+    pricingType: 'variants',
     price: '$199.00',
+    variants: [
+      { name: 'Luxury White Rose Wall', price: '$150.00', image: '/images/secondary/whiterose.png' },
+      { name: 'Signature Red Rose Wall', price: '$150.00', image: '/images/secondary/redrose.png' },
+      { name: 'Gold Rose Backdrop', price: '$150.00', image: '/images/secondary/goldbackdrop.png' },
+      { name: 'Shimmer Wall', price: '$150.00', image: '/images/secondary/shimmer.png' },
+    ],
     features: [
       'Slow-motion capture',
       'Custom branding',
@@ -75,9 +81,11 @@ export const productDetails: ProductDetail[] = [
     image: '/images/eventspace.jpeg',
     pricingType: 'variants',
     variants: [
-      { name: 'Luxury White Rose Wall', price: '$200.00', image: '/images/secondary/whiterose.png' },
-      { name: 'Signature Red Rose Wall', price: '$200.00', image: '/images/secondary/redrose.png' },
-      { name: 'Digital Print with Logo', price: '$80.00', image: '/images/secondary/yourlogohere.png' },
+      { name: 'Luxury White Rose Wall', price: '$150.00', image: '/images/secondary/whiterose.png' },
+      { name: 'Signature Red Rose Wall', price: '$150.00', image: '/images/secondary/redrose.png' },
+      { name: 'Gold Rose Backdrop', price: '$150.00', image: '/images/secondary/goldbackdrop.png' },
+      { name: 'Shimmer Wall', price: '$150.00', image: '/images/secondary/shimmer.png' },
+      { name: 'Digital Print', price: '$80.00', image: '/images/secondary/digital.png' },
     ],
     features: [
       'Premium backdrops',
@@ -157,66 +165,67 @@ export const productDetails: ProductDetail[] = [
       },
       {
         name: 'Frozen Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/frozenbackdrop.png',
-        description: 'Circular backdrop stands with Frozen-themed covers.'
+        description: 'Circular backdrop stands with Frozen-themed covers. Optional add-on: +$50 for cake stands.'
       },
       {
         name: 'Mickey Mouse Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/mickybackdrop.png',
-        description: 'Circular backdrop stands with Mickey Mouse–themed covers.'
+        description: 'Circular backdrop stands with Mickey Mouse–themed covers. Optional add-on: +$50 for cake stands.'
       },
       {
         name: 'Batman Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/batmanabackdrop.png',
-        description: 'Circular backdrop stands with Batman-themed covers.'
+        description: 'Circular backdrop stands with Batman-themed covers. Optional add-on: +$50 for cake stands.'
       },
       {
         name: 'Trolls Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/trollsbackdrop.png',
-        description: 'Circular backdrop stands with Trolls-themed covers.'
+        description: 'Circular backdrop stands with Trolls-themed covers. Optional add-on: +$50 for cake stands.'
       },
       {
         name: 'Disney Princess Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/princessbackdrop.png',
-        description: 'Circular backdrop stands with princess-themed covers.'
+        description: 'Circular backdrop stands with princess-themed covers. Optional add-on: +$50 for cake stands.'
       },
       {
         name: 'Spider-Man 1 Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/spiderman1.png',
-        description: 'Circular backdrop stands with Spiderman-themed covers.'
+        description: 'Circular backdrop stands with Spiderman-themed covers. Optional add-on: +$50 for cake stands.'
       },
       {
         name: 'Spider-Man 2 Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/spiderman2.png',
-        description: 'Circular backdrop stands with Spiderman-themed covers.'
+        description: 'Circular backdrop stands with Spiderman-themed covers. Optional add-on: +$50 for cake stands.'
       },
-      { name: 'Avengers Backdrop Package', price: '$200.00', image: '/images/secondary/avengers.JPG', description: 'Circular backdrop stands with Avengers-themed covers.' },
-      { name: 'Soccer Backdrop Package', price: '$200.00', image: '/images/secondary/soccerbackdrop.png', description: 'Circular backdrop stands with soccer-themed covers.' },
-      { name: 'Mermaid Backdrop Package', price: '$200.00', image: '/images/secondary/mermaidbd.png', description: 'Circular backdrop stands with mermaid-themed covers.' },
-      { name: 'Moana Backdrop Package', price: '$200.00', image: '/images/secondary/Moanabd.png', description: 'Circular backdrop stands with Moana-themed covers.' },
+      { name: 'Avengers Backdrop Package', price: '$150.00', image: '/images/secondary/avengers.JPG', description: 'Circular backdrop stands with Avengers-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Soccer Backdrop Package', price: '$150.00', image: '/images/secondary/soccerbackdrop.png', description: 'Circular backdrop stands with soccer-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Mermaid Backdrop Package', price: '$150.00', image: '/images/secondary/mermaidbd.png', description: 'Circular backdrop stands with mermaid-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Moana Backdrop Package', price: '$150.00', image: '/images/secondary/Moanabd.png', description: 'Circular backdrop stands with Moana-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Mr & Mrs Backdrop Package', price: '$200.00', image: '/images/secondary/mr&msbd.png', description: 'Circular backdrop stands with "Mr & Mrs" themed covers.' },
-      { name: 'Boss Baby Backdrop Package', price: '$200.00', image: '/images/secondary/BossBabybd.png', description: 'Circular backdrop stands with Boss Baby–themed covers.' },
-      { name: 'Toy Story Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with Toy Story–themed covers.' },
-      { name: 'Marble Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with marble-themed covers.' },
-      { name: 'Pink Floral Backdrop Package', price: '$200.00', description: 'Full pink floral backdrop panel with pink and blush-toned flowers and a backdrop stand.' },
-      { name: 'Blue Floral Backdrop Package', price: '$200.00', description: 'White modern arch frame with a blue and white faux floral arrangement.' },
-      { name: 'Safari Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with safari-themed covers.' },
-      { name: 'OM Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with OM-themed covers.' },
-      { name: 'Minnie Mouse Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with Minnie Mouse–themed covers.' },
-      { name: 'Basketball Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with basketball-themed covers.' },
-      { name: 'Tangled Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with Tangled-themed covers.' },
-      { name: 'Fortnite Backdrop Package', price: '$200.00', description: 'Circular backdrop stands with Fortnite-themed covers.' },
+      { name: 'Boss Baby Backdrop Package', price: '$150.00', image: '/images/secondary/BossBabybd.png', description: 'Circular backdrop stands with Boss Baby–themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Toy Story Backdrop Package', price: '$150.00', image: '/images/secondary/toybd.png', description: 'Circular backdrop stands with Toy Story–themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Marble Backdrop Package', price: '$200.00', image: '/images/secondary/marblebd.png', description: 'Circular backdrop stands with marble-themed covers.' },
+      { name: 'Pink Floral Backdrop Package', price: '$200.00', image: '/images/secondary/floralbd.png', description: 'Full pink floral backdrop panel with pink and blush-toned flowers and a backdrop stand.' },
+      { name: 'Blue Floral Backdrop Package', price: '$200.00', image: '/images/secondary/blueforalbd.png', description: 'White modern arch frame with a blue and white faux floral arrangement.' },
+      { name: 'Safari Backdrop Package', price: '$150.00', image: '/images/secondary/safaribd.png', description: 'Circular backdrop stands with safari-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'OM Backdrop Package', price: '$200.00', image: '/images/secondary/ombd.jpeg', description: 'Circular backdrop stands with OM-themed covers.' },
+      { name: 'Minnie Mouse Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Minnie Mouse–themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Basketball Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with basketball-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Tangled Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Tangled-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Fortnite Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Fortnite-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Cake Stand Add-on (Optional)', price: '$50.00', description: 'Optional cake stand add-on for any backdrop package.' },
       { name: 'Arched Panel Backdrop (Custom Wording)', price: '$250.00', description: '7 ft white arched panel with custom wording.' },
     ],
     features: ['Easy setup', 'Wide theme selection', 'Great photo background'],
-    note: 'All prices in CAD. HST extra.',
+    note: 'All prices in CAD. HST extra. $150 includes backdrop + hardware/piping.',
   },
   {
     slug: 'marquee-letters',
