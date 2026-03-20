@@ -54,6 +54,27 @@ export const productDetails: ProductDetail[] = [
     note: 'HST extra. Delivery & setup included.',
   },
   {
+    slug: '360-camera-add-ons',
+    name: '360 Camera Add-ons',
+    description:
+      'Premium add-ons to enhance your 360° Camera Experience.',
+    category: 'signature',
+    image: '/images/360.PNG',
+    pricingType: 'variants',
+    variants: [
+      { name: 'Luxury White Rose Wall', price: '$180.00', image: '/images/secondary/whiterose.png' },
+      { name: 'Signature Red Rose Wall', price: '$180.00', image: '/images/secondary/redrose.png' },
+      { name: 'Gold Rose Backdrop', price: '$180.00', image: '/images/secondary/goldbackdrop.png' },
+      { name: 'Shimmer Wall', price: '$180.00', image: '/images/secondary/shimmer.png' },
+    ],
+    features: [
+      'Premium backdrops',
+      'Professional installation',
+      'Custom branding',
+    ],
+    note: 'HST extra. Perfect complement to the 360 Camera Experience.',
+  },
+  {
     slug: 'mirror-photobooth',
     name: 'Mirror Photo Booth',
     description:

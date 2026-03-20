@@ -159,29 +159,29 @@ export function ProductDetailPage({ product }: Props) {
                   <div
                     key={tier.label}
                     className={`relative rounded-2xl border-2 p-8 text-center shadow-smooth hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
-                      product.tiers.length === 1
+                      product.tiers!.length === 1
                         ? 'border-[var(--color-gold)] bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white w-full sm:w-96'
                         : i === 1
                         ? 'border-[var(--color-gold)] bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white'
                         : 'border-[var(--color-gold)]/40 bg-white text-black'
                     }`}
                   >
-                    {product.tiers.length > 1 && i === 1 && (
+                    {product.tiers!.length > 1 && i === 1 && (
                       <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-1 rounded-full">
                         POPULAR
                       </div>
                     )}
-                    <p className={`text-sm font-semibold mb-2 ${product.tiers.length === 1 || i === 1 ? 'text-[var(--color-gold)]' : 'text-gray-500'}`}>
+                    <p className={`text-sm font-semibold mb-2 ${product.tiers!.length === 1 || i === 1 ? 'text-[var(--color-gold)]' : 'text-gray-500'}`}>
                       {tier.label}
                     </p>
-                    <p className={`${product.tiers.length === 1 ? 'text-6xl' : 'text-4xl'} font-bold mb-2`}>{tier.price}</p>
+                    <p className={`${product.tiers!.length === 1 ? 'text-6xl' : 'text-4xl'} font-bold mb-2`}>{tier.price}</p>
                     {tier.note && (
-                      <p className={`text-xs mt-2 whitespace-pre-wrap ${product.tiers.length === 1 || i === 1 ? 'text-gray-300' : 'text-gray-500'}`}>{tier.note}</p>
+                      <p className={`text-xs mt-2 whitespace-pre-wrap ${product.tiers!.length === 1 || i === 1 ? 'text-gray-300' : 'text-gray-500'}`}>{tier.note}</p>
                     )}
                     <button
                       onClick={handleQuoteClick}
                       className={`mt-6 w-full py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105 ${
-                        product.tiers.length === 1 || i === 1
+                        product.tiers!.length === 1 || i === 1
                           ? 'bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black hover:shadow-xl'
                           : 'border-2 border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-black'
                       }`}
