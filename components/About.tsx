@@ -38,7 +38,7 @@ export function About() {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="relative py-32 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
+      <section className="relative py-20 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
         
@@ -46,63 +46,67 @@ export function About() {
         <div className="absolute inset-0 animate-shimmer"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="animate-fade-in-up">
-              <div className="inline-block mb-4">
-                <span className="text-sm font-bold text-[var(--color-gold)] bg-[var(--color-gold)]/10 px-4 py-2 rounded-full border border-[var(--color-gold)]/30">
-                  OUR STORY
-                </span>
-              </div>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-                About <span className="gold-gradient-text">True North</span>
-              </h1>
-              <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mb-8"></div>
-              
-              <div className="space-y-6">
-                <p className="text-xl text-gray-300 leading-relaxed font-semibold">
-                  True North Party Rentals started with a simple idea — celebrations should feel special, not stressful.
-                </p>
-                
-                <p className="text-lg text-gray-400 leading-relaxed">
-                  What began as helping friends and family decorate small gatherings quickly grew into something bigger. We realized people weren&apos;t just looking for rentals… they were looking for someone they could trust to help bring their vision to life. Someone reliable. Someone who actually cared about the details.
-                </p>
-                
-                <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
-                  We built True North around that mindset.
-                </p>
-                
-                <p className="text-lg text-gray-400 leading-relaxed">
-                  We are a GTA-based, family-run business focused on creating memorable event experiences through modern decor, balloon garlands, and interactive photo booth services. Every setup is handled with care, professionalism, and attention to detail — because we understand these moments matter. Whether it’s a child’s first birthday, a baby shower, a wedding, or a milestone celebration, these are memories people keep forever.
-                </p>
-                
-                <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
-                  Our goal isn&apos;t just to drop off equipment.<br/>Our goal is to help create moments.
-                </p>
-                
-                <p className="text-lg text-gray-400 leading-relaxed">
-                  From the first message to the final takedown, we work closely with our clients to make the process easy, organized, and enjoyable. We pride ourselves on clear communication, on-time service, and clean, polished setups that elevate any space.
-                </p>
-                
-                <p className="text-lg text-gray-400 leading-relaxed italic border-l-4 border-[var(--color-gold)] pl-4">
-                  At True North Party Rentals, we believe a great event isn&apos;t about how big it is — it&apos;s about how it feels. And if your guests walk into the room and say &quot;wow&quot;… we&apos;ve done our job.
-                </p>
-                
-                <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
-                  We&apos;d be honoured to be part of your celebration.
-                </p>
-              </div>
-            </div>
-
-            <div className="relative">
+          <div className="animate-fade-in-up text-center">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold gold-gradient-text mb-8">
+              OUR STORY
+            </h1>
+            <div className="relative inline-block mb-10">
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] opacity-20 rounded-3xl blur-2xl"></div>
-              <div className="relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-8 rounded-3xl border-2 border-[var(--color-gold)]/30">
-                <div className="relative h-80 w-full overflow-hidden rounded-2xl">
+              <div className="relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-6 rounded-3xl border-2 border-[var(--color-gold)]/30">
+                <div className="relative h-72 w-[28rem] sm:h-80 sm:w-[32rem] lg:h-96 lg:w-[40rem] overflow-hidden rounded-2xl">
                   <ImageWithFallback
                     src="/images/About_Tab_Image.png"
                     alt="True North team setting up event"
                     className="object-cover"
                   />
                 </div>
+              </div>
+            </div>
+            <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mb-8 mx-auto"></div>
+
+            <div className="max-w-4xl mx-auto space-y-6 text-center">
+              <p className="text-xl text-gray-300 leading-relaxed font-semibold">
+                True North Party Rentals started with a simple idea — celebrations should feel special, not stressful.
+              </p>
+
+              <p className="text-lg text-gray-400 leading-relaxed">
+                What began as helping friends and family decorate small gatherings quickly grew into something bigger. We realized people weren&apos;t just looking for rentals… they were looking for someone they could trust to help bring their vision to life. Someone reliable. Someone who actually cared about the details.
+              </p>
+
+              <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
+                We built True North around that mindset.
+              </p>
+
+              <p className="text-lg text-gray-400 leading-relaxed">
+                We are a GTA-based, family-run business focused on creating memorable event experiences through modern decor, balloon garlands, and interactive photo booth services. Every setup is handled with care, professionalism, and attention to detail — because we understand these moments matter. Whether it&apos;s a child&apos;s first birthday, a baby shower, a wedding, or a milestone celebration, these are memories people keep forever.
+              </p>
+
+              <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
+                Our goal isn&apos;t just to drop off equipment.<br/>Our goal is to help create moments.
+              </p>
+
+              <p className="text-lg text-gray-400 leading-relaxed">
+                From the first message to the final takedown, we work closely with our clients to make the process easy, organized, and enjoyable. We pride ourselves on clear communication, on-time service, and clean, polished setups that elevate any space.
+              </p>
+
+              <p className="text-lg text-gray-400 leading-relaxed italic border-l-4 border-[var(--color-gold)] pl-4 text-left">
+                At True North Party Rentals, we believe a great event isn&apos;t about how big it is — it&apos;s about how it feels. And if your guests walk into the room and say &quot;wow&quot;… we&apos;ve done our job.
+              </p>
+
+              <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)]">
+                We&apos;d be honoured to be part of your celebration.
+              </p>
+
+              <div className="mt-10 pt-8 border-t border-[var(--color-gold)]/20">
+                <p className="text-lg text-gray-300 leading-relaxed font-semibold text-[var(--color-gold)] mb-2">
+                  A Note from Our Founder
+                </p>
+                <p className="text-gray-400 leading-relaxed italic">
+                  &quot;Every event we do is personal to us. We treat your celebration like it&apos;s our own — because at the end of the day, that&apos;s what True North is all about.&quot;
+                </p>
+                <p className="text-[var(--color-gold)] font-semibold mt-3">
+                  — Veronica Jagmohan, Founder
+                </p>
               </div>
             </div>
           </div>

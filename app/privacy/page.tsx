@@ -222,19 +222,20 @@ export default function PrivacyPolicyPage() {
           
           <div className="grid md:grid-cols-3 gap-6 mb-10">
             <div className="bg-white/5 border border-[var(--color-gold)]/20 rounded-xl p-6">
-              <Mail className="text-[var(--color-gold)] mx-auto mb-3" size={28} />
-              <h3 className="font-semibold mb-2">Email</h3>
-              <p className="text-gray-400 text-sm">info@truenorthrentals.ca</p>
-            </div>
-            <div className="bg-white/5 border border-[var(--color-gold)]/20 rounded-xl p-6">
               <Phone className="text-[var(--color-gold)] mx-auto mb-3" size={28} />
               <h3 className="font-semibold mb-2">Phone</h3>
-              <p className="text-gray-400 text-sm">(416) 555-0123</p>
+              <p className="text-gray-400 text-sm">647-906-3400</p>
+            </div>
+            <div className="bg-white/5 border border-[var(--color-gold)]/20 rounded-xl p-6">
+              <Mail className="text-[var(--color-gold)] mx-auto mb-3" size={28} />
+              <h3 className="font-semibold mb-2">Email</h3>
+              <p className="text-gray-400 text-sm">truenorthpartyrentals@gmail.com</p>
             </div>
             <div className="bg-white/5 border border-[var(--color-gold)]/20 rounded-xl p-6">
               <MapPin className="text-[var(--color-gold)] mx-auto mb-3" size={28} />
               <h3 className="font-semibold mb-2">Location</h3>
-              <p className="text-gray-400 text-sm">Scarborough, Ontario</p>
+              <p className="text-gray-400 text-sm">30-1275 Morningside Ave.</p>
+              <p className="text-gray-400 text-sm">Scarborough, ON. M1B3W1</p>
             </div>
           </div>
 

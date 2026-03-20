@@ -32,16 +32,18 @@ export const productDetails: ProductDetail[] = [
     slug: '360-camera',
     name: '360° Camera Experience',
     description:
-      '360 Camera Photo Booth with rotating camera platform capturing HD slow-motion videos of guests from every angle. Additional hours beyond the 2-hour rental are $125 per hour.',
+      '2 Hours / Attendant\nRed carpet & stanchions included\nStandard props included\n\n360 Camera Photo Booth with rotating camera platform capturing HD slow-motion videos of guests from every angle. Additional hours beyond the 2-hour rental are $125 per hour.',
     category: 'signature',
     image: '/images/360.PNG',
-    pricingType: 'variants',
-    price: '$199.00',
+    pricingType: 'tiered',
+    tiers: [
+      { label: '2 Hours', price: '$350.00' },
+    ],
     variants: [
-      { name: 'Luxury White Rose Wall', price: '$150.00', image: '/images/secondary/whiterose.png' },
-      { name: 'Signature Red Rose Wall', price: '$150.00', image: '/images/secondary/redrose.png' },
-      { name: 'Gold Rose Backdrop', price: '$150.00', image: '/images/secondary/goldbackdrop.png' },
-      { name: 'Shimmer Wall', price: '$150.00', image: '/images/secondary/shimmer.png' },
+      { name: 'Luxury White Rose Wall', price: '$180.00', image: '/images/secondary/whiterose.png' },
+      { name: 'Signature Red Rose Wall', price: '$180.00', image: '/images/secondary/redrose.png' },
+      { name: 'Gold Rose Backdrop', price: '$180.00', image: '/images/secondary/goldbackdrop.png' },
+      { name: 'Shimmer Wall', price: '$180.00', image: '/images/secondary/shimmer.png' },
     ],
     features: [
       'Slow-motion capture',
@@ -55,15 +57,15 @@ export const productDetails: ProductDetail[] = [
     slug: 'mirror-photobooth',
     name: 'Mirror Photo Booth',
     description:
-      'Features an interactive full-length mirror with instant picture captures for guests. Additional hours beyond the 4-hour rental are $125 per hour.',
+      'Fun, interactive experience. Perfect for birthdays, weddings, corporate events & celebrations.\n\nFeatures an interactive full-length mirror with instant picture captures for guests. Additional hours beyond the included rental are $125 per hour.',
     category: 'signature',
     image: '/images/mirrorp.png',
     objectPosition: 'center 40%',
     pricingType: 'tiered',
     tiers: [
-      { label: '2 Hours', price: '$360.00' },
-      { label: '3 Hours', price: '$475.00' },
-      { label: '4 Hours', price: '$575.00' },
+      { label: 'CLASSIC BOOTH - 2 Hours', price: '$350.00', note: 'Red Carpet & Red Ropes Included' },
+      { label: 'SIGNATURE BOOTH', price: '$450.00', note: 'Red Carpet & Red Ropes Included' },
+      { label: 'LUXURY BOOTH', price: '$550.00', note: 'Red Carpet & Red Ropes Included\nProfessional setup' },
     ],
     features: [
       'Touchscreen interface',
@@ -81,10 +83,11 @@ export const productDetails: ProductDetail[] = [
     image: '/images/eventspace.jpeg',
     pricingType: 'variants',
     variants: [
-      { name: 'Luxury White Rose Wall', price: '$150.00', image: '/images/secondary/whiterose.png' },
-      { name: 'Signature Red Rose Wall', price: '$150.00', image: '/images/secondary/redrose.png' },
-      { name: 'Gold Rose Backdrop', price: '$150.00', image: '/images/secondary/goldbackdrop.png' },
-      { name: 'Shimmer Wall', price: '$150.00', image: '/images/secondary/shimmer.png' },
+      { name: 'Red Carpet & Red Ropes - Included', price: '$0.00', image: '/images/secondary/carpet-red.png' },
+      { name: 'Luxury White Rose Wall', price: '$180.00', image: '/images/secondary/whiterose.png' },
+      { name: 'Signature Red Rose Wall', price: '$180.00', image: '/images/secondary/redrose.png' },
+      { name: 'Gold Rose Backdrop', price: '$180.00', image: '/images/secondary/goldbackdrop.png' },
+      { name: 'Shimmer Wall', price: '$180.00', image: '/images/secondary/shimmer.png' },
       { name: 'Digital Print', price: '$80.00', image: '/images/secondary/digital.png' },
     ],
     features: [
@@ -125,11 +128,11 @@ export const productDetails: ProductDetail[] = [
     description:
       'Curated all-in-one event packages for proposals, celebrations, and special occasions.',
     category: 'packages',
-    image: '/images/secondary/proposal.jpg',
+    image: '/images/true north party rentals-06.jpg',
     pricingType: 'variants',
     variants: [
       { name: '"Will You Marry Me" Package', price: '$650.00', image: '/images/secondary/marry.png', description: '"Will You Marry Me" White Marquee Letters featuring 4-foot freestanding letters with warm LED lighting, with optional marquee ring or red rose heart add-ons.' },
-      { name: 'Proposal Package', price: '$400.00', image: '/images/secondary/proposal.jpg', description: 'Includes Red Rose Heart Backdrop, "Will You Marry Me?" LED Neon Sign, Red Carpet Walkway Runner, Hurricane Vases with LED Candles (aisle setup), and Ambient Lighting.' },
+      { name: 'Proposal Package', price: '$400.00', image: '/images/true north party rentals-06.jpg', description: 'Includes Red Rose Heart Backdrop, "Will You Marry Me?" LED Neon Sign, Red Carpet Walkway Runner, Hurricane Vases with LED Candles (aisle setup), and Ambient Lighting.' },
       { name: 'LED Furniture Décor Package', price: '$750.00', image: '/images/secondary/ledL.png', description: 'This LED Lounge Furniture Package includes LED curved benches, LED cruiser tables, and LED podium barstools, featuring multicolor LED lighting, cordless battery-powered design, and weather-resistant materials.' },
     ],
     features: ['All-inclusive setup', 'Premium décor', 'Delivery & breakdown'],

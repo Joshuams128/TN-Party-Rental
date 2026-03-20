@@ -54,7 +54,7 @@ const inventoryItems = [
     name: 'Premium Packages',
     description: 'Curated all-in-one event packages for proposals, celebrations, and special occasions',
     features: ['Proposal packages', 'LED décor packages', 'Marquee setups', 'All-inclusive'],
-    image: '/images/secondary/proposal.jpg',
+    image: '/images/true north party rentals-06.jpg',
     featured: true
   },
   {
@@ -74,7 +74,7 @@ const inventoryItems = [
     name: 'Marquee Letters & Signs',
     description: 'Illuminated marquee letters, numbers, and neon signs to spell out your celebration',
     features: ['LED letters & numbers', 'Neon signs', 'Heart & ring shapes', 'Custom wording'],
-    image: '/images/eventspace.jpeg',
+    image: '/images/Marquee-Letters.png',
     featured: false
   },
   {

@@ -96,13 +96,6 @@ export function Home() {
     }
   };
 
-  const scrollToServices = () => {
-    const element = document.getElementById('services');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <>
       {/* Image Lightbox Modal */}
@@ -195,13 +188,13 @@ export function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8 animate-hero-fade animation-delay-1000">
-            <button
-              onClick={scrollToServices}
+            <Link
+              href="/inventory"
               className="group relative bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-10 py-5 rounded-full text-lg font-bold hover:shadow-2xl hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-110 overflow-hidden"
             >
               <span className="relative z-10">Explore Our Services</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-            </button>
+            </Link>
             <button
               onClick={scrollToContact}
               className="group relative glass-effect text-white border-2 border-[var(--color-gold)] px-10 py-5 rounded-full text-lg font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-110"

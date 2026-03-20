@@ -154,32 +154,34 @@ export function ProductDetailPage({ product }: Props) {
           {/* Tiered pricing */}
           {product.pricingType === 'tiered' && product.tiers && (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+              <div className={`${product.tiers.length === 1 ? 'flex justify-center' : 'grid grid-cols-1 sm:grid-cols-3 gap-6'} max-w-5xl mx-auto`}>
                 {product.tiers.map((tier, i) => (
                   <div
                     key={tier.label}
                     className={`relative rounded-2xl border-2 p-8 text-center shadow-smooth hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
-                      i === 1
+                      product.tiers.length === 1
+                        ? 'border-[var(--color-gold)] bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white w-full sm:w-96'
+                        : i === 1
                         ? 'border-[var(--color-gold)] bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white'
                         : 'border-[var(--color-gold)]/40 bg-white text-black'
                     }`}
                   >
-                    {i === 1 && (
+                    {product.tiers.length > 1 && i === 1 && (
                       <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-1 rounded-full">
                         POPULAR
                       </div>
                     )}
-                    <p className={`text-sm font-semibold mb-2 ${i === 1 ? 'text-[var(--color-gold)]' : 'text-gray-500'}`}>
+                    <p className={`text-sm font-semibold mb-2 ${product.tiers.length === 1 || i === 1 ? 'text-[var(--color-gold)]' : 'text-gray-500'}`}>
                       {tier.label}
                     </p>
-                    <p className="text-4xl font-bold mb-2">{tier.price}</p>
+                    <p className={`${product.tiers.length === 1 ? 'text-6xl' : 'text-4xl'} font-bold mb-2`}>{tier.price}</p>
                     {tier.note && (
-                      <p className={`text-xs mt-2 ${i === 1 ? 'text-gray-300' : 'text-gray-500'}`}>{tier.note}</p>
+                      <p className={`text-xs mt-2 whitespace-pre-wrap ${product.tiers.length === 1 || i === 1 ? 'text-gray-300' : 'text-gray-500'}`}>{tier.note}</p>
                     )}
                     <button
                       onClick={handleQuoteClick}
                       className={`mt-6 w-full py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105 ${
-                        i === 1
+                        product.tiers.length === 1 || i === 1
                           ? 'bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black hover:shadow-xl'
                           : 'border-2 border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-black'
                       }`}
@@ -191,41 +193,76 @@ export function ProductDetailPage({ product }: Props) {
               </div>
               {product.description && (
                 <div className="max-w-3xl mx-auto mt-10">
-                  <p className="text-lg text-gray-700 bg-white rounded-xl shadow p-6 border-l-4 border-[var(--color-gold)]">
+                  <p className="text-lg text-gray-700 bg-white rounded-xl shadow p-6 border-l-4 border-[var(--color-gold)] whitespace-pre-wrap">
                     {product.description}
                   </p>
+                </div>
+              )}
+
+              {/* Optional Add-ons for 360-camera */}
+              {product.slug === '360-camera' && product.variants && product.variants.length > 0 && (
+                <div className="mt-20">
+                  <div className="text-center mb-12">
+                    <h3 className="text-2xl font-bold text-black mb-2">Optional Add-ons</h3>
+                    <p className="text-gray-600">Enhance your experience with premium backdrops</p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr max-w-6xl mx-auto">
+                    {product.variants.map((variant) => (
+                      <div
+                        key={variant.name}
+                        className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
+                      >
+                        {/* Image area */}
+                        <div
+                          className="h-52 overflow-hidden relative cursor-pointer bg-black"
+                          onClick={() =>
+                            variant.image
+                              ? setSelectedImage({ src: variant.image, alt: variant.name })
+                              : undefined
+                          }
+                        >
+                          {variant.image ? (
+                            <>
+                              <ImageWithFallback
+                                src={variant.image}
+                                alt={variant.name}
+                                className="w-full h-full object-contain p-2 transform group-hover:scale-110 transition-transform duration-700"
+                              />
+                              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <ImageIcon className="text-white" size={32} />
+                              </div>
+                            </>
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                              <ImageIcon size={48} />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6 flex flex-col flex-1">
+                          <h3 className="font-bold text-lg text-black mb-2">{variant.name}</h3>
+                          <p className="text-[var(--color-gold)] text-3xl font-bold mt-auto mb-4">{variant.price}</p>
+                          <button
+                            onClick={handleQuoteClick}
+                            className="w-full border-2 border-[var(--color-gold)] text-[var(--color-gold)] py-3 rounded-full font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-105"
+                          >
+                            Inquire
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </>
           )}
 
-          {/* Variants pricing with base price option */}
+          {/* Variants pricing */}
           {product.pricingType === 'variants' && product.variants && (
             <>
-              {/* Base Price Section (if available) */}
-              {product.price && product.slug === '360-camera' && (
-                <div className="max-w-3xl mx-auto mb-16">
-                  <div className="bg-gradient-to-br from-black to-[var(--color-gray-dark)] text-white rounded-3xl p-12 border-2 border-[var(--color-gold)]/40 text-center">
-                    <p className="text-sm font-semibold text-[var(--color-gold)] mb-4 uppercase tracking-wider">2-Hour Package</p>
-                    <p className="text-6xl font-bold mb-8 text-[var(--color-gold)]">{product.price}</p>
-                    <button
-                      onClick={handleQuoteClick}
-                      className="bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-12 py-4 rounded-full font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
-                    >
-                      Book Now
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {/* Variants as Add-ons */}
               <div>
-                {product.variants.length > 0 && product.slug === '360-camera' && (
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-black mb-2">Optional Add-ons</h3>
-                    <p className="text-gray-600">Enhance your experience with premium backdrops</p>
-                  </div>
-                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
               {product.variants.map((variant) => (
                 <div
@@ -248,37 +285,27 @@ export function ProductDetailPage({ product }: Props) {
                           alt={variant.name}
                           className="w-full h-full object-contain p-2 transform group-hover:scale-110 transition-transform duration-700"
                         />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                          <h3 className="text-white text-base font-bold leading-tight">{variant.name}</h3>
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <ImageIcon className="text-white" size={32} />
                         </div>
                       </>
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-[var(--color-gray-dark)] to-black flex flex-col items-center justify-center gap-3">
-                        <ImageIcon size={36} className="text-[var(--color-gold)] opacity-50" />
-                        <span className="text-xs text-gray-500 font-medium">Image Coming Soon</span>
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <ImageIcon size={48} />
                       </div>
                     )}
                   </div>
 
-                  {/* Card body */}
-                  <div className="p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                      {!variant.image && (
-                        <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
-                      )}
-                      {variant.description && (
-                        <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between gap-3 mt-4">
-                      <span className="text-2xl font-bold text-[var(--color-gold)] whitespace-nowrap">{variant.price}</span>
-                      <button
-                        onClick={handleQuoteClick}
-                        className="text-sm bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-5 py-2 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap"
-                      >
-                        Inquire
-                      </button>
-                    </div>
+                  {/* Content */}
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="font-bold text-lg text-black mb-2">{variant.name}</h3>
+                    <p className="text-[var(--color-gold)] text-3xl font-bold mt-auto mb-4">{variant.price}</p>
+                    <button
+                      onClick={handleQuoteClick}
+                      className="w-full border-2 border-[var(--color-gold)] text-[var(--color-gold)] py-3 rounded-full font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-105"
+                    >
+                      Add to Order
+                    </button>
                   </div>
                 </div>
               ))}
@@ -328,37 +355,27 @@ export function ProductDetailPage({ product }: Props) {
                               alt={variant.name}
                               className="w-full h-full object-contain p-2 transform group-hover:scale-110 transition-transform duration-700"
                             />
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                              <h3 className="text-white text-base font-bold leading-tight">{variant.name}</h3>
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                              <ImageIcon className="text-white" size={32} />
                             </div>
                           </>
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-[var(--color-gray-dark)] to-black flex flex-col items-center justify-center gap-3">
-                            <ImageIcon size={36} className="text-[var(--color-gold)] opacity-50" />
-                            <span className="text-xs text-gray-500 font-medium">Image Coming Soon</span>
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <ImageIcon size={48} />
                           </div>
                         )}
                       </div>
 
-                      {/* Card body */}
-                      <div className="p-5 flex flex-col flex-grow justify-between">
-                        <div>
-                          {!variant.image && (
-                            <h3 className="text-base font-bold text-black mb-1 leading-tight">{variant.name}</h3>
-                          )}
-                          {variant.description && (
-                            <p className="text-sm text-gray-500 mb-3">{variant.description}</p>
-                          )}
-                        </div>
-                        <div className="flex items-center justify-between gap-3 mt-4">
-                          <span className="text-2xl font-bold text-[var(--color-gold)] whitespace-nowrap">{variant.price}</span>
-                          <button
-                            onClick={handleQuoteClick}
-                            className="text-sm bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-5 py-2 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap"
-                          >
-                            Inquire
-                          </button>
-                        </div>
+                      {/* Content */}
+                      <div className="p-6 flex flex-col flex-1">
+                        <h3 className="font-bold text-lg text-black mb-2">{variant.name}</h3>
+                        <p className="text-[var(--color-gold)] text-3xl font-bold mt-auto mb-4">{variant.price}</p>
+                        <button
+                          onClick={handleQuoteClick}
+                          className="w-full border-2 border-[var(--color-gold)] text-[var(--color-gold)] py-3 rounded-full font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-105"
+                        >
+                          Inquire
+                        </button>
                       </div>
                     </div>
                   ))}

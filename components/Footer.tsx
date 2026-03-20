@@ -1,6 +1,6 @@
 'use client'
 
-import { Heart } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 import Link from 'next/link';
 
 export function Footer() {
@@ -14,17 +14,16 @@ export function Footer() {
             </h3>
             <p className="text-gray-400 text-lg">Making your events unforgettable</p>
             <div className="flex items-center justify-center md:justify-start gap-2 mt-3 text-gray-400">
-              <span>Crafted with</span>
-              <Heart size={16} className="text-[var(--color-gold)] fill-[var(--color-gold)] animate-pulse" />
-              <span>in Scarborough</span>
+              <span>Crafted with love in Toronto</span>
             </div>
           </div>
           <div className="text-center md:text-right">
             <div className="flex flex-col gap-2">
-              <p className="text-gray-300 text-lg">📍 Scarborough, Ontario</p>
+              <p className="text-gray-300 text-lg">📍 30-1275 Morningside Ave.</p>
+              <p className="text-gray-300 text-lg">Scarborough, ON. M1B3W1</p>
               <p className="text-gray-400">Serving the Greater Toronto Area</p>
               <div className="h-px w-full bg-gradient-to-r from-transparent via-[var(--color-gold)]/30 to-transparent my-2"></div>
-              <p className="text-gray-500 text-sm">© 2026 True North Party Rentals</p>
+              <p className="text-gray-500 text-sm">© 2025 True North Party Rentals • v1.0</p>
               <p className="text-gray-500 text-sm">All rights reserved.</p>
             </div>
           </div>
@@ -39,15 +38,9 @@ export function Footer() {
               <Link href="/terms" className="hover:text-[var(--color-gold)] transition-colors">Terms of Service</Link>
             </div>
             <div className="flex gap-4">
-              <button className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
-                <span className="text-[var(--color-gold)] group-hover:text-black transition-colors">f</span>
-              </button>
-              <button className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
-                <span className="text-[var(--color-gold)] group-hover:text-black transition-colors">in</span>
-              </button>
-              <button className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
-                <span className="text-[var(--color-gold)] group-hover:text-black transition-colors">📷</span>
-              </button>
+              <a href="https://www.instagram.com/truenorthpartyrentals/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-[var(--color-gold)]/10 border border-[var(--color-gold)]/30 flex items-center justify-center hover:bg-[var(--color-gold)] hover:scale-110 transition-all duration-300 group">
+                <Instagram size={18} className="text-[var(--color-gold)] group-hover:text-black transition-colors" />
+              </a>
             </div>
           </div>
         </div>
