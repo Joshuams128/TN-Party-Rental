@@ -53,7 +53,7 @@ const services = [
     icon: Sparkles,
     title: 'Marquee Letters & Signs',
     description: 'Illuminated marquee letters, numbers, and neon signs to spell out your celebration.',
-    image: '/images/eventspace.jpeg'
+    image: '/images/Marquee-Letters.png'
   }
 ];
 
