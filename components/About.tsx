@@ -50,19 +50,17 @@ export function About() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold gold-gradient-text mb-8">
               OUR STORY
             </h1>
-            <div className="relative inline-block mb-10">
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] opacity-20 rounded-3xl blur-2xl"></div>
-              <div className="relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-6 rounded-3xl border-2 border-[var(--color-gold)]/30">
-                <div className="relative h-72 w-[28rem] sm:h-80 sm:w-[32rem] lg:h-96 lg:w-[40rem] overflow-hidden rounded-2xl">
-                  <ImageWithFallback
-                    src="/images/About_Tab_Image.png"
-                    alt="True North team setting up event"
-                    className="object-cover"
-                  />
-                </div>
+            <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mb-8 mx-auto"></div>
+
+            <div className="mb-12 w-full max-w-md mx-auto">
+              <div className="relative w-full" style={{ aspectRatio: '3/2' }}>
+                <ImageWithFallback
+                  src="/images/About_Tab_Image.png"
+                  alt="True North Party Rentals - Creating memorable events"
+                  className="rounded-2xl shadow-2xl object-cover"
+                />
               </div>
             </div>
-            <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mb-8 mx-auto"></div>
 
             <div className="max-w-4xl mx-auto space-y-6 text-center">
               <p className="text-xl text-gray-300 leading-relaxed font-semibold">
