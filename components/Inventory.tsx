@@ -84,7 +84,7 @@ const inventoryItems = [
     name: 'Décor & Props',
     description: 'Elegant props and décor pieces to elevate any event space with a personal touch',
     features: ['Cherry blossom trees', 'Rose hearts', 'White arches', 'Champagne walls'],
-    image: '/images/eventspace.jpeg',
+    image: '/images/secondary/white-arch.png',
     featured: false
   },
   {
@@ -94,7 +94,7 @@ const inventoryItems = [
     name: 'Carpet & Ropes',
     description: 'Make a grand entrance with red carpet and velvet rope packages for VIP-style arrivals',
     features: ['8ft red carpet', 'Velvet ropes', 'VIP entrance', 'Photo-ready'],
-    image: '/images/eventspace.jpeg',
+    image: '/images/secondary/carpet-red.png',
     featured: false
   },
   {
