@@ -241,7 +241,7 @@ export const productDetails: ProductDetail[] = [
       { name: 'Blue Floral Backdrop Package', price: '$200.00', image: '/images/secondary/blueforalbd.png', description: 'White modern arch frame with a blue and white faux floral arrangement.' },
       { name: 'Safari Backdrop Package', price: '$150.00', image: '/images/secondary/safaribd.png', description: 'Circular backdrop stands with safari-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'OM Backdrop Package', price: '$200.00', image: '/images/secondary/ombd.jpeg', description: 'Circular backdrop stands with OM-themed covers.' },
-      { name: 'Minnie Mouse Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Minnie Mouse–themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Minnie Mouse Backdrop Package', price: '$150.00', image: '/images/secondary/minnie.png', description: 'Circular backdrop stands with Minnie Mouse–themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Basketball Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with basketball-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Tangled Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Tangled-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Fortnite Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Fortnite-themed covers. Optional add-on: +$50 for cake stands.' },

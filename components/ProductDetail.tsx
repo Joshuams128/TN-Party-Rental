@@ -299,12 +299,15 @@ export function ProductDetailPage({ product }: Props) {
                   {/* Content */}
                   <div className="p-6 flex flex-col flex-1">
                     <h3 className="font-bold text-lg text-black mb-2">{variant.name}</h3>
+                    {variant.description && (
+                      <p className="text-gray-600 text-sm mb-3 leading-relaxed">{variant.description}</p>
+                    )}
                     <p className="text-[var(--color-gold)] text-3xl font-bold mt-auto mb-4">{variant.price}</p>
                     <button
                       onClick={handleQuoteClick}
                       className="w-full border-2 border-[var(--color-gold)] text-[var(--color-gold)] py-3 rounded-full font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-105"
                     >
-                      Add to Order
+                      Inquire
                     </button>
                   </div>
                 </div>
