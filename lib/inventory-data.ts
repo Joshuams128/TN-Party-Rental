@@ -78,15 +78,13 @@ export const productDetails: ProductDetail[] = [
     slug: 'mirror-photobooth',
     name: 'Mirror Photo Booth',
     description:
-      'Fun, interactive experience. Perfect for birthdays, weddings, corporate events & celebrations.\n\nFeatures an interactive full-length mirror with instant picture captures for guests. Additional hours beyond the included rental are $125 per hour.',
+      '2 Hours / Attendant\nRed carpet & stanchions included\n\nFun, interactive experience. Perfect for birthdays, weddings, corporate events & celebrations. Features an interactive full-length mirror with instant picture captures for guests. Additional hours beyond the 2-hour rental are $125 per hour.',
     category: 'signature',
     image: '/images/mirrorp.png',
     objectPosition: 'center 40%',
     pricingType: 'tiered',
     tiers: [
-      { label: 'CLASSIC BOOTH - 2 Hours', price: '$350.00', note: 'Red Carpet & Red Ropes Included' },
-      { label: 'SIGNATURE BOOTH', price: '$450.00', note: 'Red Carpet & Red Ropes Included' },
-      { label: 'LUXURY BOOTH', price: '$550.00', note: 'Red Carpet & Red Ropes Included\nProfessional setup' },
+      { label: '2 Hours', price: '$350.00' },
     ],
     features: [
       'Touchscreen interface',
@@ -347,8 +345,6 @@ export const productDetails: ProductDetail[] = [
       { name: 'Throne Chair – Gold', price: '$150.00', image: '/images/secondary/ThroneChair-Gold.png', description: 'Gold high-back throne chair with an ornate frame and cushioned seat.' },
       { name: 'Throne Chair – Silver', price: '$150.00', image: '/images/secondary/ThroneChair-silver.jpg', description: 'Silver high-back throne chair with an ornate frame and cushioned seat.' },
       { name: 'Boho Peacock Chair', price: '$100.00', image: '/images/secondary/BohoPeacockChair.png', description: 'Boho peacock chair with a woven rattan frame and high back design.' },
-      { name: 'LED Curved Bench', price: '$55.00', image: '/images/secondary/LEDCurvedBench.png', description: 'Illuminated seating surface and base.' },
-      { name: 'LED Barstool', price: '$40.00', image: '/images/secondary/LEDBarstool.png', description: 'LED podium bar stool with illuminated base and seat.' },
     ],
     features: [
       'Chiavari chairs',
@@ -378,8 +374,6 @@ export const productDetails: ProductDetail[] = [
       { name: 'Rectangle Table Cloths (8 ft)', price: '$16.00', image: '/images/secondary/Rectangle-Table-Cloths.png' },
       { name: 'Cylinder Decor Tables', price: '$150.00', image: '/images/secondary/CylinderDecorTables.png', description: 'Available in blue, white, pink, or gold.' },
       { name: 'Food Risers', price: '$3.00 each', image: '/images/secondary/food-risers.png' },
-      { name: 'LED Bar', price: '$250.00', image: '/images/secondary/led-bar.jpg', description: 'Curved LED bar with illuminated front panel and display shelves for bottles and glassware.' },
-      { name: 'LED Lounge Table', price: '$60.00', image: '/images/secondary/LEDLoungeTable.png', description: 'LED lounge cocktail table with illuminated base and top.' },
     ],
     features: [
       '60" & 72" rounds',
@@ -390,7 +384,55 @@ export const productDetails: ProductDetail[] = [
     note: 'All prices in CAD. HST extra.',
   },
 
-  // ─── STRUCTURES ───────────────────────────────────────────────────────────
+  // --- GLOW FURNITURE --------------------------------------------------------
+  {
+    slug: 'glow-furniture',
+    name: 'Glow Furniture',
+    description:
+      'LED illuminated furniture for stunning event ambiance — bars, tables, benches, and barstools with multicolor LED lighting, cordless battery-powered design, and weather-resistant materials.',
+    category: 'glow-furniture',
+    image: '/images/secondary/ledL.png',
+    pricingType: 'variants',
+    variants: [
+      { name: 'LED Curved Bench', price: '$55.00', image: '/images/secondary/LEDCurvedBench.png', description: 'Illuminated seating surface and base.' },
+      { name: 'LED Barstool', price: '$40.00', image: '/images/secondary/LEDBarstool.png', description: 'LED podium bar stool with illuminated base and seat.' },
+      { name: 'LED Bar', price: '$250.00', image: '/images/secondary/led-bar.jpg', description: 'Curved LED bar with illuminated front panel and display shelves for bottles and glassware.' },
+      { name: 'LED Lounge Table', price: '$60.00', image: '/images/secondary/LEDLoungeTable.png', description: 'LED lounge cocktail table with illuminated base and top.' },
+    ],
+    features: [
+      'LED Bar',
+      'LED Lounge Table',
+      'LED Curved Bench',
+      'LED Barstool',
+    ],
+    note: 'All prices in CAD. HST extra.',
+  },
+
+  // --- KIDS FURNITURE --------------------------------------------------------
+  {
+    slug: 'kids-furniture',
+    name: 'Kids Furniture',
+    description:
+      'Child-sized chairs and tables perfect for kids parties and family events. Lightweight yet sturdy, with matching seat cushions included on chairs.',
+    category: 'kids-furniture',
+    image: '/images/kids-tables.png',
+    pricingType: 'variants',
+    variants: [
+      { name: 'Kids Chiavari Chair - Blue', price: '$7.00', image: '/images/secondary/KidsChiavariChairblue.png', description: 'Blue chiavari chair sized for children. Includes seat cushion.' },
+      { name: 'Kids Chiavari Chair - Pink', price: '$7.00', image: '/images/secondary/KidsChiavariChairpink.png', description: 'Pink chiavari chair sized for children. Includes seat cushion.' },
+      { name: 'Kids Chiavari Chair - White', price: '$7.00', image: '/images/secondary/KidsChiavariChairwhite.png', description: 'White chiavari chair sized for children. Includes seat cushion.' },
+      { name: 'Kids Rectangle Table (6ft)', price: '$20.00', image: '/images/secondary/KidsRectangleTable.png', description: 'Child-height 6-foot rectangle table. Sturdy folding design.' },
+    ],
+    features: [
+      'Chiavari chairs',
+      'Rectangle tables',
+      'Child-sized',
+      'Multiple colors',
+    ],
+    note: 'All prices in CAD. HST extra.',
+  },
+
+  // --- STRUCTURES ------------------------------------------------------------
   {
     slug: 'event-tents',
     name: 'Event Tents & Canopies',

@@ -1,6 +1,6 @@
 'use client'
 
-import { Tent, Armchair, Music, Sparkles, Gift, X, Palette, Package, Menu } from 'lucide-react';
+import { Tent, Armchair, Sparkles, Gift, X, Palette, Package, Menu, Baby } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -12,7 +12,8 @@ const categories = [
   { id: 'decor', name: 'Décor', icon: Palette },
   { id: 'structures', name: 'Structures', icon: Tent },
   { id: 'furniture', name: 'Furniture', icon: Armchair },
-  { id: 'entertainment', name: 'TN Social', icon: Music },
+  { id: 'kids-furniture', name: 'Kids Furniture', icon: Baby },
+  { id: 'glow-furniture', name: 'Glow Furniture', icon: Sparkles },
 ];
 
 const inventoryItems = [
@@ -143,8 +144,28 @@ const inventoryItems = [
     category: 'furniture',
     name: 'Chairs & Seating',
     description: 'Elegant seating options including chiavari, folding, throne, and lounge furniture',
-    features: ['Chiavari chairs', 'Throne chairs', 'Folding chairs', 'Glow Furniture'],
+    features: ['Chiavari chairs', 'Throne chairs', 'Folding chairs', 'Lounge seating'],
     image: '/images/Chairs_and_Seating_Image.png',
+    featured: false
+  },
+  {
+    id: 19,
+    slug: 'kids-furniture',
+    category: 'kids-furniture',
+    name: 'Kids Furniture',
+    description: 'Child-sized chairs and tables perfect for kids parties and family events',
+    features: ['Chiavari chairs', 'Rectangle tables', 'Child-sized', 'Multiple colors'],
+    image: '/images/kids-tables.png',
+    featured: false
+  },
+  {
+    id: 20,
+    slug: 'glow-furniture',
+    category: 'glow-furniture',
+    name: 'Glow Furniture',
+    description: 'LED illuminated furniture for stunning event ambiance — bars, tables, benches, and barstools',
+    features: ['LED Bar', 'LED Lounge Table', 'LED Curved Bench', 'LED Barstool'],
+    image: '/images/secondary/ledL.png',
     featured: false
   },
 ];
