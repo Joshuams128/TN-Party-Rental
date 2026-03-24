@@ -203,14 +203,9 @@ export function PackagesPage() {
 
                 {/* Header with Icon */}
                 <div className="relative p-6 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold mb-1">{pkg.name}</h3>
-                      <p className="text-xs text-gray-300">{pkg.subtitle}</p>
-                    </div>
-                    <div className={`bg-gradient-to-br ${pkg.color} w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300`}>
-                      <pkg.icon className="text-white" size={24} />
-                    </div>
+                  <div className="mb-3">
+                    <h3 className="text-xl font-bold mb-1">{pkg.name}</h3>
+                    <p className="text-xs text-gray-300">{pkg.subtitle}</p>
                   </div>
                   <div className="flex items-baseline justify-start">
                     <span className="text-xs text-gray-400">{pkg.guests}</span>
@@ -304,9 +299,6 @@ export function PackagesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-smooth">
-              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                <span className="text-2xl">💰</span>
-              </div>
               <h3 className="text-xl font-bold mb-2 text-black">Flexible Pricing</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 All packages are customizable. Add or remove items to fit your budget perfectly.
@@ -314,9 +306,6 @@ export function PackagesPage() {
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-smooth">
-              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                <span className="text-2xl">📞</span>
-              </div>
               <h3 className="text-xl font-bold mb-2 text-black">Free Consultation</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Talk to our team to discuss your needs and get personalized recommendations.
@@ -324,9 +313,6 @@ export function PackagesPage() {
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-smooth">
-              <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                <span className="text-2xl">✨</span>
-              </div>
               <h3 className="text-xl font-bold mb-2 text-black">Quality Guaranteed</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Premium equipment, professional service, and on-time delivery — every time.

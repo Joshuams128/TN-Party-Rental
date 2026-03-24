@@ -50,7 +50,7 @@ export function About() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold gold-gradient-text mb-8">
               OUR STORY
             </h1>
-            <div className="h-1 w-20 bg-gradient-to-r from-[var(--color-gold)] to-transparent mb-8 mx-auto"></div>
+            <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent mb-8 mx-auto"></div>
 
             <div className="mb-12 w-full max-w-md mx-auto">
               <div className="relative w-full" style={{ aspectRatio: '3/2' }}>
