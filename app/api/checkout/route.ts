@@ -3,10 +3,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 export async function POST(req: Request) {
   try {
-    const { itemName, price } = await req.json()
+    const { itemName, price, cancelUrl } = await req.json()
     
     const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'
     console.log('Checkout baseUrl:', baseUrl)
+    
+    // Determine cancel URL based on item type
+    const finalCancelUrl = cancelUrl || (itemName.includes('Event Ticket') ? `${baseUrl}/tn-social` : `${baseUrl}/inventory`)
     
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -20,7 +23,7 @@ export async function POST(req: Request) {
       }],
       mode: 'payment',
       success_url: `${baseUrl}/success`,
-      cancel_url: `${baseUrl}/inventory`,
+      cancel_url: finalCancelUrl,
     })
     
     console.log('Session created with success_url:', `${baseUrl}/success`)

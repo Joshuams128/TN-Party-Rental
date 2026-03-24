@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ImageIcon, X } from 'lucide-react';
+import { ImageIcon, X, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 const events = [
@@ -12,7 +12,7 @@ const events = [
     image: '/images/secondary/summer-event.PNG',
     description:
       'Get ready for the ultimate summer vibes! Join us for an unforgettable night of soca music, dancing, and Caribbean energy.',
-    ticketLink: '#',
+    ticketPrice: 5000, // $50.00 in cents
     comingSoon: false,
   },
   {
@@ -21,7 +21,7 @@ const events = [
     image: '/images/secondary/soca-event.PNG',
     description:
       'Experience the rhythm of the islands at Soca Social. A premium soca event featuring top DJs, great vibes, and an electric atmosphere.',
-    ticketLink: '#',
+    ticketPrice: 4500, // $45.00 in cents
     comingSoon: true,
   },
   {
@@ -30,13 +30,40 @@ const events = [
     image: '/images/secondary/wicked-event.PNG',
     description:
       'The ultimate carnival experience is here! Immerse yourself in the culture, music, and energy of the Caribbean carnival tradition.',
-    ticketLink: '#',
+    ticketPrice: 6000, // $60.00 in cents
     comingSoon: true,
   },
 ];
 
 export default function TNSocialPage() {
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [loadingEventId, setLoadingEventId] = useState<string | null>(null);
+
+  const handlePurchaseTicket = async (eventId: string, eventName: string, ticketPrice: number) => {
+    setLoadingEventId(eventId);
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemName: `${eventName} - Event Ticket`,
+          price: ticketPrice,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to create checkout session. Please try again.');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setLoadingEventId(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-[var(--color-gray-dark)] to-black text-white">
@@ -125,18 +152,29 @@ export default function TNSocialPage() {
               {/* Body */}
               <div className="p-6 flex flex-col flex-grow">
                 <h3 className="text-2xl font-bold text-[var(--color-gold)] mb-3">{event.name}</h3>
-                <p className="text-gray-300 mb-6 flex-grow">{event.description}</p>
+                <p className="text-gray-300 mb-4 flex-grow">{event.description}</p>
+                <p className="text-xl font-bold text-[var(--color-gold)] mb-4">
+                  ${(event.ticketPrice / 100).toFixed(2)} CAD
+                </p>
                 {event.comingSoon ? (
                   <div className="w-full bg-gray-600 text-white px-8 py-4 rounded-full text-lg font-bold text-center block cursor-not-allowed opacity-60">
                     Coming Soon
                   </div>
                 ) : (
-                  <Link
-                    href={event.ticketLink}
-                    className="w-full bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-xl hover:shadow-[var(--color-gold)]/30 transition-all duration-300 transform hover:scale-105 text-center block"
+                  <button
+                    onClick={() => handlePurchaseTicket(event.id, event.name, event.ticketPrice)}
+                    disabled={loadingEventId === event.id}
+                    className="w-full bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full text-lg font-bold hover:shadow-xl hover:shadow-[var(--color-gold)]/30 transition-all duration-300 transform hover:scale-105 text-center flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                   >
-                    Purchase Tickets
-                  </Link>
+                    {loadingEventId === event.id ? (
+                      <>
+                        <Loader2 className="animate-spin" size={20} />
+                        Processing...
+                      </>
+                    ) : (
+                      'Purchase Tickets'
+                    )}
+                  </button>
                 )}
               </div>
             </div>
