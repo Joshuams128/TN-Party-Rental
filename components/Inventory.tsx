@@ -9,7 +9,7 @@ const categories = [
   { id: 'all', name: 'All Items', icon: Gift },
   { id: 'signature', name: 'Signature', icon: Sparkles },
   { id: 'packages', name: 'Packages', icon: Package },
-  { id: 'decor', name: 'Décor', icon: Palette },
+  { id: 'decor', name: 'Decor', icon: Palette },
   { id: 'structures', name: 'Structures', icon: Tent },
   { id: 'furniture', name: 'Furniture', icon: Armchair },
   { id: 'kids-furniture', name: 'Kids Furniture', icon: Baby },
@@ -65,7 +65,7 @@ const inventoryItems = [
     name: 'Backdrop Packages',
     description: 'Stunning backdrop options for any theme — florals, characters, custom designs, and more',
     features: ['30+ themes available', 'Character backdrops', 'Floral designs', 'Custom wording'],
-    image: '/images/secondary/spiderman1.png',
+    image: '/images/secondary/avengers.JPG',
     featured: false
   },
   {
@@ -82,10 +82,10 @@ const inventoryItems = [
     id: 16,
     slug: 'decor-props',
     category: 'decor',
-    name: 'Décor & Props',
-    description: 'Elegant props and décor pieces to elevate any event space with a personal touch',
+    name: 'Decor & Props',
+    description: 'Elegant props and decor pieces to elevate any event space with a personal touch',
     features: ['Cherry blossom trees', 'Rose hearts', 'White arches', 'Champagne walls'],
-    image: '/images/secondary/white-arch.png',
+    image: '/images/secondary/cherrydecor.jpeg',
     featured: false
   },
   {
@@ -99,33 +99,13 @@ const inventoryItems = [
     featured: false
   },
   {
-    id: 4,
-    slug: 'event-tents',
-    category: 'structures',
-    name: 'Event Tents & Canopies',
-    description: 'Weather-proof pop-up canopy tents in multiple sizes — perfect for outdoor events',
-    features: ['Multiple sizes', 'Weather-proof', 'Sidewalls available', 'Professional setup'],
-    image: '/images/bigtent.png',
-    featured: false
-  },
-  {
-    id: 11,
-    slug: 'dance-floors',
-    category: 'structures',
-    name: 'Dance Floors',
-    description: 'Portable dance floors in various sizes with professional installation',
-    features: ['Multiple sizes', 'Black & white', 'Professional install', 'Indoor/outdoor'],
-    image: '/images/dance.png',
-    featured: false
-  },
-  {
     id: 18,
     slug: 'inflatables',
     category: 'structures',
     name: 'Inflatables & Bounce Houses',
     description: 'Fun and safe inflatable entertainment for kids and adults at any event',
     features: ['Bouncy houses', 'Inflatable igloos', 'Party houses', 'Safe & clean'],
-    image: '/images/bigtent.png',
+    image: '/images/secondary/WhiteInflatableHouse.png',
     featured: false
   },
   {

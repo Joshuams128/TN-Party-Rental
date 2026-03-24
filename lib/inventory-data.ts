@@ -126,7 +126,7 @@ export const productDetails: ProductDetail[] = [
     image: '/images/Custom_Balloon_Decorations_Image.PNG',
     pricingType: 'variants',
     variants: [
-      { name: 'Mini Garland — 7 ft', price: 'Inquire for pricing', image: '/images/secondary/8ftgarland.png', description: '7-Foot Mini Balloon Garland featuring three balloon colours.' },
+      { name: 'Mini Garland — 7 ft', price: 'Inquire for pricing', image: '/images/secondary/mamatobegarland.JPG', description: '7-Foot Mini Balloon Garland featuring three balloon colours.' },
       { name: 'Classic Garland — 10 ft', price: 'Inquire for pricing', image: '/images/secondary/10lux.png', description: '10-Foot Classic Balloon Garland featuring three balloon colours.' },
       { name: 'Deluxe Garland — 12 ft', price: 'Inquire for pricing', image: '/images/secondary/12ftballoon.png', description: '12-Foot Deluxe Balloon Garland featuring four balloon colours.' },
       { name: 'Luxury Garland — 14–16 ft', price: 'Inquire for pricing', image: '/images/secondary/16ftballoon.png', description: '14-16-Foot Luxury Balloon Garland featuring five balloon colours.' },
@@ -158,33 +158,39 @@ export const productDetails: ProductDetail[] = [
     note: 'HST extra where applicable.',
   },
 
-  // ─── DÉCOR ────────────────────────────────────────────────────────────────
+  // ─── DECOR ────────────────────────────────────────────────────────────────
   {
     slug: 'backdrop-packages',
     name: 'Backdrop Packages',
     description:
       'Stunning backdrop options for any theme — from elegant florals to beloved characters and custom designs.',
     category: 'decor',
-    image: '/images/secondary/spiderman1.png',
+    image: '/images/secondary/avengers.JPG',
     pricingType: 'variants',
     variants: [
-      { name: 'White Circle Backdrop Package', price: '$200.00', image: '/images/secondary/whitebackdrop.png', description: 'Includes circular backdrop stands with premium white covers.' },
+      {
+        name: 'Shimmer Backdrop Package - Silver',
+        price: '$250.00',
+        image: '/images/secondary/shimmer.png',
+        description: '8×10 ft shimmer backdrop panel with hardware. Silver finish. +$50 for hardware'
+      },
+      {
+        name: 'Shimmer Backdrop Package - Gold',
+        price: '$250.00',
+        image: '/images/secondary/ShimmerPanelbd.png',
+        description: '8×10 ft shimmer backdrop panel with hardware. Gold finish. +$50 for hardware'
+      },
       { name: 'Red Rose Backdrop Package', price: '$250.00', image: '/images/secondary/redbackdrop.png', description: 'Backdrop stand with a red rose backdrop panel featuring realistic floral textures.' },
       { name: 'White Rose Backdrop Package', price: '$250.00', image: '/images/secondary/whiterose2.jpeg', description: 'Backdrop stand with a white rose backdrop panel featuring realistic floral textures.' },
-      { name: 'Gold Metal Backdrop Package', price: '$200.00', image: '/images/secondary/goldbackdrop.png', description: 'Gold metal backdrop stand with a sleek reflective finish.' },
       { name: 'Grass Backdrop Package', price: '$250.00', image: '/images/secondary/grassbackdrop.png', description: 'Grass wall panel with a vibrant green finish and a backdrop stand.' },
+      { name: 'White Circle Backdrop Package', price: '$200.00', image: '/images/secondary/whitebackdrop.png', description: 'Includes circular backdrop stands with premium white covers.' },
       {
         name: 'Summer Floral Backdrop Package',
         price: '$200.00',
         image: '/images/secondary/summerbackdrop.png',
         description: 'Full floral backdrop panel with summer blooms made from artificial flowers.'
       },
-      {
-        name: 'Shimmer Backdrop Package',
-        price: '$200.00',
-        image: '/images/secondary/shimmer.png',
-        description: '8×10 ft shimmer backdrop panel with hardware. Available in gold or silver.'
-      },
+      { name: 'Gold Metal Backdrop Package', price: '$200.00', image: '/images/secondary/goldbackdrop.png', description: 'Gold metal backdrop stand with a sleek reflective finish.' },
       {
         name: 'Frozen Backdrop Package',
         price: '$150.00',
@@ -227,7 +233,7 @@ export const productDetails: ProductDetail[] = [
         image: '/images/secondary/spiderman2.png',
         description: 'Circular backdrop stands with Spiderman-themed covers. Optional add-on: +$50 for cake stands.'
       },
-      { name: 'Avengers Backdrop Package', price: '$150.00', image: '/images/secondary/avengers.JPG', description: 'Circular backdrop stands with Avengers-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Avengers Backdrop Package', price: '$150.00', image: '/images/secondary/avengers2.png', description: 'Circular backdrop stands with Avengers-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Soccer Backdrop Package', price: '$150.00', image: '/images/secondary/soccerbackdrop.png', description: 'Circular backdrop stands with soccer-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Mermaid Backdrop Package', price: '$150.00', image: '/images/secondary/mermaidbd.png', description: 'Circular backdrop stands with mermaid-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Moana Backdrop Package', price: '$150.00', image: '/images/secondary/Moanabd.png', description: 'Circular backdrop stands with Moana-themed covers. Optional add-on: +$50 for cake stands.' },
@@ -254,7 +260,7 @@ export const productDetails: ProductDetail[] = [
     description:
       'Illuminated marquee letters, numbers, and neon signs to spell out your celebration in style.',
     category: 'decor',
-    image: '/images/eventspace.jpeg',
+    image: '/images/secondary/happybirth.png',
     pricingType: 'variants',
     variants: [
       {
@@ -270,9 +276,9 @@ export const productDetails: ProductDetail[] = [
         description: '3.2ft white marquee number (0–9) with built-in lights.',
       },
       { name: 'Marquee Heart', price: '$70.00', image: '/images/secondary/heartmarq.png', description: '3.2ft white marquee heart with built-in lights.' },
-      { name: 'Marquee – Ring', price: '$70.00', image: '/images/secondary/ring.png' },
+      { name: 'Marquee – Ring', price: '$50.00', image: '/images/secondary/ring.png' },
       { name: 'Marquee – BABY (Word Set)', price: '$125.00', image: '/images/secondary/babymarq.png', description: '3.2ft white marquee letters with lights spelling BABY.' },
-      { name: '"Will You Marry Me" Neon Sign', price: '$80.00', image: '/images/secondary/marry.png', description: '"Will You Marry Me" LED neon sign with bright white cursive lighting.' },
+      { name: '"Will You Marry Me" Neon Sign', price: '$80.00', image: '/images/secondary/marry-sign.png', description: '"Will You Marry Me" LED neon sign with bright white cursive lighting.' },
       { name: '"Bride to Be" Neon Sign', price: '$80.00', image: '/images/secondary/bridemarquee.png', description: '"Bride to Be" LED neon sign with warm white cursive lighting.' },
       { name: '"Congrats" Neon Sign', price: '$70.00', image: '/images/secondary/congrats.png', description: '"Congrats" LED neon sign with warm white cursive lighting.' },
       { name: '"Happy Birthday" Neon Sign', price: '$70.00', image: '/images/secondary/happybirth.png', description: '"Happy Birthday" LED neon sign with cursive lighting.' },
@@ -288,11 +294,11 @@ export const productDetails: ProductDetail[] = [
   },
   {
     slug: 'decor-props',
-    name: 'Décor & Props',
+    name: 'Decor & Props',
     description:
-      'Elegant props and décor pieces to elevate any event space with a personal touch.',
+      'Elegant props and decor pieces to elevate any event space with a personal touch',
     category: 'decor',
-    image: '/images/secondary/white-arch.png',
+    image: '/images/secondary/cherrydecor.jpeg',
     pricingType: 'variants',
     variants: [
       { name: 'Cherry Blossom Tree', price: '$250.00', image: '/images/secondary/cherrydecor.jpeg', description: '10 ft lifelike cherry blossom tree in pink or white with a freestanding base.' },
@@ -300,10 +306,10 @@ export const productDetails: ProductDetail[] = [
       { name: 'Solid Wood "BABY" Blocks', price: '$80.00', image: '/images/secondary/wood-baby.png', description: 'Solid wood baby blocks with a smooth natural finish spelling B-A-B-Y. Approximate 16" each.' },
       { name: 'Red Rose Heart', price: '$250.00', image: '/images/secondary/heart-display.jpg', description: 'Red rose heart arrangement with a sturdy stand.' },
       { name: 'White Rose Heart', price: '$250.00', image: '/images/secondary/white-heart-display.jpeg', description: 'White rose heart arrangement with a sturdy stand.' },
-      { name: 'Golden Heart', price: '$125.00', image: '/images/secondary/golden-heart.png', description: 'Heart-shaped gold frame mirror with a reflective finish.' },
+      { name: 'Golden Heart', price: '$200.00', image: '/images/secondary/golden-heart.png', description: 'Heart-shaped gold frame mirror with a reflective finish.' },
       { name: 'White Arch', price: '$100.00', image: '/images/secondary/white-arch.png', description: '7 ft white arch frame.' },
       { name: 'Champagne Wall', price: '$125.00', image: '/images/secondary/cham-wall.png', description: 'White champagne wall with a sleek finish and built-in glass holders.' },
-      { name: 'Dessert Cart', price: '$200.00', image: '/images/secondary/dessertcart.jpg', description: 'White dessert cart with wood panel accents and built-in LED lighting.' },
+      { name: 'Charcuterie Cart', price: '$200.00', image: '/images/secondary/dessertcart.jpg', description: 'White charcuterie cart with wood panel accents and built-in LED lighting.' },
     ],
     features: ['Premium quality', 'Great centrepieces', 'Wide variety'],
     note: 'All prices in CAD. HST extra.',
@@ -314,7 +320,7 @@ export const productDetails: ProductDetail[] = [
     description:
       'Make a grand entrance with our red carpet and velvet rope packages for VIP-style arrivals.',
     category: 'decor',
-    image: '/images/eventspace.jpeg',
+    image: '/images/secondary/RedCarpetVelvetRope.png',
     pricingType: 'variants',
     variants: [
       { name: 'Red Carpet', price: '$60.00', image: '/images/secondary/red-carpet.png', description: '8 ft red carpet runner.' },
@@ -335,11 +341,11 @@ export const productDetails: ProductDetail[] = [
     image: '/images/Chairs_and_Seating_Image.png',
     pricingType: 'variants',
     variants: [
-      { name: 'Standard Folding Chairs', price: '$2.50', image: '/images/secondary/standard-chair.png' },
+      { name: 'Standard Folding Chairs', price: '$2.00', image: '/images/secondary/standard-chair.png' },
       { name: 'Spandex Chair Covers', price: '$3.00', image: '/images/secondary/SpandexChairCovers.png', description: 'Available in black or white.' },
-      { name: 'Black Chiavari Chairs', price: '$8.50 each', image: '/images/secondary/BlackChiavariChairs.jpg', description: 'Includes seat cushions.' },
-      { name: 'Clear Chiavari Chairs', price: '$8.50 each', image: '/images/secondary/ClearChiavariChairs.png', description: 'Includes seat cushions.' },
-      { name: 'Gold Chiavari Chairs', price: '$8.50 each', image: '/images/secondary/GoldChiavariChairs.png', description: 'Includes seat cushions.' },
+      { name: 'Black Chiavari Chairs', price: '$7.00 each', image: '/images/secondary/BlackChiavariChairs.jpg', description: 'Includes seat cushions.' },
+      { name: 'Clear Chiavari Chairs', price: '$7.00 each', image: '/images/secondary/ClearChiavariChairs.png', description: 'Includes seat cushions.' },
+      { name: 'Gold Chiavari Chairs', price: '$7.00 each', image: '/images/secondary/GoldChiavariChairs.png', description: 'Includes seat cushions.' },
       { name: 'Crossback Harvest Chairs', price: '$9.50 each', image: '/images/secondary/CrossbackHarvestChairs.jpg', description: 'Cross-back harvest chair with a wooden frame and seat.' },
       { name: 'Fruitwood Folding Chairs', price: '$8.00 each', image: '/images/secondary/FruitwoodFoldingChairs.jpg' },
       { name: 'Throne Chair – Gold', price: '$150.00', image: '/images/secondary/ThroneChair-Gold.png', description: 'Gold high-back throne chair with an ornate frame and cushioned seat.' },
@@ -381,7 +387,7 @@ export const productDetails: ProductDetail[] = [
       'Cocktail tables',
       'Folding tables',
     ],
-    note: 'All prices in CAD. HST extra.',
+    note: 'All prices in CAD. HST extra. Inquire about your choice of colour in the form as well.',
   },
 
   // --- GLOW FURNITURE --------------------------------------------------------
@@ -434,62 +440,25 @@ export const productDetails: ProductDetail[] = [
 
   // --- STRUCTURES ------------------------------------------------------------
   {
-    slug: 'event-tents',
-    name: 'Event Tents & Canopies',
-    description:
-      'Weather-proof pop-up canopy tents in multiple sizes — perfect for outdoor events of any scale.',
-    category: 'structures',
-    image: '/images/bigtent.png',
-    pricingType: 'variants',
-    variants: [
-      { name: 'Canopy Pop-Up Tent 10x10', price: '$140.00', image: '/images/secondary/Canopy-Pop-Up10-10.png', description: '10×10-foot white canopy tent with a sturdy frame for outdoor coverage.' },
-      { name: 'Canopy Pop-Up Tent 10x20', price: '$200.00', image: '/images/secondary/CanopyPop-UpTent-10x20.png', description: '10×20-foot white canopy tent with a sturdy frame for outdoor coverage.' },
-      { name: 'Canopy Pop-Up Tent 20x40', price: '$979.00', image: '/images/secondary/CanopyPop-Up20ftx40ft.png', description: '20×40-foot white canopy tent with a sturdy frame for outdoor coverage.' },
-    ],
-    features: [
-      'Weather-proof',
-      'Multiple sizes',
-      'Sidewalls available',
-      'Professional setup',
-    ],
-    note: 'All prices in CAD. HST extra. Delivery & setup fees may apply.',
-  },
-  {
-    slug: 'dance-floors',
-    name: 'Dance Floors',
-    description:
-      'Portable dance floors in various sizes with professional installation for indoor and outdoor events.',
-    category: 'structures',
-    image: '/images/dance.png',
-    pricingType: 'quote',
-    features: [
-      'Multiple sizes',
-      'Black & white',
-      'Professional install',
-      'Indoor/outdoor',
-    ],
-    note: 'Pricing varies by size and location. Contact us for a custom quote.',
-  },
-  {
     slug: 'inflatables',
     name: 'Inflatables & Bounce Houses',
     description:
       'Fun and safe inflatable entertainment for kids and adults — perfect for backyard parties and large events.',
     category: 'structures',
-    image: '/images/bigtent.png',
+    image: '/images/secondary/WhiteInflatableHouse.png',
     pricingType: 'variants',
     variants: [
-      { name: 'Inflatable Bounce House', price: '$360.00', description: 'All-white inflatable house made from durable, weather-resistant material.' },
-      { name: 'Inflatable Igloo', price: '$200.00', description: 'White and clear inflatable igloo dome made from weather-resistant material.' },
-      { name: 'Inflatable Party House', price: '$800.00', description: 'Black inflatable party house made from durable, weather-resistant material.' },
+      { name: 'Inflatable Bounce House', price: '$360.00', description: 'All-white inflatable house made from durable, weather-resistant material.', image: '/images/secondary/WhiteInflatableHouse.png' },
+      { name: 'Inflatable Igloo', price: '$200.00', description: 'White and clear inflatable igloo dome made from weather-resistant material.', image: '/images/secondary/InflatablIgloo.png' },
+      { name: 'Inflatable Party House', price: '$800.00', description: 'Black inflatable party house made from durable, weather-resistant material.', image: '/images/secondary/InflatablePartyHouse.png' },
     ],
     features: [
+      'Bouncy houses',
+      'Inflatable igloos',
+      'Party houses',
       'Safe & clean',
-      'Setup included',
-      'Indoor & outdoor options',
-      'Multiple styles',
     ],
-    note: 'All prices in CAD. HST extra. Delivery & setup included.',
+    note: 'All prices in CAD. HST extra. Delivery & setup additional charge.',
   },
 ];
 

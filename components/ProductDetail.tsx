@@ -302,10 +302,12 @@ export function ProductDetailPage({ product }: Props) {
                     {variant.description && (
                       <p className="text-gray-600 text-sm mb-3 leading-relaxed">{variant.description}</p>
                     )}
-                    <p className="text-[var(--color-gold)] text-3xl font-bold mt-auto mb-4">{variant.price}</p>
+                    {variant.price !== 'Inquire for pricing' && (
+                      <p className="text-[var(--color-gold)] text-3xl font-bold mt-auto mb-4">{variant.price}</p>
+                    )}
                     <button
                       onClick={handleQuoteClick}
-                      className="w-full border-2 border-[var(--color-gold)] text-[var(--color-gold)] py-3 rounded-full font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-105"
+                      className={`w-full border-2 border-[var(--color-gold)] text-[var(--color-gold)] py-3 rounded-full font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300 transform hover:scale-105 ${variant.price === 'Inquire for pricing' ? 'mt-auto' : ''}`}
                     >
                       Inquire
                     </button>
