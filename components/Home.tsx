@@ -267,12 +267,7 @@ export function Home() {
                       </div>
                     )}
                     <div className="p-6">
-                      <div className="flex items-center mb-4">
-                        <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-3 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                          <service.icon className="text-black" size={28} />
-                        </div>
-                        <h3 className="ml-4 text-xl font-bold text-black">{service.title}</h3>
-                      </div>
+                      <h3 className="text-xl font-bold text-black mb-4">{service.title}</h3>
                       <p className="text-gray-600 leading-relaxed">{service.description}</p>
                     </div>
                   </div>
@@ -320,12 +315,7 @@ export function Home() {
                     </div>
                   )}
                   <div className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-3 rounded-xl shadow-md transform group-hover:scale-110 transition-all duration-300">
-                        <service.icon className="text-black" size={28} />
-                      </div>
-                      <h3 className="ml-4 text-xl font-semibold text-black">{service.title}</h3>
-                    </div>
+                    <h3 className="text-xl font-semibold text-black mb-4">{service.title}</h3>
                     <p className="text-gray-600 leading-relaxed">{service.description}</p>
                   </div>
                 </div>
@@ -372,9 +362,6 @@ export function Home() {
             <div className="group relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-8 rounded-2xl border-2 border-[var(--color-gold)]/30 hover:border-[var(--color-gold)] transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-[var(--color-gold)]/20">
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
               <div className="relative z-10">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                  <Award className="text-black" size={32} />
-                </div>
                 <h3 className="text-2xl font-bold mb-4 text-[var(--color-gold)]">Premium Quality</h3>
                 <p className="text-gray-300 leading-relaxed">
                   All our equipment is professionally maintained and regularly updated to ensure you get the best quality for your event.
@@ -385,9 +372,6 @@ export function Home() {
             <div className="group relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-8 rounded-2xl border-2 border-[var(--color-gold)]/30 hover:border-[var(--color-gold)] transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-[var(--color-gold)]/20">
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
               <div className="relative z-10">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                  <Star className="text-black" size={32} />
-                </div>
                 <h3 className="text-2xl font-bold mb-4 text-[var(--color-gold)]">5-Star Service</h3>
                 <p className="text-gray-300 leading-relaxed">
                   Our dedicated team goes above and beyond to ensure your event runs smoothly from setup to teardown.
@@ -398,9 +382,6 @@ export function Home() {
             <div className="group relative bg-gradient-to-br from-[var(--color-gray-dark)] to-[var(--color-gray-medium)] p-8 rounded-2xl border-2 border-[var(--color-gold)]/30 hover:border-[var(--color-gold)] transition-all duration-500 transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-[var(--color-gold)]/20">
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
               <div className="relative z-10">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                  <Sparkles className="text-black" size={32} />
-                </div>
                 <h3 className="text-2xl font-bold mb-4 text-[var(--color-gold)]">Unique Offerings</h3>
                 <p className="text-gray-300 leading-relaxed">
                   Stand out with our exclusive 360° camera, mirror booth, and professional balloon garlands that wow your guests.

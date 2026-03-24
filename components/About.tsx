@@ -146,9 +146,6 @@ export function About() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
                 <div className="relative z-10">
-                  <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                    <value.icon className="text-black" size={32} />
-                  </div>
                   <h3 className="text-2xl font-bold mb-3 text-[var(--color-gold)]">
                     {value.title}
                   </h3>
@@ -172,82 +169,57 @@ export function About() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Award className="text-black" size={28} />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                    Family-Owned GTA Business
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    As a locally operated family business, we take pride in every event we service. We treat each setup with care and attention to detail because our reputation in the community matters to us.
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                  Family-Owned GTA Business
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  As a locally operated family business, we take pride in every event we service. We treat each setup with care and attention to detail because our reputation in the community matters to us.
+                </p>
               </div>
             </div>
 
             <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Star className="text-black" size={28} />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                    5-Star Rated Service
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Our clients consistently trust us for professional communication, clean setups, and dependable service. We aim to make every experience smooth from your first message to the final takedown.
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                  5-Star Rated Service
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Our clients consistently trust us for professional communication, clean setups, and dependable service. We aim to make every experience smooth from your first message to the final takedown.
+                </p>
               </div>
             </div>
 
             <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Sparkles className="text-black" size={28} />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                    Full Setup and Takedown Included
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    We handle the delivery, installation, and removal of all rentals and decor so everything is ready before your guests arrive. You won&apos;t need to assemble, move, or return any equipment.
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                  Full Setup and Takedown Included
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  We handle the delivery, installation, and removal of all rentals and decor so everything is ready before your guests arrive. You won&apos;t need to assemble, move, or return any equipment.
+                </p>
               </div>
             </div>
 
             <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Target className="text-black" size={28} />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                    Custom Packages
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Every event is different, so we offer flexible packages tailored to your space, theme, and budget. We work with you to create a setup that fits your vision.
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                  Custom Packages
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Every event is different, so we offer flexible packages tailored to your space, theme, and budget. We work with you to create a setup that fits your vision.
+                </p>
               </div>
             </div>
 
             <div className="group bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] p-4 rounded-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <Clock className="text-black" size={28} />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
-                    Reliable and On-Time Service
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    We arrive on schedule and complete setups within the agreed timeframe so your event stays on track. Our goal is to give you peace of mind on the day of your celebration.
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-2 text-[var(--color-gold)]">
+                  Reliable and On-Time Service
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  We arrive on schedule and complete setups within the agreed timeframe so your event stays on track. Our goal is to give you peace of mind on the day of your celebration.
+                </p>
               </div>
             </div>
           </div>

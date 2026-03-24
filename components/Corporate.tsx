@@ -152,9 +152,6 @@ export function Corporate() {
                 key={index}
                 className="group relative bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-[var(--color-gold)] shadow-smooth hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2"
               >
-                <div className="bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] w-16 h-16 rounded-xl flex items-center justify-center mb-6 shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                  <type.icon className="text-black" size={32} />
-                </div>
                 <h3 className="text-xl font-bold mb-3 text-[var(--color-gold)]">
                   {type.title}
                 </h3>
