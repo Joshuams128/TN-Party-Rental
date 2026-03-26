@@ -252,8 +252,6 @@ export function Home() {
                   className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)]"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {/* Gold border glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)] via-[var(--color-gold-light)] to-[var(--color-gold)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl blur-xl"></div>
 
                   <div className="relative overflow-hidden bg-white">
                     {service.image && (
