@@ -396,7 +396,7 @@ export const productDetails: ProductDetail[] = [
     description:
       'LED illuminated furniture for stunning event ambiance — bars, tables, benches, and barstools with multicolor LED lighting, cordless battery-powered design, and weather-resistant materials.',
     category: 'glow-furniture',
-    image: '/images/secondary/ledL.png',
+    image: '/images/secondary/led-tables-chairs.png',
     pricingType: 'variants',
     variants: [
       { name: 'LED Curved Bench', price: '$55.00', image: '/images/secondary/LEDCurvedBench.png', description: 'Illuminated seating surface and base.' },

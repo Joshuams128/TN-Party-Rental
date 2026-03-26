@@ -145,7 +145,7 @@ const inventoryItems = [
     name: 'Glow Furniture',
     description: 'LED illuminated furniture for stunning event ambiance — bars, tables, benches, and barstools',
     features: ['LED Bar', 'LED Lounge Table', 'LED Curved Bench', 'LED Barstool'],
-    image: '/images/secondary/ledL.png',
+    image: '/images/secondary/led-tables-chairs.png',
     featured: false
   },
 ];
