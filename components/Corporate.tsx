@@ -217,7 +217,6 @@ export function Corporate() {
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Building2 className="text-[var(--color-gold)] mx-auto mb-6" size={64} />
           <h2 className="text-5xl font-bold mb-6">
             Ready to Plan Your <span className="gold-gradient-text">Corporate Event?</span>
           </h2>

@@ -261,9 +261,6 @@ export function PackagesPage() {
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--color-gold)] opacity-10 rounded-full blur-3xl"></div>
             
             <div className="relative z-10 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[var(--color-gold)] to-[var(--color-gold-light)] rounded-2xl mb-6 shadow-lg">
-                <Sparkles className="text-black" size={32} />
-              </div>
               <h3 className="text-3xl sm:text-4xl font-bold mb-4">
                 Need a <span className="gold-gradient-text">Custom Package?</span>
               </h3>

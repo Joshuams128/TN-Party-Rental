@@ -30,7 +30,7 @@ const events = [
   },
   {
     id: 'wicked-carnival-experience',
-    name: 'Wicked Carnival Experience',
+    name: 'Wicked',
     image: '/images/secondary/wicked-event.PNG',
     description:
       'The ultimate carnival experience is here! Immerse yourself in the culture, music, and energy of the Caribbean carnival tradition.',
