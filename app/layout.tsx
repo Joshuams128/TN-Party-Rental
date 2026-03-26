@@ -18,6 +18,14 @@ export const metadata: Metadata = {
     title: 'True North Party Rentals',
     description: 'Premier event rental company in Scarborough',
     type: 'website',
+    images: [
+      {
+        url: '/images/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'True North Party Rentals Logo',
+      },
+    ],
   },
 }
 
