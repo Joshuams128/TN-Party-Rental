@@ -25,7 +25,7 @@ const services = [
   {
     icon: Camera,
     title: 'Mirror Photo Booth',
-    description: 'Elegant full-length interactive mirror with touchscreen, voice guidance, and instant prints. A showstopper at any event.',
+    description: '360 Camera Photo Booth with rotating camera platform capturing HD slow-motion videos of guests from every angle. Features an interactive full-length mirror with instant picture captures for guests.',
     image: '/images/mirrorp.png',
     objectPosition: 'center 40%',
     featured: true
@@ -33,20 +33,27 @@ const services = [
   {
     icon: Sparkles,
     title: 'Balloon Garlands',
-    description: 'Professional balloon artistry including arches, garlands, sculptures, and themed installations to transform your venue.',
+    description: 'Professional balloon garland artistry in various sizes for stunning event décor.',
     image: '/images/Custom_Balloon_Decorations_Image.PNG',
+    featured: true
+  },
+  {
+    icon: Camera,
+    title: 'Backdrop Packages',
+    description: 'Stunning backdrop options for any theme — from elegant florals to beloved characters and custom designs.',
+    image: '/images/secondary/avengers.JPG',
     featured: true
   },
   {
     icon: UtensilsCrossed,
     title: 'Tables & Linens',
-    description: 'Premium tables, tablecloths, and runners in various colors and styles to match your event theme.',
+    description: 'Premium tables in various sizes with professional-grade construction for any event layout.',
     image: '/images/Tables_and_Linen_Image.png'
   },
   {
     icon: Armchair,
     title: 'Chairs & Seating',
-    description: 'Comfortable and elegant seating options including chiavari chairs, folding chairs, and lounge furniture.',
+    description: 'Elegant and comfortable seating options to suit any event style — from intimate gatherings to grand galas.',
     image: '/images/Chairs_and_Seating_Image.png'
   },
   {
@@ -238,17 +245,17 @@ export function Home() {
               <div className="h-px bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent flex-1 max-w-xs"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 max-w-6xl mx-auto">
               {featuredServices.map((service, index) => (
                 <div
                   key={index}
-                  className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+                  className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)]"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {/* Gold border glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-gold)] via-[var(--color-gold-light)] to-[var(--color-gold)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl blur-xl"></div>
-                  
-                  <div className="relative border-2 border-[var(--color-gold)] rounded-2xl overflow-hidden bg-white">
+
+                  <div className="relative overflow-hidden bg-white">
                     {service.image && (
                       <div 
                         className="h-56 overflow-hidden relative cursor-pointer"
