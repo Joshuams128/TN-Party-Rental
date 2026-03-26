@@ -475,6 +475,7 @@ export function Home() {
                     <p className="text-gray-600">Monday–Friday: 12–4 p.m.</p>
                     <p className="text-gray-600">Saturday: 10 a.m.–2 p.m.</p>
                     <p className="text-gray-600">Sunday: Closed</p>
+                    <p className="text-gray-600 mt-1 italic">By appointment only</p>
                   </div>
                 </div>
               </div>

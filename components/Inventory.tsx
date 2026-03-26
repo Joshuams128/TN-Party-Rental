@@ -135,7 +135,7 @@ const inventoryItems = [
     name: 'Kids Furniture',
     description: 'Child-sized chairs and tables perfect for kids parties and family events',
     features: ['Chiavari chairs', 'Rectangle tables', 'Child-sized', 'Multiple colors'],
-    image: '/images/kids-tables.png',
+    image: '/images/secondary/kids-table-chairs.png',
     featured: false
   },
   {

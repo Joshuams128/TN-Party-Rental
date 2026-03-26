@@ -379,7 +379,6 @@ export const productDetails: ProductDetail[] = [
       { name: 'Rectangle Table Cloths (6 ft)', price: '$13.00', image: '/images/secondary/Rectangle-Table-Cloths.png' },
       { name: 'Rectangle Table Cloths (8 ft)', price: '$16.00', image: '/images/secondary/Rectangle-Table-Cloths.png' },
       { name: 'Cylinder Decor Tables', price: '$150.00', image: '/images/secondary/CylinderDecorTables.png', description: 'Available in blue, white, pink, or gold.' },
-      { name: 'Food Risers', price: '$3.00 each', image: '/images/secondary/food-risers.png' },
     ],
     features: [
       '60" & 72" rounds',
@@ -402,7 +401,7 @@ export const productDetails: ProductDetail[] = [
     variants: [
       { name: 'LED Curved Bench', price: '$55.00', image: '/images/secondary/LEDCurvedBench.png', description: 'Illuminated seating surface and base.' },
       { name: 'LED Barstool', price: '$40.00', image: '/images/secondary/LEDBarstool.png', description: 'LED podium bar stool with illuminated base and seat.' },
-      { name: 'LED Bar', price: '$250.00', image: '/images/secondary/led-bar.jpg', description: 'Curved LED bar with illuminated front panel and display shelves for bottles and glassware.' },
+      { name: 'LED Bar', price: '$200.00', image: '/images/secondary/led-bar.jpg', description: 'Curved LED bar with illuminated front panel and display shelves for bottles and glassware.' },
       { name: 'LED Lounge Table', price: '$60.00', image: '/images/secondary/LEDLoungeTable.png', description: 'LED lounge cocktail table with illuminated base and top.' },
     ],
     features: [
@@ -421,7 +420,7 @@ export const productDetails: ProductDetail[] = [
     description:
       'Child-sized chairs and tables perfect for kids parties and family events. Lightweight yet sturdy, with matching seat cushions included on chairs.',
     category: 'kids-furniture',
-    image: '/images/kids-tables.png',
+    image: '/images/secondary/kids-table-chairs.png',
     pricingType: 'variants',
     variants: [
       { name: 'Kids Chiavari Chair - Blue', price: '$7.00', image: '/images/secondary/KidsChiavariChairblue.png', description: 'Blue chiavari chair sized for children. Includes seat cushion.' },
