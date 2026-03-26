@@ -22,7 +22,7 @@ const events = [
   {
     id: 'soca-social',
     name: 'Soca Social',
-    image: '/images/secondary/soca-event.PNG',
+    image: '/images/secondary/socasocial.PNG',
     description:
       'Experience the rhythm of the islands at Soca Social. A premium soca event featuring top DJs, great vibes, and an electric atmosphere.',
     comingSoon: true,
