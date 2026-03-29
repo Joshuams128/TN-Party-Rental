@@ -188,7 +188,7 @@ export function Home() {
           </div>
           
           <p className="text-2xl sm:text-3xl mb-4 font-light tracking-wide animate-hero-fade animation-delay-600">
-            Stylish Event Decor & Experiences Across the GTA
+            Celebrations Made Perfect
           </p>
           <p className="text-lg sm:text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-300 animate-hero-fade animation-delay-800">
             Luxury event rentals, photo booths & balloon garlands for unforgettable celebrations.
