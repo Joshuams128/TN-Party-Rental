@@ -42,8 +42,6 @@ export const productDetails: ProductDetail[] = [
     variants: [
       { name: 'Luxury White Rose Wall', price: '$180.00', image: '/images/secondary/whiterose.png' },
       { name: 'Signature Red Rose Wall', price: '$180.00', image: '/images/secondary/redrose.png' },
-      { name: 'Gold Rose Backdrop', price: '$180.00', image: '/images/secondary/goldbackdrop.png' },
-      { name: 'Shimmer Wall', price: '$180.00', image: '/images/secondary/shimmer.png' },
     ],
     features: [
       'Slow-motion capture',
@@ -64,8 +62,6 @@ export const productDetails: ProductDetail[] = [
     variants: [
       { name: 'Luxury White Rose Wall', price: '$180.00', image: '/images/secondary/whiterose.png' },
       { name: 'Signature Red Rose Wall', price: '$180.00', image: '/images/secondary/redrose.png' },
-      { name: 'Gold Rose Backdrop', price: '$180.00', image: '/images/secondary/goldbackdrop.png' },
-      { name: 'Shimmer Wall', price: '$180.00', image: '/images/secondary/shimmer.png' },
     ],
     features: [
       'Premium backdrops',
@@ -105,8 +101,6 @@ export const productDetails: ProductDetail[] = [
       { name: 'Red Carpet & Red Ropes - Included', price: '$0.00', image: '/images/secondary/carpet-red.png' },
       { name: 'Luxury White Rose Wall', price: '$180.00', image: '/images/secondary/whiterose.png' },
       { name: 'Signature Red Rose Wall', price: '$180.00', image: '/images/secondary/redrose.png' },
-      { name: 'Gold Rose Backdrop', price: '$180.00', image: '/images/secondary/goldbackdrop.png' },
-      { name: 'Shimmer Wall', price: '$180.00', image: '/images/secondary/shimmer.png' },
       { name: 'Digital Print', price: '$80.00', image: '/images/secondary/digital.png' },
     ],
     features: [

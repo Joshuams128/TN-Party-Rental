@@ -32,7 +32,7 @@ const inventoryItems = [
     slug: 'mirror-photobooth',
     category: 'signature',
     name: 'Mirror Photo Booth',
-    description: 'Features an interactive full-length mirror with instant picture captures for guests. Additional hours beyond the 4-hour rental are $125 per hour.',
+    description: 'Features an interactive full-length mirror with instant picture captures for guests. Additional hours beyond the 2-hour rental are $125 per hour.',
     features: ['Touchscreen interface', 'Instant prints', 'Digital gallery'],
     image: '/images/mirrorp.png',
     objectPosition: 'center 40%',

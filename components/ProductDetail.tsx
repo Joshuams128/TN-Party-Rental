@@ -396,7 +396,7 @@ export function ProductDetailPage({ product }: Props) {
       {product.slug === 'premium-packages' && (() => {
         const addOns = [
           { name: 'Marquee Ring', price: '+$50.00', image: '/images/secondary/MarqueeHeart.png' },
-          { name: 'Red Rose Heart', price: '+$100.00', image: '/images/secondary/redheart.png' },
+          { name: 'Red Rose Heart', price: '+$200.00', image: '/images/secondary/redheart.png' },
         ];
         return (
           <section className="py-20 bg-gray-50">
