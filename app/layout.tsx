@@ -6,15 +6,18 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'True North Party Rentals | Event Rentals in Scarborough',
   description: 'True North Party Rentals - Premier event rental company in Scarborough. Quality equipment and packages for weddings, corporate events, and parties.',
   keywords: ['party rentals', 'event rentals', 'Scarborough', 'wedding rentals', 'corporate events'],
   icons: {
-    icon: '/images/logo.png',
-    apple: '/images/logo.png',
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     title: 'True North Party Rentals',
@@ -38,6 +41,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="dns-prefetch" href="https://assets.calendly.com" />
+        <link rel="preconnect" href="https://assets.calendly.com" crossOrigin="anonymous" />
+      </head>
       <body className={inter.className}>
         <Header />
         <main className="min-h-screen">
