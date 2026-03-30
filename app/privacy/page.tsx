@@ -234,7 +234,7 @@ export default function PrivacyPolicyPage() {
             <div className="bg-white/5 border border-[var(--color-gold)]/20 rounded-xl p-6">
               <MapPin className="text-[var(--color-gold)] mx-auto mb-3" size={28} />
               <h3 className="font-semibold mb-2">Location</h3>
-              <p className="text-gray-400 text-sm">30-1275 Morningside Ave.</p>
+              <p className="text-gray-400 text-sm">32-1275 Morningside Ave.</p>
               <p className="text-gray-400 text-sm">Scarborough, ON. M1B3W1</p>
             </div>
           </div>
