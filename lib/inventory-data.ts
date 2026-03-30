@@ -418,9 +418,9 @@ export const productDetails: ProductDetail[] = [
     slug: 'kids-furniture',
     name: 'Kids Furniture',
     description:
-      'Child-sized chairs and tables perfect for kids parties and family events. Lightweight yet sturdy, with matching seat cushions included on chairs.',
+      'Child-sized chairs and tables perfect for kids parties and family events. Lightweight yet sturdy, with matching seat cushions included on chairs. Inquire for birthday party packages.',
     category: 'kids-furniture',
-    image: '/images/secondary/kids-table-chairs.png',
+    image: '/images/secondary/kids-tables-chairs.PNG',
     pricingType: 'variants',
     variants: [
       { name: 'Kids Chiavari Chair - Blue', price: '$7.00', image: '/images/secondary/KidsChiavariChairblue.png', description: 'Blue chiavari chair sized for children. Includes seat cushion.' },
