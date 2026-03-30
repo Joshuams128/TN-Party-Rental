@@ -19,7 +19,7 @@ export function Footer() {
           </div>
           <div className="text-center md:text-right">
             <div className="flex flex-col gap-2">
-              <p className="text-gray-300 text-lg">📍 30-1275 Morningside Ave.</p>
+              <p className="text-gray-300 text-lg">📍 32-1275 Morningside Ave.</p>
               <p className="text-gray-300 text-lg">Scarborough, ON. M1B3W1</p>
               <p className="text-gray-400">Serving the Greater Toronto Area</p>
               <div className="h-px w-full bg-gradient-to-r from-transparent via-[var(--color-gold)]/30 to-transparent my-2"></div>

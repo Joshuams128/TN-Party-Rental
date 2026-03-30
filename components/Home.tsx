@@ -464,7 +464,7 @@ export function Home() {
                   </div>
                   <div className="ml-6">
                     <h3 className="text-xl font-bold mb-2 text-[var(--color-gold)] transition-colors">Address</h3>
-                    <p className="text-gray-600 text-lg">30-1275 Morningside Ave.</p>
+                    <p className="text-gray-600 text-lg">32-1275 Morningside Ave.</p>
                     <p className="text-gray-600 text-lg">Scarborough, ON. M1B3W1</p>
                   </div>
                 </div>

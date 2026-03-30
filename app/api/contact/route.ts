@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
 
     // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: 'True North Party Rentals <onboarding@resend.dev>', // Update this with your verified domain
-      to: ['info@truenorthpartyrentals.com'], // Update with your actual email
+      from: 'True North Party Rentals <truenorthpartyrentals@gmail.com>',
+      to: ['joshuams128@gmail.com'],
       replyTo: email,
       subject: `New Contact Form Submission - ${eventType}`,
       html: `

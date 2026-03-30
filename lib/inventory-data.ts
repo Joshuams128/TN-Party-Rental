@@ -127,8 +127,8 @@ export const productDetails: ProductDetail[] = [
     pricingType: 'variants',
     variants: [
       { name: 'Mini Garland — 7 ft', price: 'Inquire for pricing', image: '/images/secondary/mamatobegarland.JPG', description: '7-Foot Mini Balloon Garland featuring three balloon colours.' },
-      { name: 'Classic Garland — 10 ft', price: 'Inquire for pricing', image: '/images/secondary/10lux.png', description: '10-Foot Classic Balloon Garland featuring three balloon colours.' },
-      { name: 'Deluxe Garland — 12 ft', price: 'Inquire for pricing', image: '/images/secondary/12ftballoon.png', description: '12-Foot Deluxe Balloon Garland featuring four balloon colours.' },
+      { name: 'Classic Garland — 10 ft', price: 'Inquire for pricing', image: '/images/secondary/happy-birth-garland.png', description: '10-Foot Classic Balloon Garland featuring three balloon colours.' },
+      { name: 'Deluxe Garland — 12 ft', price: 'Inquire for pricing', image: '/images/secondary/garland-12.jpg', description: '12-Foot Deluxe Balloon Garland featuring four balloon colours.' },
       { name: 'Luxury Garland — 14–16 ft', price: 'Inquire for pricing', image: '/images/secondary/16ftballoon.png', description: '14-16-Foot Luxury Balloon Garland featuring five balloon colours.' },
     ],
     features: [
@@ -170,27 +170,27 @@ export const productDetails: ProductDetail[] = [
     variants: [
       {
         name: 'Shimmer Backdrop Package - Silver',
-        price: '$250.00',
-        image: '/images/secondary/shimmer.png',
-        description: '8×10 ft shimmer backdrop panel with hardware. Silver finish. +$50 for hardware'
+        price: '$200.00',
+        image: '/images/secondary/shrimmer-silver.jpg',
+        description: '8×10 ft shimmer backdrop panel with hardware. Silver finish. Includes hardware.'
       },
       {
         name: 'Shimmer Backdrop Package - Gold',
-        price: '$250.00',
+        price: '$200.00',
         image: '/images/secondary/ShimmerPanelbd.png',
-        description: '8×10 ft shimmer backdrop panel with hardware. Gold finish. +$50 for hardware'
+        description: '8×10 ft shimmer backdrop panel with hardware. Gold finish. Includes hardware.'
       },
-      { name: 'Red Rose Backdrop Package', price: '$250.00', image: '/images/secondary/redbackdrop.png', description: 'Backdrop stand with a red rose backdrop panel featuring realistic floral textures.' },
-      { name: 'White Rose Backdrop Package', price: '$250.00', image: '/images/secondary/whiterose2.jpeg', description: 'Backdrop stand with a white rose backdrop panel featuring realistic floral textures.' },
-      { name: 'Grass Backdrop Package', price: '$250.00', image: '/images/secondary/grassbackdrop.png', description: 'Grass wall panel with a vibrant green finish and a backdrop stand.' },
-      { name: 'White Circle Backdrop Package', price: '$200.00', image: '/images/secondary/whitebackdrop.png', description: 'Includes circular backdrop stands with premium white covers.' },
+      { name: 'Red Rose Backdrop Package', price: '$200.00', image: '/images/secondary/redbackdrop.png', description: 'Backdrop stand with a red rose backdrop panel featuring realistic floral textures. Includes hardware.' },
+      { name: 'White Rose Backdrop Package', price: '$200.00', image: '/images/secondary/whiterose2.jpeg', description: 'Backdrop stand with a white rose backdrop panel featuring realistic floral textures. Includes hardware.' },
+      { name: 'Grass Backdrop Package', price: '$200.00', image: '/images/secondary/grassbackdrop.png', description: 'Grass wall panel with a vibrant green finish and a backdrop stand. Includes hardware.' },
+      { name: 'White Circle Backdrop Package', price: '$150.00', image: '/images/secondary/whitebackdrop.png', description: 'Includes circular backdrop stands with premium white covers. Additional items inquire for.' },
       {
         name: 'Summer Floral Backdrop Package',
-        price: '$200.00',
+        price: '$150.00',
         image: '/images/secondary/summerbackdrop.png',
-        description: 'Full floral backdrop panel with summer blooms made from artificial flowers.'
+        description: 'Full floral backdrop panel with summer blooms made from artificial flowers. Additional items inquire for.'
       },
-      { name: 'Gold Metal Backdrop Package', price: '$200.00', image: '/images/secondary/goldbackdrop.png', description: 'Gold metal backdrop stand with a sleek reflective finish.' },
+      { name: 'Gold Metal Backdrop Package', price: '$150.00', image: '/images/secondary/goldbackdrop.png', description: 'Gold metal backdrop stand with a sleek reflective finish. Additional items inquire for.' },
       {
         name: 'Frozen Backdrop Package',
         price: '$150.00',
@@ -237,22 +237,22 @@ export const productDetails: ProductDetail[] = [
       { name: 'Soccer Backdrop Package', price: '$150.00', image: '/images/secondary/soccerbackdrop.png', description: 'Circular backdrop stands with soccer-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Mermaid Backdrop Package', price: '$150.00', image: '/images/secondary/mermaidbd.png', description: 'Circular backdrop stands with mermaid-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Moana Backdrop Package', price: '$150.00', image: '/images/secondary/Moanabd.png', description: 'Circular backdrop stands with Moana-themed covers. Optional add-on: +$50 for cake stands.' },
-      { name: 'Mr & Mrs Backdrop Package', price: '$200.00', image: '/images/secondary/mr&msbd.png', description: 'Circular backdrop stands with "Mr & Mrs" themed covers.' },
+      { name: 'Mr & Mrs Backdrop Package', price: '$150.00', image: '/images/secondary/mr&msbd.png', description: 'Circular backdrop stands with "Mr & Mrs" themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Boss Baby Backdrop Package', price: '$150.00', image: '/images/secondary/BossBabybd.png', description: 'Circular backdrop stands with Boss Baby–themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Toy Story Backdrop Package', price: '$150.00', image: '/images/secondary/toybd.png', description: 'Circular backdrop stands with Toy Story–themed covers. Optional add-on: +$50 for cake stands.' },
-      { name: 'Marble Backdrop Package', price: '$200.00', image: '/images/secondary/marblebd.png', description: 'Circular backdrop stands with marble-themed covers.' },
-      { name: 'Pink Floral Backdrop Package', price: '$200.00', image: '/images/secondary/floralbd.png', description: 'Full pink floral backdrop panel with pink and blush-toned flowers and a backdrop stand.' },
-      { name: 'Blue Floral Backdrop Package', price: '$200.00', image: '/images/secondary/blueforalbd.png', description: 'White modern arch frame with a blue and white faux floral arrangement.' },
+      { name: 'Marble Backdrop Package', price: '$150.00', image: '/images/secondary/marblebd.png', description: 'Circular backdrop stands with marble-themed covers. Optional add-on: +$50 for cake stands.' },
+      { name: 'Pink Floral Backdrop Package', price: '$150.00', image: '/images/secondary/floralbd.png', description: 'Full pink floral backdrop panel with pink and blush-toned flowers and a backdrop stand.' },
+      { name: 'Blue Floral Backdrop Package', price: '$150.00', image: '/images/secondary/blueforalbd.png', description: 'White modern arch frame with a blue and white faux floral arrangement.' },
       { name: 'Safari Backdrop Package', price: '$150.00', image: '/images/secondary/safaribd.png', description: 'Circular backdrop stands with safari-themed covers. Optional add-on: +$50 for cake stands.' },
-      { name: 'OM Backdrop Package', price: '$200.00', image: '/images/secondary/ombd.jpeg', description: 'Circular backdrop stands with OM-themed covers.' },
+      { name: 'OM Backdrop Package', price: '$150.00', image: '/images/secondary/ombd.jpeg', description: 'Circular backdrop stands with OM-themed covers. Optional add-on: +$60 for candles shown in image.' },
       { name: 'Minnie Mouse Backdrop Package', price: '$150.00', image: '/images/secondary/minnie.png', description: 'Circular backdrop stands with Minnie Mouse–themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Basketball Backdrop Package', price: '$150.00', image: '/images/secondary/basketballbd.png', description: 'Circular backdrop stands with basketball-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Tangled Backdrop Package', price: '$150.00', image: '/images/secondary/tangledbd.png', description: 'Circular backdrop stands with Tangled-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Fortnite Backdrop Package', price: '$150.00', image: '/images/secondary/fortnitebd.png', description: 'Circular backdrop stands with Fortnite-themed covers. Optional add-on: +$50 for cake stands.' },
-      { name: 'Arched Panel Backdrop (Custom Wording)', price: '$250.00', image: '/images/secondary/archedbd.png', description: '7 ft white arched panel with custom wording.' },
+      { name: 'Arched Panel Backdrop (Custom Wording)', price: '$150.00', image: '/images/secondary/archedbd.png', description: '7 ft white arched panel with custom wording. Additional items inquire for.' },
     ],
     features: ['Easy setup', 'Wide theme selection', 'Great photo background'],
-    note: 'All prices in CAD. HST extra. $150 includes backdrop + hardware/piping.',
+    note: 'All prices in CAD. HST extra.',
   },
   {
     slug: 'marquee-letters',
