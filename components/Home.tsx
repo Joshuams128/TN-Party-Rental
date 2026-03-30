@@ -481,6 +481,12 @@ export function Home() {
                     <p className="text-gray-600">Saturday: 10 a.m.–2 p.m.</p>
                     <p className="text-gray-600">Sunday: Closed</p>
                     <p className="text-gray-600 mt-1 italic">By appointment only</p>
+                    <button
+                      onClick={() => (window as any).Calendly?.initPopupWidget({ url: 'https://calendly.com/truenorthpartyrentals' })}
+                      className="mt-3 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-2 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-[var(--color-gold)]/30 transition-all duration-300 transform hover:scale-105"
+                    >
+                      Book Now
+                    </button>
                   </div>
                 </div>
               </div>
