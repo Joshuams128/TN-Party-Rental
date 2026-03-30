@@ -434,7 +434,7 @@ export const productDetails: ProductDetail[] = [
       'Child-sized',
       'Multiple colors',
     ],
-    note: 'All prices in CAD. HST extra.',
+    note: 'All prices in CAD. HST extra. Inquire for birthday party packages.',
   },
 
   // --- STRUCTURES ------------------------------------------------------------
