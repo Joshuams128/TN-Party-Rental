@@ -149,8 +149,8 @@ export function PackagesPage() {
     <div className="pt-20">
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-black via-[var(--color-gray-dark)] to-black text-white overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-10 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--color-gold)] opacity-10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-[var(--color-gold)] opacity-5 rounded-full blur-3xl"></div>
         
         {/* Animated overlay */}
         <div className="absolute inset-0 animate-shimmer"></div>
