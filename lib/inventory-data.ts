@@ -337,9 +337,9 @@ export const productDetails: ProductDetail[] = [
     variants: [
       { name: 'Standard Folding Chairs', price: '$2.00', image: '/images/secondary/standard-chair.png' },
       { name: 'Spandex Chair Covers', price: '$3.00', image: '/images/secondary/SpandexChairCovers.png', description: 'Available in black or white.' },
-      { name: 'Black Chiavari Chairs', price: '$7.00 each', image: '/images/secondary/BlackChiavariChairs.jpg', description: 'Includes seat cushions.' },
-      { name: 'Clear Chiavari Chairs', price: '$7.00 each', image: '/images/secondary/ClearChiavariChairs.png', description: 'Includes seat cushions.' },
-      { name: 'Gold Chiavari Chairs', price: '$7.00 each', image: '/images/secondary/GoldChiavariChairs.png', description: 'Includes seat cushions.' },
+      { name: 'Black Chiavari Chairs', price: '$8.00 each', image: '/images/secondary/BlackChiavariChairs.jpg', description: 'Includes seat cushions.' },
+      { name: 'Clear Chiavari Chairs', price: '$8.00 each', image: '/images/secondary/ClearChiavariChairs.png', description: 'Includes seat cushions.' },
+      { name: 'Gold Chiavari Chairs', price: '$8.00 each', image: '/images/secondary/GoldChiavariChairs.png', description: 'Includes seat cushions.' },
       { name: 'Crossback Harvest Chairs', price: '$9.50 each', image: '/images/secondary/CrossbackHarvestChairs.jpg', description: 'Cross-back harvest chair with a wooden frame and seat.' },
       { name: 'Fruitwood Folding Chairs', price: '$8.00 each', image: '/images/secondary/FruitwoodFoldingChairs.jpg' },
       { name: 'Throne Chair – Gold', price: '$150.00', image: '/images/secondary/ThroneChair-Gold.png', description: 'Gold high-back throne chair with an ornate frame and cushioned seat.' },
@@ -372,7 +372,7 @@ export const productDetails: ProductDetail[] = [
       { name: 'Rectangle Table Cloths (4 ft)', price: '$10.00', image: '/images/secondary/Rectangle-Table-Cloths.png' },
       { name: 'Rectangle Table Cloths (6 ft)', price: '$13.00', image: '/images/secondary/Rectangle-Table-Cloths.png' },
       { name: 'Rectangle Table Cloths (8 ft)', price: '$16.00', image: '/images/secondary/Rectangle-Table-Cloths.png' },
-      { name: 'Cylinder Decor Tables', price: '$150.00', image: '/images/secondary/CylinderDecorTables.png', description: 'Available in blue, white, pink, or gold.' },
+      { name: 'Cylinder Decor Tables', price: '$50.00', image: '/images/secondary/CylinderDecorTables.png', description: 'Available in blue, white, pink, or gold.' },
     ],
     features: [
       '60" & 72" rounds',
