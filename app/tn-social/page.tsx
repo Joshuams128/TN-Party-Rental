@@ -7,28 +7,6 @@ import { useState } from 'react';
 
 const events = [
   {
-    id: 'summer-soca',
-    name: 'Summer Soca',
-    image: '/images/secondary/summer-event.PNG',
-    description:
-      'Get ready for the ultimate summer vibes! Join us for an unforgettable night of soca music, dancing, and Caribbean energy.',
-    comingSoon: false,
-    ticketUrl: 'https://www.ticketgateway.com/event/view/summer-soca-affair',
-    genderPricing: {
-      men: 20,
-      women: 10,
-    },
-  },
-  {
-    id: 'soca-social',
-    name: 'Soca Social',
-    image: '/images/secondary/socasocial.PNG',
-    description:
-      'Experience the rhythm of the islands at Soca Social. A premium soca event featuring top DJs, great vibes, and an electric atmosphere.',
-    comingSoon: true,
-    tierPricing: 'Tier 1 $25',
-  },
-  {
     id: 'wicked-carnival-experience',
     name: 'Wicked',
     image: '/images/secondary/wicked-event.PNG',
@@ -85,11 +63,11 @@ export default function TNSocialPage() {
 
       {/* Event Cards */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="flex flex-wrap justify-center gap-10">
           {events.map((event) => (
             <div
               key={event.id}
-              className="bg-gradient-to-br from-[var(--color-gray-dark)] to-black rounded-2xl overflow-hidden border-2 border-[var(--color-gold)]/40 shadow-2xl flex flex-col relative"
+              className="bg-gradient-to-br from-[var(--color-gray-dark)] to-black rounded-2xl overflow-hidden border-2 border-[var(--color-gold)]/40 shadow-2xl flex flex-col relative w-full max-w-sm"
             >
               {/* Coming Soon Badge */}
               {event.comingSoon && (
