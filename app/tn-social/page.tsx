@@ -5,7 +5,19 @@ import Link from 'next/link';
 import { ImageIcon, X } from 'lucide-react';
 import { useState } from 'react';
 
-const events = [
+type EventItem = {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  comingSoon: boolean;
+  ticketUrl?: string;
+  genderPricing?: { men: number; women: number };
+  tierPricing?: string;
+  price?: string;
+};
+
+const events: EventItem[] = [
   {
     id: 'wicked-carnival-experience',
     name: 'Wicked',
