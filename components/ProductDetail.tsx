@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { ChevronLeft, Phone, Mail, Tag, ImageIcon } from 'lucide-react';
 import type { ProductDetail } from '@/lib/inventory-data';
-import { getProductBySlug } from '@/lib/inventory-data';
+import { getProductBySlug, slugify } from '@/lib/inventory-data';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 interface Props {
   product: ProductDetail;
@@ -13,6 +14,26 @@ interface Props {
 
 export function ProductDetailPage({ product }: Props) {
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  // When arriving from search (?v=variant-slug), scroll to that exact variant
+  // card and briefly highlight it.
+  useEffect(() => {
+    const target = searchParams.get('v');
+    if (!target) return;
+
+    setHighlighted(target);
+    const scrollTimer = setTimeout(() => {
+      document.getElementById(`v-${target}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+    const clearTimer = setTimeout(() => setHighlighted(null), 3000);
+
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [searchParams]);
 
   const handleQuoteClick = () => {
     window.location.href = '/#contact';
@@ -210,7 +231,10 @@ export function ProductDetailPage({ product }: Props) {
                     {product.variants.map((variant) => (
                       <div
                         key={variant.name}
-                        className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
+                        id={`v-${slugify(variant.name)}`}
+                        className={`group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full scroll-mt-28 ${
+                          highlighted === slugify(variant.name) ? 'ring-4 ring-[var(--color-gold)]/60 ring-offset-2' : ''
+                        }`}
                       >
                         {/* Image area */}
                         <div
@@ -267,7 +291,10 @@ export function ProductDetailPage({ product }: Props) {
               {product.variants.map((variant) => (
                 <div
                   key={variant.name}
-                  className="group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
+                  id={`v-${slugify(variant.name)}`}
+                  className={`group bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full scroll-mt-28 ${
+                    highlighted === slugify(variant.name) ? 'ring-4 ring-[var(--color-gold)]/60 ring-offset-2' : ''
+                  }`}
                 >
                   {/* Image area */}
                   <div

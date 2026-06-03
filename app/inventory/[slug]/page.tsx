@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { getProductBySlug, productDetails } from '@/lib/inventory-data';
 import { ProductDetailPage } from '@/components/ProductDetail';
 
@@ -25,5 +26,9 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
   const product = getProductBySlug(slug);
   if (!product) notFound();
-  return <ProductDetailPage product={product} />;
+  return (
+    <Suspense>
+      <ProductDetailPage product={product} />
+    </Suspense>
+  );
 }

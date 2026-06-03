@@ -458,3 +458,13 @@ export const productDetails: ProductDetail[] = [
 export function getProductBySlug(slug: string): ProductDetail | undefined {
   return productDetails.find((p) => p.slug === slug);
 }
+
+/** Turn a variant/item name into a URL- and DOM-id-safe anchor. */
+export function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // strip accents
+    .replace(/[^a-z0-9]+/g, '-') // non-alphanumerics -> dash
+    .replace(/^-+|-+$/g, ''); // trim leading/trailing dashes
+}

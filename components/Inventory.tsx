@@ -2,7 +2,8 @@
 
 import { Tent, Armchair, Sparkles, Gift, X, Palette, Package, Menu, Baby } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 const categories = [
@@ -16,7 +17,7 @@ const categories = [
   { id: 'glow-furniture', name: 'Glow Furniture', icon: Sparkles },
 ];
 
-const inventoryItems = [
+export const inventoryItems = [
   {
     id: 1,
     slug: '360-camera',
@@ -154,10 +155,32 @@ export function InventoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const searchParams = useSearchParams();
 
-  const filteredItems = selectedCategory === 'all' 
-    ? inventoryItems 
+  const filteredItems = selectedCategory === 'all'
+    ? inventoryItems
     : inventoryItems.filter(item => item.category === selectedCategory);
+
+  // When arriving from search (?item=slug), show all items, scroll to the
+  // matching card and briefly highlight it.
+  useEffect(() => {
+    const target = searchParams.get('item');
+    if (!target || !inventoryItems.some((i) => i.slug === target)) return;
+
+    setSelectedCategory('all');
+    setHighlighted(target);
+
+    const scrollTimer = setTimeout(() => {
+      document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 150);
+    const clearTimer = setTimeout(() => setHighlighted(null), 3000);
+
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [searchParams]);
 
   return (
     <div className="pt-20">
@@ -273,7 +296,12 @@ export function InventoryPage() {
             {filteredItems.map((item, index) => (
               <div
                 key={item.id}
-                className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col"
+                id={item.slug}
+                className={`group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col scroll-mt-44 ${
+                  highlighted === item.slug
+                    ? 'border-2 border-[var(--color-gold)] ring-4 ring-[var(--color-gold)]/50 ring-offset-2'
+                    : 'border-2 border-[var(--color-gold)]'
+                }`}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {item.featured && (

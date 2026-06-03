@@ -1,9 +1,11 @@
 'use client'
 
 import { Check, Sparkles, Heart, Briefcase, PartyPopper, Users } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-const packages = [
+export const packages = [
   {
     id: 'intimate',
     name: 'Intimate Gathering',
@@ -145,6 +147,28 @@ const packages = [
 ];
 
 export function PackagesPage() {
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  // When arriving from search (?pkg=id), scroll to the package card and
+  // briefly highlight it.
+  useEffect(() => {
+    const target = searchParams.get('pkg');
+    if (!target || !packages.some((p) => p.id === target)) return;
+
+    setHighlighted(target);
+
+    const scrollTimer = setTimeout(() => {
+      document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 150);
+    const clearTimer = setTimeout(() => setHighlighted(null), 3000);
+
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [searchParams]);
+
   return (
     <div className="pt-20">
       {/* Hero Section */}
@@ -184,9 +208,10 @@ export function PackagesPage() {
             {packages.map((pkg, index) => (
               <div
                 key={pkg.id}
-                className={`group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full shadow-lg border-2 border-[var(--color-gold)] hover:shadow-2xl ${
+                id={pkg.id}
+                className={`group relative bg-white rounded-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2 flex flex-col h-full shadow-lg border-2 border-[var(--color-gold)] hover:shadow-2xl scroll-mt-28 ${
                   pkg.popular || pkg.featured ? 'shadow-2xl' : ''
-                }`}
+                } ${highlighted === pkg.id ? 'ring-4 ring-[var(--color-gold)]/50 ring-offset-2' : ''}`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Popular/Featured Badge */}
