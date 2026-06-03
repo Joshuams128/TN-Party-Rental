@@ -3,8 +3,11 @@
 import { Building2, Users, Presentation, Coffee, Award, CheckCircle, Sparkles } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { slugify } from '@/lib/inventory-data';
 
-const packages = [
+export const corporatePackages = [
   {
     name: 'Essential',
     price: 'Starting at $499',
@@ -83,6 +86,27 @@ const eventTypes = [
 ];
 
 export function Corporate() {
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  // When arriving from search (?pkg=slug), scroll to the corporate package
+  // card and briefly highlight it.
+  useEffect(() => {
+    const target = searchParams.get('pkg');
+    if (!target || !corporatePackages.some((p) => slugify(p.name) === target)) return;
+
+    setHighlighted(target);
+    const scrollTimer = setTimeout(() => {
+      document.getElementById(`corp-${target}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+    const clearTimer = setTimeout(() => setHighlighted(null), 3000);
+
+    return () => {
+      clearTimeout(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [searchParams]);
+
   return (
     <div className="pt-20">
       {/* Hero Section */}
@@ -176,10 +200,13 @@ export function Corporate() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {packages.map((pkg, index) => (
+            {corporatePackages.map((pkg, index) => (
               <div
                 key={index}
-                className="group relative bg-white rounded-3xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full"
+                id={`corp-${slugify(pkg.name)}`}
+                className={`group relative bg-white rounded-3xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col h-full scroll-mt-28 ${
+                  highlighted === slugify(pkg.name) ? 'ring-4 ring-[var(--color-gold)]/60 ring-offset-2' : ''
+                }`}
               >
                 {pkg.popular && (
                   <div className="absolute top-4 right-4 bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black text-xs font-bold px-4 py-2 rounded-full shadow-lg z-10">

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { inventoryItems } from './Inventory';
 import { packages } from './Packages';
+import { corporatePackages } from './Corporate';
 import { productDetails, slugify } from '@/lib/inventory-data';
 
 interface SearchBarProps {
@@ -40,9 +41,18 @@ const searchIndex: SearchEntry[] = [
   ...packages.map((p) => ({
     key: `pkg-${p.id}`,
     name: p.name,
-    label: 'Package',
+    label: 'Event Package',
     href: `/packages?pkg=${p.id}`,
     haystack: [p.name, p.subtitle, p.price, ...(p.features ?? []), ...(p.addons ?? [])]
+      .join(' ')
+      .toLowerCase(),
+  })),
+  ...corporatePackages.map((p) => ({
+    key: `corp-${slugify(p.name)}`,
+    name: p.name,
+    label: 'Corporate Package',
+    href: `/corporate?pkg=${slugify(p.name)}`,
+    haystack: ['corporate', p.name, p.description, p.price, ...(p.features ?? [])]
       .join(' ')
       .toLowerCase(),
   })),
