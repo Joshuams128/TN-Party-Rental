@@ -25,6 +25,7 @@ const services = [
   {
     icon: Camera,
     title: 'Mirror Photo Booth',
+    slug: 'mirror-photobooth',
     description: '360 Camera Photo Booth with rotating camera platform capturing HD slow-motion videos of guests from every angle. Features an interactive full-length mirror with instant picture captures for guests.',
     image: '/images/mirrorp.png',
     objectPosition: 'center 40%',
@@ -33,6 +34,7 @@ const services = [
   {
     icon: Sparkles,
     title: 'Balloon Garlands',
+    slug: 'custom-balloons',
     description: 'Professional balloon garland artistry in various sizes for stunning event décor.',
     image: '/images/Custom_Balloon_Decorations_Image.PNG',
     featured: true
@@ -40,6 +42,7 @@ const services = [
   {
     icon: Camera,
     title: 'Backdrop Packages',
+    slug: 'backdrop-packages',
     description: 'Stunning backdrop options for any theme — from elegant florals to beloved characters and custom designs.',
     image: '/images/secondary/avengers.JPG',
     featured: true
@@ -47,18 +50,21 @@ const services = [
   {
     icon: UtensilsCrossed,
     title: 'Tables & Linens',
+    slug: 'tables-linens',
     description: 'Premium tables in various sizes with professional-grade construction for any event layout.',
     image: '/images/Tables_and_Linen_Image.png'
   },
   {
     icon: Armchair,
     title: 'Chairs & Seating',
+    slug: 'chairs-seating',
     description: 'Elegant and comfortable seating options to suit any event style — from intimate gatherings to grand galas.',
     image: '/images/Chairs_and_Seating_Image.png'
   },
   {
     icon: Sparkles,
     title: 'Marquee Letters & Signs',
+    slug: 'marquee-letters',
     description: 'Illuminated marquee letters, numbers, and neon signs to spell out your celebration.',
     image: '/images/Marquee-Letters.png'
   }
@@ -273,14 +279,20 @@ export function Home() {
                     )}
                     <div className="p-6">
                       <h3 className="text-xl font-bold text-black mb-4">{service.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{service.description}</p>
+                      <p className="text-gray-600 leading-relaxed mb-6">{service.description}</p>
+                      <Link
+                        href={`/inventory/${service.slug}`}
+                        className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      >
+                        View Details & Pricing
+                      </Link>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             <div className="text-center">
-              <Link 
+              <Link
                 href="/inventory"
                 className="inline-block bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-3 rounded-full font-bold hover:shadow-lg hover:shadow-[var(--color-gold)]/50 transition-all duration-300 transform hover:scale-105"
               >
@@ -321,7 +333,13 @@ export function Home() {
                   )}
                   <div className="p-6">
                     <h3 className="text-xl font-semibold text-black mb-4">{service.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{service.description}</p>
+                    <p className="text-gray-600 leading-relaxed mb-6">{service.description}</p>
+                    <Link
+                      href={`/inventory/${service.slug}`}
+                      className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    >
+                      View Details & Pricing
+                    </Link>
                   </div>
                 </div>
               ))}
