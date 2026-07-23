@@ -251,17 +251,17 @@ export function Home() {
               <div className="h-px bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent flex-1 max-w-xs"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 max-w-6xl mx-auto auto-rows-fr">
               {featuredServices.map((service, index) => (
                 <div
                   key={index}
-                  className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)]"
+                  className="group relative bg-white rounded-2xl overflow-hidden shadow-smooth hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-[var(--color-gold)] flex flex-col"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
 
-                  <div className="relative overflow-hidden bg-white">
+                  <div className="relative overflow-hidden bg-white flex flex-col flex-grow">
                     {service.image && (
-                      <div 
+                      <div
                         className="h-56 overflow-hidden relative cursor-pointer"
                         onClick={() => setSelectedImage({ src: service.image, alt: service.title })}
                       >
@@ -277,15 +277,17 @@ export function Home() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       </div>
                     )}
-                    <div className="p-6">
+                    <div className="p-6 flex flex-col flex-grow">
                       <h3 className="text-xl font-bold text-black mb-4">{service.title}</h3>
-                      <p className="text-gray-600 leading-relaxed mb-6">{service.description}</p>
-                      <Link
-                        href={`/inventory/${service.slug}`}
-                        className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                      >
-                        View Details & Pricing
-                      </Link>
+                      <p className="text-gray-600 leading-relaxed mb-6 flex-grow">{service.description}</p>
+                      <div className="mt-auto">
+                        <Link
+                          href={`/inventory/${service.slug}`}
+                          className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                        >
+                          View Details & Pricing
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -313,14 +315,14 @@ export function Home() {
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent flex-1 max-w-xs"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
               {standardServices.map((service, index) => (
                 <div
                   key={index}
-                  className="group bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-smooth hover:border-[var(--color-gold)] hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2"
+                  className="group bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-smooth hover:border-[var(--color-gold)] hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col"
                 >
                   {service.image && (
-                    <div 
+                    <div
                       className="h-48 overflow-hidden relative cursor-pointer"
                       onClick={() => setSelectedImage({ src: service.image, alt: service.title })}
                     >
@@ -331,15 +333,17 @@ export function Home() {
                       />
                     </div>
                   )}
-                  <div className="p-6">
+                  <div className="p-6 flex flex-col flex-grow">
                     <h3 className="text-xl font-semibold text-black mb-4">{service.title}</h3>
-                    <p className="text-gray-600 leading-relaxed mb-6">{service.description}</p>
-                    <Link
-                      href={`/inventory/${service.slug}`}
-                      className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                    >
-                      View Details & Pricing
-                    </Link>
+                    <p className="text-gray-600 leading-relaxed mb-6 flex-grow">{service.description}</p>
+                    <div className="mt-auto">
+                      <Link
+                        href={`/inventory/${service.slug}`}
+                        className="block w-full text-center bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      >
+                        View Details & Pricing
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}
