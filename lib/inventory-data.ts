@@ -363,9 +363,9 @@ export const productDetails: ProductDetail[] = [
     image: '/images/Tables_and_Linen_Image.png',
     pricingType: 'variants',
     variants: [
-      { name: 'Rectangle Tables – 4-6 ft', price: '$10.00', image: '/images/secondary/table-4.jpeg', description: 'Rectangular table available in 4 ft or 6 ft size.' },
-      { name: 'Rectangle Tables – 8 ft', price: '$12.00', image: '/images/secondary/table-8.jpeg', description: 'Rectangular table available in 8 ft size.' },
-      { name: 'Round Tables', price: '$12.50', image: '/images/secondary/round-table.png', description: 'Round tables available in 4 ft or 5 ft size.' },
+      { name: 'Round Tables', price: '$12.50', image: '/images/secondary/round-table.png', description: 'Round tables available in 4 ft (seating 6) or 5 ft (seating 8).' },
+      { name: 'Rectangle Tables – 6 ft', price: '$10.00', image: '/images/secondary/table-4.jpeg', description: 'Rectangular table, 6 ft. (seating 6-8)' },
+      { name: 'Rectangle Tables – 8 ft', price: '$12.00', image: '/images/secondary/table-8.jpeg', description: 'Rectangular table, 8 ft. (seating 8-10)' },
       { name: 'Cruiser Tables', price: '$15.00', image: '/images/secondary/crusier-table.jpeg', description: 'Cruiser cocktail table with a tall round surface and sturdy base.' },
       { name: 'Round Table Cloths', price: '$16.00', image: '/images/secondary/RoundTableCloths.png', description: 'Round tablecloth designed to fit standard round tables.' },
       { name: 'Cruiser Table Cloths', price: '$4.00', image: '/images/secondary/CruiserTable-cloth.png', description: 'High-top cruiser tablecloth designed to fit standard cocktail/cruiser tables.' },
