@@ -21,7 +21,7 @@ const events: EventItem[] = [
   {
     id: 'wicked-all-white-affair',
     name: 'Wicked: An All White Affair',
-    image: '/images/secondary/wicked-event.PNG',
+    image: '/images/secondary/wicked-event.JPG',
     description:
       'Toronto Carnival Thursday aboard the Stella Borealis! An all-white boat cruise presented by True North Events & Vic Jagmohan Events, featuring Crystal Vibez, DJ Adam, Bunji Garlin’s Official DJ Rebel Muzik (live from NYC), DJ Shiva, Big Rich, Megs & DJ Vibez. Dinner catered by 9 Mile. July 30th — 9PM boarding, 10PM sailing, 2AM return.',
     comingSoon: true,
