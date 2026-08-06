@@ -1,6 +1,6 @@
 'use client'
 
-import { Tent, Armchair, Sparkles, Gift, X, Palette, Package, Menu, Baby } from 'lucide-react';
+import { Tent, Armchair, Sparkles, Gift, X, Palette, Package, Menu, Baby, Fence } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -15,6 +15,7 @@ const categories = [
   { id: 'furniture', name: 'Furniture', icon: Armchair },
   { id: 'kids-furniture', name: 'Kids Furniture', icon: Baby },
   { id: 'glow-furniture', name: 'Glow Furniture', icon: Sparkles },
+  { id: 'fences-privacy', name: 'Fences & Privacy', icon: Fence },
 ];
 
 export const inventoryItems = [
@@ -147,6 +148,16 @@ export const inventoryItems = [
     description: 'LED illuminated furniture for stunning event ambiance — bars, tables, benches, and barstools',
     features: ['LED Bar', 'LED Lounge Table', 'LED Curved Bench', 'LED Barstool'],
     image: '/images/secondary/led-tables-chairs.png',
+    featured: false
+  },
+  {
+    id: 21,
+    slug: 'fences-privacy',
+    category: 'fences-privacy',
+    name: 'Fences & Privacy',
+    description: 'Temporary fence panels, VIP fencing, and privacy/debris screening for secure and polished event perimeters',
+    features: ['Temporary fence panels', 'VIP fencing', 'Privacy screening', 'Debris screening'],
+    image: '/images/secondary/temp-fence-panels.PNG',
     featured: false
   },
 ];

@@ -345,6 +345,10 @@ export const productDetails: ProductDetail[] = [
       { name: 'Throne Chair – Gold', price: '$150.00', image: '/images/secondary/ThroneChair-Gold.png', description: 'Gold high-back throne chair with an ornate frame and cushioned seat.' },
       { name: 'Throne Chair – Silver', price: '$150.00', image: '/images/secondary/ThroneChair-silver.jpg', description: 'Silver high-back throne chair with an ornate frame and cushioned seat.' },
       { name: 'Boho Peacock Chair', price: '$100.00', image: '/images/secondary/BohoPeacockChair.png', description: 'Boho peacock chair with a woven rattan frame and high back design.' },
+      { name: 'Lounge Furniture – Big (White)', price: '$200.00', image: '/images/secondary/big-sofa-white.PNG', description: 'Large lounge sofa in white.' },
+      { name: 'Lounge Furniture – Big (Black)', price: '$200.00', image: '/images/secondary/big-sofa-black.PNG', description: 'Large lounge sofa in black.' },
+      { name: 'Lounge Furniture – Small (White)', price: '$150.00', image: '/images/secondary/small-sofa-white.PNG', description: 'Small lounge sofa in white.' },
+      { name: 'Lounge Furniture – Small (Black)', price: '$150.00', image: '/images/secondary/small-sofa-black.PNG', description: 'Small lounge sofa in black.' },
     ],
     features: [
       'Chiavari chairs',
@@ -452,6 +456,30 @@ export const productDetails: ProductDetail[] = [
       'Safe & clean',
     ],
     note: 'All prices in CAD. HST extra. Delivery & setup additional charge.',
+  },
+
+  // --- FENCES & PRIVACY -------------------------------------------------------
+  {
+    slug: 'fences-privacy',
+    name: 'Fences & Privacy',
+    description:
+      'Temporary fence panels, VIP fencing, and privacy or debris screening to secure and define your event perimeter.',
+    category: 'fences-privacy',
+    image: '/images/secondary/temp-fence-panels.PNG',
+    pricingType: 'variants',
+    variants: [
+      { name: 'Temporary Fence Panels', price: 'Inquire for pricing', image: '/images/secondary/temp-fence-panels.PNG' },
+      { name: 'Black VIP Fence', price: 'Inquire for pricing', image: '/images/secondary/vip-fence-black.png' },
+      { name: 'Privacy & Debris Screening (White)', price: 'Inquire for pricing', image: '/images/secondary/privacy-debris-screening-white.PNG' },
+      { name: 'Privacy & Debris Screening (Black)', price: 'Inquire for pricing', image: '/images/secondary/privacy-debris-screening-black.PNG' },
+    ],
+    features: [
+      'Temporary fence panels',
+      'VIP fencing',
+      'Privacy screening',
+      'Debris screening',
+    ],
+    note: 'Delivery & setup additional charge.',
   },
 ];
 
