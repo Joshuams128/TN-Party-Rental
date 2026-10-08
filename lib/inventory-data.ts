@@ -248,7 +248,6 @@ export const productDetails: ProductDetail[] = [
       { name: 'Paw Patrol Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Paw Patrol–themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Baby Shark Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Baby Shark–themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Cocomelon Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with Cocomelon-themed covers. Optional add-on: +$50 for cake stands.' },
-      { name: 'Glitter Backdrop Package', price: '$150.00', description: 'Circular backdrop stands with glitter-themed covers. Optional add-on: +$50 for cake stands.' },
       { name: 'Arched Panel Backdrop (Custom Wording)', price: '$150.00', image: '/images/secondary/archedbd.png', description: '7 ft white arched panel with custom wording. Additional items inquire for.' },
     ],
     features: ['Easy setup', 'Wide theme selection', 'Great photo background'],
