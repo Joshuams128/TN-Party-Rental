@@ -14,14 +14,14 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       <header className="flex items-center justify-between py-4">
         <span className="font-semibold">True North · Invoicing</span>
         <form action={logout}>
-          <button className="flex items-center gap-1 text-sm text-gray-600 hover:text-black">
+          <button className="flex items-center gap-1 text-sm text-gray-400 hover:text-white">
             <LogOut size={16} /> Sign out
           </button>
         </form>
       </header>
-      <nav className="mb-6 flex gap-2 overflow-x-auto border-b border-gray-200 pb-3">
+      <nav className="mb-6 flex gap-2 overflow-x-auto border-b border-gray-800 pb-3">
         {nav.map(({ href, label, icon: Icon }) => (
-          <Link key={href} href={href} className="flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-200">
+          <Link key={href} href={href} className="flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-800">
             <Icon size={16} /> {label}
           </Link>
         ))}
