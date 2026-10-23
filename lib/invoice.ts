@@ -41,7 +41,7 @@ export function computeTotals(
 }
 
 // Same math for rows read straight from the database (amounts already in cents).
-export function totalFromRows(
+export function breakdownFromRows(
   lines: { unit_price_cents: number; quantity: number }[],
   discountCents: number,
   applyTax: boolean,
@@ -51,7 +51,16 @@ export function totalFromRows(
   const discount = Math.min(discountCents, subtotal)
   const taxable = subtotal - discount
   const tax = applyTax ? Math.round((taxable * taxRate) / 100) : 0
-  return taxable + tax
+  return { subtotal, discount, tax, total: taxable + tax }
+}
+
+export function totalFromRows(
+  lines: { unit_price_cents: number; quantity: number }[],
+  discountCents: number,
+  applyTax: boolean,
+  taxRate: number
+) {
+  return breakdownFromRows(lines, discountCents, applyTax, taxRate).total
 }
 
 export function todayISO(): string {

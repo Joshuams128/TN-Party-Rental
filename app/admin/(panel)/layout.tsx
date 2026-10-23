@@ -1,11 +1,12 @@
 import Link from 'next/link'
-import { FileText, LayoutDashboard, Package, LogOut } from 'lucide-react'
+import { FileText, LayoutDashboard, Package, Settings, LogOut } from 'lucide-react'
 import { logout } from '../login/actions'
 
 const nav = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/invoices', label: 'Invoices', icon: FileText },
   { href: '/admin/items', label: 'Items', icon: Package },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {

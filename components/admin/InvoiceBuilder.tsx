@@ -130,30 +130,47 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
     }
   }, [supabase, taxRate])
 
-  const flush = useCallback(async () => {
+  const flush = useCallback(async (): Promise<boolean> => {
     if (saving.current) {
       dirty.current = true
-      return
+      return true
     }
     const { fields: f, lines: ls, invoiceId: id } = latest.current
     const hasContent = !!id || ls.length > 0 || f.customer_name.trim() || f.customer_email.trim() || f.notes.trim()
-    if (!hasContent) return
+    if (!hasContent) return true
 
     saving.current = true
     dirty.current = false
     setSaveState('saving')
+    let ok = true
     try {
       await persist()
       setSaveState('saved')
       setSaveError('')
     } catch (e) {
+      ok = false
       setSaveState('error')
       setSaveError(e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Could not save')
     } finally {
       saving.current = false
       if (dirty.current) void flush()
     }
+    return ok
   }, [persist])
+
+  // Save everything right now (skipping the debounce), then open the review screen.
+  const [opening, setOpening] = useState(false)
+  async function openReview() {
+    setOpening(true)
+    clearTimeout(timer.current)
+    while (saving.current) await new Promise((r) => setTimeout(r, 100))
+    const ok = await flush()
+    while (saving.current) await new Promise((r) => setTimeout(r, 100))
+    const id = latest.current.invoiceId
+    setOpening(false)
+    if (ok && id) router.push(`/admin/invoices/${id}/review`)
+  }
+  const canReview = lines.length > 0 && !opening
 
   // Autosave shortly after the owner stops typing.
   useEffect(() => {
@@ -414,14 +431,18 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       <aside className="hidden lg:block">
         <div className={`${card} sticky top-4 space-y-3`}>
           <Summary totals={totals} taxLabel={taxLabel} taxRate={taxRate} applyTax={fields.apply_tax} />
-          <p className="text-xs text-gray-500">Preview, PDF and sending come next.</p>
+          <ReviewButton onClick={openReview} disabled={!canReview} busy={opening} resend={initial.status === 'sent'} />
+          {lines.length === 0 && <p className="text-xs text-gray-500">Add an item to continue.</p>}
         </div>
       </aside>
 
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-800 bg-gray-950/95 px-4 py-3 backdrop-blur lg:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <span className="text-sm text-gray-400">{lines.length} item{lines.length === 1 ? '' : 's'}</span>
-          <span className="text-lg font-bold">{formatMoney(totals.total)}</span>
+          <span>
+            <span className="block text-lg font-bold leading-tight">{formatMoney(totals.total)}</span>
+            <span className="text-xs text-gray-400">{lines.length} item{lines.length === 1 ? '' : 's'}</span>
+          </span>
+          <div className="w-44"><ReviewButton onClick={openReview} disabled={!canReview} busy={opening} resend={initial.status === 'sent'} /></div>
         </div>
       </div>
     </div>
@@ -438,5 +459,18 @@ function Summary({ totals, taxLabel, taxRate, applyTax }: { totals: ReturnType<t
       {applyTax && <div className={row}><span className="text-gray-400">{taxLabel} ({taxRate}%)</span><span>{formatMoney(totals.tax)}</span></div>}
       <div className="flex justify-between border-t border-gray-800 pt-3 text-lg font-bold"><span>Total</span><span>{formatMoney(totals.total)}</span></div>
     </>
+  )
+}
+
+function ReviewButton({ onClick, disabled, busy, resend }: { onClick: () => void; disabled: boolean; busy: boolean; resend: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="w-full rounded-lg bg-gold px-4 py-3 font-semibold text-black hover:bg-gold-dark disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {busy ? 'Saving…' : resend ? 'Review & resend' : 'Review & send'}
+    </button>
   )
 }
