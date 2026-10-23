@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { formatMoney } from '@/lib/money'
 import { totalFromRows } from '@/lib/invoice'
+import DeleteInvoiceButton from '@/components/admin/DeleteInvoiceButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,8 +42,8 @@ export default async function InvoicesPage() {
       ) : (
         <ul className="divide-y divide-gray-800 overflow-hidden rounded-xl border border-gray-800 bg-gray-900">
           {invoices.map((inv) => (
-            <li key={inv.id}>
-              <Link href={`/admin/invoices/${inv.id}`} className="flex items-center gap-4 px-4 py-3 hover:bg-gray-800">
+            <li key={inv.id} className="flex items-center hover:bg-gray-800">
+              <Link href={`/admin/invoices/${inv.id}`} className="flex min-w-0 flex-1 items-center gap-4 px-4 py-3">
                 <span className="w-16 font-mono text-sm text-gray-400">#{inv.number}</span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{inv.customer_name || 'No customer yet'}</span>
@@ -55,6 +56,9 @@ export default async function InvoicesPage() {
                   {formatMoney(totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate)))}
                 </span>
               </Link>
+              <div className="pr-2">
+                <DeleteInvoiceButton id={inv.id} number={inv.number} status={inv.status} />
+              </div>
             </li>
           ))}
         </ul>

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Minus, Plus, PlusCircle, Trash2, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { formatMoney, parseMoneyToCents } from '@/lib/money'
+import { pruneOrphanCustomers } from '@/lib/customers'
+import { deleteInvoiceMessage } from './DeleteInvoiceButton'
 import { computeTotals, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
 import type { Item } from '@/lib/items'
 import ItemImage from './ItemImage'
@@ -53,6 +55,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const dirty = useRef(false)
   const timer = useRef<ReturnType<typeof setTimeout>>()
   const firstRender = useRef(true)
+  const deleted = useRef(false) // once deleted, autosave must not recreate or touch the invoice
   // The owner-signature column comes from a later migration, so only write it once the owner has used it.
   const ownerSigTouched = useRef(initial.fields.owner_signature)
 
@@ -134,6 +137,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   }, [supabase, taxRate])
 
   const flush = useCallback(async (): Promise<boolean> => {
+    if (deleted.current) return true
     if (saving.current) {
       dirty.current = true
       return true
@@ -249,11 +253,21 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   }
 
   async function deleteDraft() {
-    if (!invoiceId) return router.push('/admin/invoices')
-    if (!confirm('Delete this draft? This cannot be undone.')) return
+    if (!invoiceId) {
+      deleted.current = true
+      clearTimeout(timer.current)
+      return router.push('/admin/invoices')
+    }
+    if (!confirm(deleteInvoiceMessage(number ?? 0, initial.status))) return
+    deleted.current = true
     clearTimeout(timer.current)
+    while (saving.current) await new Promise((r) => setTimeout(r, 100))
     const { error } = await supabase.from('invoices').delete().eq('id', invoiceId)
-    if (error) return setSaveError(error.message)
+    if (error) {
+      deleted.current = false
+      return setSaveError(error.message)
+    }
+    await pruneOrphanCustomers(supabase)
     router.push('/admin/invoices')
     router.refresh()
   }
@@ -436,11 +450,9 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           )}
         </section>
 
-        {initial.status === 'draft' && (
-          <button type="button" onClick={deleteDraft} className="flex items-center gap-1 text-sm text-gray-400 hover:text-red-400">
-            <Trash2 size={14} /> Delete this draft
-          </button>
-        )}
+        <button type="button" onClick={deleteDraft} className="flex items-center gap-1 text-sm text-gray-400 hover:text-red-400">
+          <Trash2 size={14} /> {invoiceId ? 'Delete this invoice' : 'Discard'}
+        </button>
       </div>
 
       {/* Summary */}
