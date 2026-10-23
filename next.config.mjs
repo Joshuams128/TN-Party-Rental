@@ -13,6 +13,9 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000,
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@react-pdf/renderer', 'sharp'],
+  },
   poweredByHeader: false,
   compress: true,
 };

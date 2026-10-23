@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/success'],
+      disallow: ['/api/', '/success', '/admin'],
     },
     sitemap: 'https://www.truenorthpartyrentals.com/sitemap.xml',
   }

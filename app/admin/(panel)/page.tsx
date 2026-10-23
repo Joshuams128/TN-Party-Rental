@@ -1,0 +1,73 @@
+import Link from 'next/link'
+import { Plus } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import { formatMoney } from '@/lib/money'
+import { totalFromRows } from '@/lib/invoice'
+
+export const dynamic = 'force-dynamic'
+
+type Row = {
+  id: string
+  number: number
+  status: 'draft' | 'sent'
+  customer_name: string
+  discount_cents: number
+  apply_tax: boolean
+  tax_rate: number
+  invoice_lines: { unit_price_cents: number; quantity: number }[]
+}
+
+export default async function DashboardPage() {
+  const { data } = await createClient()
+    .from('invoices')
+    .select('id, number, status, customer_name, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity)')
+    .order('number', { ascending: false })
+  const invoices = (data ?? []) as Row[]
+  const drafts = invoices.filter((i) => i.status === 'draft').length
+  const sent = invoices.length - drafts
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <Link href="/admin/invoices/new" className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-3 font-semibold text-black hover:bg-gold-dark">
+        <Plus size={18} /> New invoice
+      </Link>
+
+      <div className="grid grid-cols-2 gap-3 sm:max-w-md">
+        <div className="rounded-xl border border-gray-800 bg-gray-900 p-4">
+          <p className="text-2xl font-bold">{drafts}</p>
+          <p className="text-sm text-gray-400">Drafts</p>
+        </div>
+        <div className="rounded-xl border border-gray-800 bg-gray-900 p-4">
+          <p className="text-2xl font-bold">{sent}</p>
+          <p className="text-sm text-gray-400">Sent</p>
+        </div>
+      </div>
+
+      <section>
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="font-semibold">Recent invoices</h2>
+          <Link href="/admin/invoices" className="text-sm text-gray-400 hover:text-gold">View all</Link>
+        </div>
+        {invoices.length === 0 ? (
+          <p className="text-sm text-gray-400">Nothing yet.</p>
+        ) : (
+          <ul className="divide-y divide-gray-800 overflow-hidden rounded-xl border border-gray-800 bg-gray-900">
+            {invoices.slice(0, 5).map((inv) => (
+              <li key={inv.id}>
+                <Link href={`/admin/invoices/${inv.id}`} className="flex items-center gap-4 px-4 py-3 hover:bg-gray-800">
+                  <span className="w-16 font-mono text-sm text-gray-400">#{inv.number}</span>
+                  <span className="min-w-0 flex-1 truncate">{inv.customer_name || 'No customer yet'}</span>
+                  <span className="text-xs capitalize text-gray-400">{inv.status}</span>
+                  <span className="w-28 text-right font-semibold">
+                    {formatMoney(totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate)))}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
+  )
+}

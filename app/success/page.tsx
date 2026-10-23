@@ -21,12 +21,6 @@ export default function SuccessPage() {
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
-            href="/tn-social" 
-            className="bg-gradient-to-r from-[var(--color-gold)] to-[var(--color-gold-light)] text-black px-8 py-4 rounded-full font-bold hover:shadow-xl hover:shadow-[var(--color-gold)]/30 transition-all duration-300 transform hover:scale-105"
-          >
-            Back to Events
-          </Link>
-          <Link 
             href="/" 
             className="border-2 border-[var(--color-gold)] text-[var(--color-gold)] px-8 py-4 rounded-full font-bold hover:bg-[var(--color-gold)] hover:text-black transition-all duration-300"
           >
