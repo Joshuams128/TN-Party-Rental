@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { productDetails } from '@/lib/inventory-data'
+import { TN_SOCIAL_ENABLED } from '@/lib/site-config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.truenorthpartyrentals.com'
@@ -10,7 +11,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/packages`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/corporate`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${baseUrl}/tn-social`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    ...(TN_SOCIAL_ENABLED
+      ? [{ url: `${baseUrl}/tn-social`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.8 }]
+      : []),
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ]

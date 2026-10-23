@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { TN_SOCIAL_ENABLED } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'TN Social Events | True North Party Rentals',
@@ -13,5 +15,6 @@ export const metadata: Metadata = {
 }
 
 export default function TNSocialLayout({ children }: { children: React.ReactNode }) {
+  if (!TN_SOCIAL_ENABLED) notFound()
   return children
 }

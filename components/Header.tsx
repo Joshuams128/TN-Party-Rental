@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SearchBar } from './SearchBar';
+import { TN_SOCIAL_ENABLED } from '@/lib/site-config';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,10 +48,12 @@ export function Header() {
               Corporate
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--color-gold)] group-hover:w-full transition-all duration-300"></span>
             </Link>
+            {TN_SOCIAL_ENABLED && (
             <Link href="/tn-social" className="relative hover:text-[var(--color-gold)] transition-all duration-300 group">
               TN Social
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--color-gold)] group-hover:w-full transition-all duration-300"></span>
             </Link>
+            )}
             <Link href="/about" className="relative hover:text-[var(--color-gold)] transition-all duration-300 group">
               About
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--color-gold)] group-hover:w-full transition-all duration-300"></span>
@@ -91,9 +94,11 @@ export function Header() {
             <Link href="/corporate" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
               Corporate
             </Link>
+            {TN_SOCIAL_ENABLED && (
             <Link href="/tn-social" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
               TN Social
             </Link>
+            )}
             <Link href="/about" onClick={closeMenu} className="block w-full text-left py-3 px-4 hover:bg-[var(--color-gold)] hover:bg-opacity-10 rounded-lg hover:text-[var(--color-gold)] transition-all duration-300">
               About
             </Link>
