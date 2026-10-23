@@ -5,6 +5,7 @@ import Script from 'next/script'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import SiteChrome from '@/components/SiteChrome'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
@@ -46,11 +47,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://assets.calendly.com" crossOrigin="anonymous" />
       </head>
       <body className={inter.className}>
-        <Header />
+        <SiteChrome><Header /></SiteChrome>
         <main className="min-h-screen">
           {children}
         </main>
-        <Footer />
+        <SiteChrome><Footer /></SiteChrome>
         <Analytics />
         <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
         <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="lazyOnload" />
