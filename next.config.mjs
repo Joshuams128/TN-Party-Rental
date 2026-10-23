@@ -15,6 +15,12 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ['@react-pdf/renderer', 'sharp'],
+    // pdfkit (used by @react-pdf) loads its font files by a computed name, which file tracing can't see,
+    // so without this the PDF/send routes crash on Vercel with "Cannot find module .../standard-fonts/Helvetica.cjs".
+    outputFileTracingIncludes: {
+      '/api/invoices/[id]/pdf': ['./node_modules/pdfkit/js/**/*'],
+      '/api/invoices/[id]/send': ['./node_modules/pdfkit/js/**/*'],
+    },
   },
   poweredByHeader: false,
   compress: true,
