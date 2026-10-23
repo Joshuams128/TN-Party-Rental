@@ -53,6 +53,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const dirty = useRef(false)
   const timer = useRef<ReturnType<typeof setTimeout>>()
   const firstRender = useRef(true)
+  // The owner-signature column comes from a later migration, so only write it once the owner has used it.
+  const ownerSigTouched = useRef(initial.fields.owner_signature)
 
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
 
@@ -86,6 +88,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       notes: f.notes.trim(),
       discount_cents: parseMoneyToCents(f.discount) ?? 0,
       apply_tax: f.apply_tax,
+      ...(ownerSigTouched.current ? { include_owner_signature: f.owner_signature } : {}),
       updated_at: new Date().toISOString(),
     }
 
@@ -393,6 +396,19 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           <label className="mt-3 block text-sm font-medium">
             Invoice date
             <input type="date" value={fields.issue_date} onChange={(e) => setField('issue_date', e.target.value)} className={`${input} sm:w-56`} />
+          </label>
+
+          <label className="mt-4 flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={fields.owner_signature}
+              onChange={(e) => {
+                ownerSigTouched.current = true
+                setField('owner_signature', e.target.checked)
+              }}
+              className="h-4 w-4 accent-[#D4AF37]"
+            />
+            Add a line for my signature too <span className="text-gray-400">(the customer line is always included)</span>
           </label>
 
           {!showDetails ? (

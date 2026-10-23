@@ -4,7 +4,7 @@ import { TN_SOCIAL_ENABLED } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'TN Social Events | True North Party Rentals',
-  description: 'Upcoming soca and Caribbean events in the GTA. Get tickets to Summer Soca, Soca Social, Wicked, and more.',
+  description: 'Upcoming soca and Caribbean events in the GTA. Get tickets to upcoming events.',
   keywords: ['soca events', 'Caribbean events', 'Toronto events', 'GTA events', 'soca party'],
   openGraph: {
     title: 'TN Social Events | True North Party Rentals',

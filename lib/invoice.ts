@@ -19,6 +19,7 @@ export type InvoiceFields = {
   notes: string
   discount: string // dollars as typed
   apply_tax: boolean
+  owner_signature: boolean
 }
 
 export type InvoiceStatus = 'draft' | 'sent'

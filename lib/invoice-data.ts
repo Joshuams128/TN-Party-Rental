@@ -32,6 +32,7 @@ export type InvoiceDoc = {
   due_date: string | null
   notes: string
   apply_tax: boolean
+  owner_signature: boolean
   tax_rate: number
   lines: DocLine[]
   totals: { subtotal: number; discount: number; tax: number; total: number }
@@ -74,6 +75,7 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     due_date: inv.due_date,
     notes: inv.notes,
     apply_tax: inv.apply_tax,
+    owner_signature: !!inv.include_owner_signature,
     tax_rate: taxRate,
     lines,
     totals: breakdownFromRows(lines, inv.discount_cents, inv.apply_tax, taxRate),

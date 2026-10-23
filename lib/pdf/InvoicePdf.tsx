@@ -130,9 +130,17 @@ export default function InvoicePdf({ doc, logo, thumbs }: Props) {
             </View>
           )}
 
-          <View style={s.sign} wrap={false}>
-            <View style={s.signBox}><Text style={s.signLine}>Customer signature</Text></View>
-            <View style={s.signDate}><Text style={s.signLine}>Date</Text></View>
+          <View wrap={false}>
+            <View style={s.sign}>
+              <View style={s.signBox}><Text style={s.signLine}>Customer signature</Text></View>
+              <View style={s.signDate}><Text style={s.signLine}>Date</Text></View>
+            </View>
+            {doc.owner_signature && (
+              <View style={[s.sign, { marginTop: 36 }]}>
+                <View style={s.signBox}><Text style={s.signLine}>Authorized signature - {b.business_name}</Text></View>
+                <View style={s.signDate}><Text style={s.signLine}>Date</Text></View>
+              </View>
+            )}
           </View>
         </View>
 

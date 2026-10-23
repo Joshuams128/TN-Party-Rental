@@ -44,6 +44,7 @@ export default async function EditInvoicePage({ params }: { params: { id: string
           notes: invoice.notes,
           discount: invoice.discount_cents ? (invoice.discount_cents / 100).toFixed(2) : '',
           apply_tax: invoice.apply_tax,
+          owner_signature: !!invoice.include_owner_signature,
         },
         lines,
       }}
