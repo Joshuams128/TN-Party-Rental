@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CheckCircle2, Download, Pencil, Send } from 'lucide-react'
+import DeleteInvoiceButton from './DeleteInvoiceButton'
 
 type Props = {
   invoiceId: string
@@ -89,6 +90,7 @@ export default function SendPanel({ invoiceId, number, status, to, from, problem
           <Pencil size={14} /> Edit invoice
         </Link>
         <Link href="/admin/invoices" className="text-gray-400 hover:text-gold">All invoices</Link>
+        <DeleteInvoiceButton id={invoiceId} number={number} status={alreadySent ? 'sent' : status} variant="text" redirectTo="/admin/invoices" />
       </div>
     </div>
   )
