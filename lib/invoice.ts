@@ -64,6 +64,11 @@ export function totalFromRows(
   return breakdownFromRows(lines, discountCents, applyTax, taxRate).total
 }
 
+export function formatDateShort(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number)
+  return new Date(y, m - 1, d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
 export function todayISO(): string {
   const d = new Date()
   const pad = (n: number) => String(n).padStart(2, '0')

@@ -50,8 +50,8 @@ export default function DeleteInvoiceButton({ id, number, status, variant = 'ico
         title="Delete invoice"
         className={
           variant === 'icon'
-            ? 'rounded-md p-2 text-gray-500 hover:bg-gray-800 hover:text-red-400 disabled:opacity-50'
-            : 'flex items-center gap-1 text-sm text-gray-400 hover:text-red-400 disabled:opacity-50'
+            ? 'flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-700 hover:text-red-400 disabled:opacity-50'
+            : 'flex min-h-[44px] items-center gap-1 text-sm text-gray-400 hover:text-red-400 disabled:opacity-50'
         }
       >
         <Trash2 size={variant === 'icon' ? 16 : 14} />
