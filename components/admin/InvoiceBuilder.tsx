@@ -343,24 +343,34 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           ) : (
             <ul className="mt-4 divide-y divide-gray-800">
               {lines.map((l) => (
-                <li key={l.key} className="flex flex-wrap items-center gap-3 py-3">
+                // Phone: photo + name + remove on one row, quantity / price / total on the next. Desktop: a single row.
+                <li key={l.key} className="flex flex-wrap items-center gap-x-3 gap-y-3 py-4 sm:flex-nowrap sm:gap-y-0 sm:py-3">
                   <ItemImage path={l.image_path} className="h-14 w-14" />
-                  <div className="min-w-[8rem] flex-1">
+                  <div className="min-w-0 flex-1 basis-0">
                     {l.item_id ? (
-                      <p className="font-medium">{l.name}</p>
+                      <p className="font-medium leading-snug">{l.name}</p>
                     ) : (
                       <input
                         value={l.name}
                         onChange={(e) => updateLine(l.key, { name: e.target.value })}
                         placeholder="Custom item (e.g. Delivery)"
-                        className="w-full rounded-lg border border-gray-700 bg-gray-800 px-2 py-1.5 text-white placeholder-gray-500"
+                        className="h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-white placeholder-gray-500"
                         autoFocus={!l.name}
                       />
                     )}
                   </div>
-                  <div className="flex items-center rounded-lg border border-gray-700">
-                    <button type="button" aria-label="Decrease quantity" onClick={() => updateLine(l.key, { quantity: Math.max(1, l.quantity - 1) })} className="px-2.5 py-2 hover:bg-gray-800">
-                      <Minus size={14} />
+                  <button
+                    type="button"
+                    aria-label={`Remove ${l.name || 'item'}`}
+                    onClick={() => removeLine(l.key)}
+                    className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-800 hover:text-red-400 sm:order-1"
+                  >
+                    <X size={18} />
+                  </button>
+                  <span aria-hidden className="h-0 w-full sm:hidden" />
+                  <div className="flex h-11 shrink-0 items-center rounded-lg border border-gray-700">
+                    <button type="button" aria-label="Decrease quantity" onClick={() => updateLine(l.key, { quantity: Math.max(1, l.quantity - 1) })} className="flex h-11 w-10 items-center justify-center rounded-l-lg hover:bg-gray-800">
+                      <Minus size={16} />
                     </button>
                     <input
                       aria-label="Quantity"
@@ -369,31 +379,28 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                       onChange={(e) => updateLine(l.key, { quantity: Math.max(1, parseInt(e.target.value.replace(/\D/g, ''), 10) || 1) })}
                       className="w-10 bg-transparent text-center"
                     />
-                    <button type="button" aria-label="Increase quantity" onClick={() => updateLine(l.key, { quantity: l.quantity + 1 })} className="px-2.5 py-2 hover:bg-gray-800">
-                      <Plus size={14} />
+                    <button type="button" aria-label="Increase quantity" onClick={() => updateLine(l.key, { quantity: l.quantity + 1 })} className="flex h-11 w-10 items-center justify-center rounded-r-lg hover:bg-gray-800">
+                      <Plus size={16} />
                     </button>
                   </div>
-                  <label className="relative w-24">
+                  <label className="relative min-w-[5.5rem] flex-1 sm:flex-none">
                     <span className="sr-only">Unit price</span>
-                    <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
                     <input
                       inputMode="decimal"
                       value={l.price}
                       onChange={(e) => updateLine(l.key, { price: e.target.value })}
                       placeholder="0.00"
-                      className="w-full rounded-lg border border-gray-700 bg-gray-800 py-1.5 pl-5 pr-2 text-right text-white"
+                      className="h-11 w-full min-w-0 rounded-lg border border-gray-700 bg-gray-800 pl-6 pr-3 text-right text-white sm:w-28"
                     />
                   </label>
-                  <span className="w-24 text-right font-semibold">{formatMoney(lineTotalCents(l))}</span>
-                  <button type="button" aria-label={`Remove ${l.name || 'item'}`} onClick={() => removeLine(l.key)} className="rounded-md p-2 text-gray-400 hover:bg-gray-800 hover:text-red-400">
-                    <X size={16} />
-                  </button>
+                  <span className="ml-auto min-w-[4.5rem] text-right font-semibold sm:ml-0 sm:w-24">{formatMoney(lineTotalCents(l))}</span>
                 </li>
               ))}
             </ul>
           )}
 
-          <button type="button" onClick={addCustom} className="mt-3 flex items-center gap-2 text-sm text-gray-300 hover:text-gold">
+          <button type="button" onClick={addCustom} className="mt-2 flex min-h-[44px] items-center gap-2 text-sm text-gray-300 hover:text-gold">
             <PlusCircle size={16} /> Add a custom item
           </button>
         </section>
@@ -402,8 +409,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
         <section className={card}>
           <div className="flex items-center justify-between">
             <h2 className="font-semibold">Details</h2>
-            <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={fields.apply_tax} onChange={(e) => setField('apply_tax', e.target.checked)} className="h-4 w-4 accent-[#D4AF37]" />
+            <label className="flex min-h-[44px] items-center gap-3 text-sm">
+              <input type="checkbox" checked={fields.apply_tax} onChange={(e) => setField('apply_tax', e.target.checked)} className="h-5 w-5 accent-[#D4AF37]" />
               Charge {taxLabel} ({taxRate}%)
             </label>
           </div>
@@ -412,7 +419,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
             <input type="date" value={fields.issue_date} onChange={(e) => setField('issue_date', e.target.value)} className={`${input} sm:w-56`} />
           </label>
 
-          <label className="mt-4 flex items-center gap-2 text-sm">
+          <label className="mt-2 flex min-h-[44px] items-center gap-3 text-sm">
             <input
               type="checkbox"
               checked={fields.owner_signature}
@@ -420,13 +427,13 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                 ownerSigTouched.current = true
                 setField('owner_signature', e.target.checked)
               }}
-              className="h-4 w-4 accent-[#D4AF37]"
+              className="h-5 w-5 accent-[#D4AF37]"
             />
             Add a line for my signature too <span className="text-gray-400">(the customer line is always included)</span>
           </label>
 
           {!showDetails ? (
-            <button type="button" onClick={() => setShowDetails(true)} className="mt-3 text-sm text-gray-300 hover:text-gold">
+            <button type="button" onClick={() => setShowDetails(true)} className="mt-2 min-h-[44px] text-sm text-gray-300 hover:text-gold">
               + Add due date, discount, or notes
             </button>
           ) : (
@@ -450,7 +457,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           )}
         </section>
 
-        <button type="button" onClick={deleteDraft} className="flex items-center gap-1 text-sm text-gray-400 hover:text-red-400">
+        <button type="button" onClick={deleteDraft} className="flex min-h-[44px] items-center gap-1 text-sm text-gray-400 hover:text-red-400">
           <Trash2 size={14} /> {invoiceId ? 'Delete this invoice' : 'Discard'}
         </button>
       </div>
@@ -464,7 +471,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
         </div>
       </aside>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-800 bg-gray-950/95 px-4 py-3 backdrop-blur lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-800 bg-gray-950/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur lg:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <span>
             <span className="block text-lg font-bold leading-tight">{formatMoney(totals.total)}</span>

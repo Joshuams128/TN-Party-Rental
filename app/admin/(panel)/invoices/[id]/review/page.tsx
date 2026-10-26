@@ -38,9 +38,14 @@ export default async function ReviewPage({ params }: { params: { id: string } })
             title={`Invoice ${doc.number} preview`}
             className="hidden h-[820px] w-full rounded-xl border border-gray-800 bg-white md:block"
           />
-          <p className="text-sm text-gray-400 md:hidden">
-            <a href={`/api/invoices/${doc.id}/pdf`} target="_blank" rel="noreferrer" className="text-gold underline">Open the PDF preview</a> to check it before sending.
-          </p>
+          <a
+            href={`/api/invoices/${doc.id}/pdf`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex min-h-[48px] items-center justify-center rounded-xl border border-gray-700 bg-gray-900 px-4 text-sm font-medium text-gold md:hidden"
+          >
+            Open PDF preview to check it before sending
+          </a>
         </div>
         <div className="order-1 lg:order-2">
           <SendPanel

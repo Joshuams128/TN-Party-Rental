@@ -82,14 +82,14 @@ export default function SendPanel({ invoiceId, number, status, to, from, problem
 
       {error && <p role="alert" className="text-sm text-red-400">{error}</p>}
 
-      <div className="flex flex-wrap gap-4 text-sm">
-        <a href={`/api/invoices/${invoiceId}/pdf?download=1`} className="flex items-center gap-1 text-gray-300 hover:text-gold">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+        <a href={`/api/invoices/${invoiceId}/pdf?download=1`} className="flex min-h-[44px] items-center gap-1 text-gray-300 hover:text-gold">
           <Download size={14} /> Download PDF
         </a>
-        <Link href={`/admin/invoices/${invoiceId}`} className="flex items-center gap-1 text-gray-300 hover:text-gold">
+        <Link href={`/admin/invoices/${invoiceId}`} className="flex min-h-[44px] items-center gap-1 text-gray-300 hover:text-gold">
           <Pencil size={14} /> Edit invoice
         </Link>
-        <Link href="/admin/invoices" className="text-gray-400 hover:text-gold">All invoices</Link>
+        <Link href="/admin/invoices" className="flex min-h-[44px] items-center text-gray-400 hover:text-gold">All invoices</Link>
         <DeleteInvoiceButton id={invoiceId} number={number} status={alreadySent ? 'sent' : status} variant="text" redirectTo="/admin/invoices" />
       </div>
     </div>

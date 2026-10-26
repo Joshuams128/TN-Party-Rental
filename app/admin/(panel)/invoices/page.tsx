@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { formatMoney } from '@/lib/money'
 import { totalFromRows } from '@/lib/invoice'
-import DeleteInvoiceButton from '@/components/admin/DeleteInvoiceButton'
+import InvoiceListItem from '@/components/admin/InvoiceListItem'
 
 export const dynamic = 'force-dynamic'
 
@@ -43,22 +42,15 @@ export default async function InvoicesPage() {
         <ul className="divide-y divide-gray-800 overflow-hidden rounded-xl border border-gray-800 bg-gray-900">
           {invoices.map((inv) => (
             <li key={inv.id} className="flex items-center hover:bg-gray-800">
-              <Link href={`/admin/invoices/${inv.id}`} className="flex min-w-0 flex-1 items-center gap-4 px-4 py-3">
-                <span className="w-16 font-mono text-sm text-gray-400">#{inv.number}</span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate font-medium">{inv.customer_name || 'No customer yet'}</span>
-                  <span className="block text-xs text-gray-400">{inv.issue_date}</span>
-                </span>
-                <span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${inv.status === 'sent' ? 'bg-green-950 text-green-300' : 'bg-gray-800 text-gray-300'}`}>
-                  {inv.status}
-                </span>
-                <span className="w-28 text-right font-semibold">
-                  {formatMoney(totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate)))}
-                </span>
-              </Link>
-              <div className="pr-2">
-                <DeleteInvoiceButton id={inv.id} number={inv.number} status={inv.status} />
-              </div>
+              <InvoiceListItem
+                id={inv.id}
+                number={inv.number}
+                status={inv.status}
+                customerName={inv.customer_name}
+                issueDate={inv.issue_date}
+                totalCents={totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate))}
+                deletable
+              />
             </li>
           ))}
         </ul>

@@ -110,7 +110,7 @@ export default function ItemForm({ item, categories }: { item?: Item; categories
             <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={(e) => onPickImage(e.target.files?.[0])} />
           </label>
           {imagePath && (
-            <button type="button" onClick={() => setImagePath(null)} className="block text-sm text-gray-400 hover:text-white">
+            <button type="button" onClick={() => setImagePath(null)} className="block py-2 text-sm text-gray-400 hover:text-white">
               Remove photo
             </button>
           )}
@@ -142,24 +142,24 @@ export default function ItemForm({ item, categories }: { item?: Item; categories
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className={field} />
       </label>
 
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="h-4 w-4 accent-[#D4AF37]" />
+      <label className="flex min-h-[44px] items-center gap-3 text-sm">
+        <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="h-5 w-5 accent-[#D4AF37]" />
         Available when creating invoices
       </label>
 
       {error && <p role="alert" className="text-sm text-red-400">{error}</p>}
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex gap-3">
-          <button type="submit" disabled={saving || uploading} className="rounded-lg bg-gold px-5 py-2.5 font-semibold text-black hover:bg-gold-dark disabled:opacity-60">
+          <button type="submit" disabled={saving || uploading} className="min-h-[48px] flex-1 rounded-lg bg-gold px-5 py-2.5 font-semibold text-black hover:bg-gold-dark disabled:opacity-60 sm:flex-none">
             {saving ? 'Saving…' : item ? 'Save changes' : `Add item${price ? ` · ${formatMoney(parseMoneyToCents(price) ?? 0)}` : ''}`}
           </button>
-          <button type="button" onClick={() => router.push('/admin/items')} className="rounded-lg px-4 py-2.5 text-gray-300 hover:bg-gray-800">
+          <button type="button" onClick={() => router.push('/admin/items')} className="min-h-[48px] rounded-lg px-4 py-2.5 text-gray-300 hover:bg-gray-800">
             Cancel
           </button>
         </div>
         {item && (
-          <button type="button" onClick={remove} disabled={saving} className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300">
+          <button type="button" onClick={remove} disabled={saving} className="flex min-h-[44px] items-center justify-center gap-1 text-sm text-red-400 hover:text-red-300 sm:justify-start">
             <Trash2 size={16} /> Delete
           </button>
         )}

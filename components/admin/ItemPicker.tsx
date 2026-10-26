@@ -103,7 +103,7 @@ export default function ItemPicker({ items, quantities, onAdd }: Props) {
                   key={c || 'all'}
                   type="button"
                   onClick={() => setCategory(c)}
-                  className={`whitespace-nowrap rounded-full border px-3 py-1 text-xs capitalize ${
+                  className={`whitespace-nowrap rounded-full border px-4 py-2 text-xs capitalize ${
                     category === c ? 'border-gold bg-gold text-black' : 'border-gray-700 hover:bg-gray-800'
                   }`}
                 >
@@ -116,7 +116,7 @@ export default function ItemPicker({ items, quantities, onAdd }: Props) {
           {results.length === 0 ? (
             <p className="p-6 text-center text-sm text-gray-400">No items match “{query}”.</p>
           ) : (
-            <ul id="item-picker-list" ref={listRef} role="listbox" className="max-h-[50vh] overflow-y-auto p-1">
+            <ul id="item-picker-list" ref={listRef} role="listbox" className="max-h-[50dvh] overflow-y-auto overscroll-contain p-1">
               {results.map((item, idx) => {
                 const qty = quantities[item.id] ?? 0
                 return (
@@ -129,15 +129,17 @@ export default function ItemPicker({ items, quantities, onAdd }: Props) {
                     >
                       <ItemImage path={item.image_path} className="h-12 w-12" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-medium">{item.name}</p>
-                        <p className="truncate text-xs capitalize text-gray-400">{item.category || 'Uncategorized'}</p>
+                        <p className="line-clamp-2 font-medium leading-snug">{item.name}</p>
+                        <p className="mt-0.5 flex items-center gap-2 text-xs capitalize text-gray-400">
+                          <span className="truncate">{item.category || 'Uncategorized'}</span>
+                          {qty > 0 && (
+                            <span className="flex shrink-0 items-center gap-1 rounded-full bg-gold/20 px-2 py-0.5 font-semibold text-gold">
+                              <Check size={12} /> {qty} added
+                            </span>
+                          )}
+                        </p>
                       </div>
-                      {qty > 0 && (
-                        <span className="flex items-center gap-1 rounded-full bg-gold/20 px-2 py-0.5 text-xs font-semibold text-gold">
-                          <Check size={12} /> {qty}
-                        </span>
-                      )}
-                      <span className="w-20 text-right font-semibold">{formatMoney(item.price_cents)}</span>
+                      <span className="shrink-0 text-right font-semibold">{formatMoney(item.price_cents)}</span>
                     </button>
                   </li>
                 )
@@ -146,8 +148,8 @@ export default function ItemPicker({ items, quantities, onAdd }: Props) {
           )}
 
           <div className="flex items-center justify-between border-t border-gray-800 px-3 py-2 text-xs text-gray-400">
-            <span>Tap an item to add it. Tap again for more.</span>
-            <button type="button" onClick={() => setOpen(false)} className="rounded-md bg-gray-800 px-3 py-1 font-medium text-white hover:bg-gray-700">
+            <span className="pr-3">Tap an item to add it. Tap again for more.</span>
+            <button type="button" onClick={() => setOpen(false)} className="rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-700">
               Done
             </button>
           </div>

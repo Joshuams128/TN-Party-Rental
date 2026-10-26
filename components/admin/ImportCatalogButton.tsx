@@ -10,10 +10,12 @@ export default function ImportCatalogButton({ existingNames }: { existingNames: 
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
 
+  const have = new Set(existingNames.map((n) => n.toLowerCase()))
+  const pending = catalogToItems().filter((i) => !have.has(i.name.toLowerCase())).length
+
   async function run() {
     setBusy(true)
     setMessage('')
-    const have = new Set(existingNames.map((n) => n.toLowerCase()))
     const rows = catalogToItems().filter((i) => !have.has(i.name.toLowerCase()))
     if (rows.length === 0) {
       setMessage('Everything from the website is already imported.')
@@ -30,8 +32,11 @@ export default function ImportCatalogButton({ existingNames }: { existingNames: 
     router.refresh()
   }
 
+  // Nothing left to import (and no message to show): don't take up space on a phone.
+  if (pending === 0 && !message) return null
+
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-wrap items-center gap-3">
       <button onClick={run} disabled={busy} className="rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-60">
         {busy ? 'Importing…' : 'Import from website catalog'}
       </button>
