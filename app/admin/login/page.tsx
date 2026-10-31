@@ -3,6 +3,7 @@
 import { useFormState, useFormStatus } from 'react-dom'
 import Image from 'next/image'
 import { login } from './actions'
+import PoweredBy from '@/components/admin/PoweredBy'
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -21,7 +22,7 @@ export default function LoginPage() {
   const [state, action] = useFormState(login, undefined)
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-black px-4">
       <form action={action} className="w-full max-w-sm space-y-4 rounded-2xl border border-gray-800 bg-gray-900 p-8 shadow-2xl">
         <Image src="/images/logo.png" alt="True North Party Rentals" width={240} height={80} className="mx-auto h-16 w-auto" />
         <h1 className="text-center text-lg font-semibold">Owner sign in</h1>
@@ -36,6 +37,7 @@ export default function LoginPage() {
         {state?.error && <p role="alert" className="text-sm text-red-400">{state.error}</p>}
         <SubmitButton />
       </form>
+      <PoweredBy className="mt-6" />
     </div>
   )
 }

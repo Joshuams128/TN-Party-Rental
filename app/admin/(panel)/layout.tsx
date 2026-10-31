@@ -1,6 +1,7 @@
 import { LogOut } from 'lucide-react'
 import { logout } from '../login/actions'
 import AdminNav from '@/components/admin/AdminNav'
+import PoweredBy from '@/components/admin/PoweredBy'
 
 export default function PanelLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,6 +16,9 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       </header>
       <AdminNav />
       {children}
+      <footer className="mt-12 border-t border-gray-800 py-2">
+        <PoweredBy />
+      </footer>
     </div>
   )
 }
