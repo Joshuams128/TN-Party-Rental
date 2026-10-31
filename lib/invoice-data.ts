@@ -10,6 +10,16 @@ export type BusinessSettings = {
   tax_label: string
   tax_rate: number
   invoice_footer: string
+  owner_signature_image: string // PNG data URL, '' if none
+}
+
+export type Signature = {
+  name: string
+  type: 'draw' | 'type'
+  image: string // PNG data URL
+  signedAt: string // ISO timestamp
+  hash: string
+  ip: string
 }
 
 export type DocLine = {
@@ -33,6 +43,8 @@ export type InvoiceDoc = {
   notes: string
   apply_tax: boolean
   owner_signature: boolean
+  sign_token: string | null
+  signature: Signature | null
   tax_rate: number
   lines: DocLine[]
   totals: { subtotal: number; discount: number; tax: number; total: number }
@@ -48,6 +60,7 @@ export const DEFAULT_SETTINGS: BusinessSettings = {
   tax_label: 'HST',
   tax_rate: 13,
   invoice_footer: '',
+  owner_signature_image: '',
 }
 
 export async function loadSettings(supabase: SupabaseClient): Promise<BusinessSettings> {
@@ -76,9 +89,20 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     notes: inv.notes,
     apply_tax: inv.apply_tax,
     owner_signature: !!inv.include_owner_signature,
+    sign_token: inv.sign_token ?? null,
+    signature: inv.signed_at
+      ? {
+          name: inv.signer_name ?? '',
+          type: inv.signature_type ?? 'draw',
+          image: inv.signature_image ?? '',
+          signedAt: inv.signed_at,
+          hash: inv.signed_hash ?? '',
+          ip: inv.signer_ip ?? '',
+        }
+      : null,
     tax_rate: taxRate,
     lines,
     totals: breakdownFromRows(lines, inv.discount_cents, inv.apply_tax, taxRate),
-    settings,
+    settings: inv.include_owner_signature ? settings : { ...settings, owner_signature_image: '' },
   }
 }

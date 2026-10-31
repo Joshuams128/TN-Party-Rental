@@ -10,6 +10,7 @@ type Row = {
   id: string
   number: number
   status: 'draft' | 'sent'
+  signed_at: string | null
   customer_name: string
   issue_date: string
   discount_cents: number
@@ -21,7 +22,7 @@ type Row = {
 export default async function InvoicesPage() {
   const { data, error } = await createClient()
     .from('invoices')
-    .select('id, number, status, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity)')
+    .select('id, number, status, signed_at, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity)')
     .order('number', { ascending: false })
   const invoices = (data ?? []) as Row[]
 
@@ -45,7 +46,7 @@ export default async function InvoicesPage() {
               <InvoiceListItem
                 id={inv.id}
                 number={inv.number}
-                status={inv.status}
+                status={inv.signed_at ? 'signed' : inv.status}
                 customerName={inv.customer_name}
                 issueDate={inv.issue_date}
                 totalCents={totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate))}

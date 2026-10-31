@@ -4,6 +4,7 @@ import { requireOwner } from '@/lib/auth'
 import { loadInvoiceDoc } from '@/lib/invoice-data'
 import { buildInvoicePdf } from '@/lib/pdf/build'
 import { invoiceEmailHtml, invoiceEmailText, invoiceSubject } from '@/lib/invoice-email'
+import { newSignToken, requestOrigin, signUrl } from '@/lib/signing'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -30,7 +31,21 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   if (doc.lines.length === 0) return fail('Add at least one item first.')
   if (!EMAIL_RE.test(from)) return fail('Add your business email in Settings first. Invoices are sent from it.')
 
-  const pdf = await buildInvoicePdf(doc, request.nextUrl.origin)
+  if (doc.signature) return fail('This invoice has already been signed, so it can’t be sent again.')
+
+  // The customer signs through a private link; create it the first time, reuse it on a resend.
+  let token = doc.sign_token
+  if (!token) {
+    token = newSignToken()
+    const { error: tokenErr } = await owner.supabase.from('invoices').update({ sign_token: token }).eq('id', doc.id)
+    if (tokenErr) {
+      console.error('Could not create signing link:', tokenErr)
+      return fail('Online signing isn’t set up yet. Run the digital-signing database update (0003) in Supabase, then try again.', 500)
+    }
+  }
+  const origin = requestOrigin(request.headers, request.nextUrl.origin)
+  const link = signUrl(origin, token)
+  const pdf = await buildInvoicePdf(doc, origin, { signUrl: link })
 
   const resend = new Resend(apiKey)
   const { error } = await resend.emails.send({
@@ -39,8 +54,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     bcc: [from], // the owner keeps a copy in their own inbox
     replyTo: from,
     subject: invoiceSubject(doc),
-    html: invoiceEmailHtml(doc),
-    text: invoiceEmailText(doc),
+    html: invoiceEmailHtml(doc, link),
+    text: invoiceEmailText(doc, link),
     attachments: [{ filename: `Invoice-${doc.number}.pdf`, content: pdf }],
   })
   if (error) {

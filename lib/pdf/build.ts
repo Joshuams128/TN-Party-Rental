@@ -5,7 +5,12 @@ import { loadPdfImage } from './images'
 import InvoicePdf from './InvoicePdf'
 
 // Renders the invoice to a PDF buffer. `requestOrigin` is only used to find site-hosted images (e.g. the logo).
-export async function buildInvoicePdf(doc: InvoiceDoc, requestOrigin: string): Promise<Buffer> {
+const dataUrlToBuffer = (url: string): Buffer | null => {
+  const m = /^data:image\/png;base64,([A-Za-z0-9+/=]+)$/.exec(url)
+  return m ? Buffer.from(m[1], 'base64') : null
+}
+
+export async function buildInvoicePdf(doc: InvoiceDoc, requestOrigin: string, opts: { signUrl?: string } = {}): Promise<Buffer> {
   const origins = Array.from(
     new Set([process.env.NEXT_PUBLIC_URL, 'https://www.truenorthpartyrentals.com', requestOrigin].filter(Boolean) as string[])
   ).map((o) => o.replace(/\/$/, ''))
@@ -25,5 +30,9 @@ export async function buildInvoicePdf(doc: InvoiceDoc, requestOrigin: string): P
   doc.lines.forEach((l, i) => (thumbs[l.id] = thumbList[i]))
 
   // InvoicePdf's root element is a <Document>; the library's types just can't see through our wrapper.
-  return renderToBuffer(createElement(InvoicePdf, { doc, logo, thumbs }) as unknown as ReactElement<DocumentProps>)
+  const customerSignature = doc.signature ? dataUrlToBuffer(doc.signature.image) : null
+  const ownerSignature = doc.owner_signature ? dataUrlToBuffer(doc.settings.owner_signature_image) : null
+  return renderToBuffer(
+    createElement(InvoicePdf, { doc, logo, thumbs, customerSignature, ownerSignature, signUrl: opts.signUrl }) as unknown as ReactElement<DocumentProps>
+  )
 }

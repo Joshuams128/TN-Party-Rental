@@ -52,6 +52,8 @@ export default async function ReviewPage({ params }: { params: { id: string } })
             invoiceId={doc.id}
             number={doc.number}
             status={doc.status}
+            signedBy={doc.signature?.name}
+            signedOn={doc.signature ? new Date(doc.signature.signedAt).toLocaleString('en-CA', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Toronto' }) : undefined}
             to={doc.customer_email}
             from={doc.settings.email}
             problems={problems}

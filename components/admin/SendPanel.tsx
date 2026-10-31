@@ -10,12 +10,14 @@ type Props = {
   invoiceId: string
   number: number
   status: 'draft' | 'sent'
+  signedBy?: string // set once the customer has signed
+  signedOn?: string
   to: string
   from: string
   problems: string[] // reasons sending is blocked
 }
 
-export default function SendPanel({ invoiceId, number, status, to, from, problems }: Props) {
+export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, problems }: Props) {
   const router = useRouter()
   const [confirming, setConfirming] = useState(false)
   const [sending, setSending] = useState(false)
@@ -40,22 +42,28 @@ export default function SendPanel({ invoiceId, number, status, to, from, problem
   }
 
   const alreadySent = status === 'sent' || sent
+  const signed = !!signedBy
 
   return (
     <div className="space-y-4 rounded-xl border border-gray-800 bg-gray-900 p-5">
-      {alreadySent && (
+      {signed ? (
+        <div className="rounded-lg bg-green-950 p-4 text-green-200">
+          <p className="flex items-center gap-2 font-semibold"><CheckCircle2 size={18} /> Signed by {signedBy}</p>
+          <p className="mt-1 text-sm text-green-300">{signedOn}. A signed copy was emailed to you and the customer. It can no longer be edited or resent.</p>
+        </div>
+      ) : alreadySent ? (
         <p className="flex items-center gap-2 text-green-400">
-          <CheckCircle2 size={18} /> {sent ? 'Sent!' : 'This invoice was sent.'}
+          <CheckCircle2 size={18} /> {sent ? 'Sent! Waiting for the customer to sign.' : 'Sent. Waiting for the customer to sign.'}
         </p>
-      )}
+      ) : null}
 
-      {problems.length > 0 && (
+      {!signed && problems.length > 0 && (
         <ul className="space-y-1 rounded-lg bg-red-950 p-3 text-sm text-red-300">
           {problems.map((p) => <li key={p}>• {p}</li>)}
         </ul>
       )}
 
-      {!confirming ? (
+      {signed ? null : !confirming ? (
         <button
           onClick={() => setConfirming(true)}
           disabled={problems.length > 0}
@@ -66,7 +74,7 @@ export default function SendPanel({ invoiceId, number, status, to, from, problem
       ) : (
         <div className="space-y-3 rounded-lg border border-gold/40 p-4">
           <p className="text-sm">
-            Email invoice #{number} with the PDF attached to <strong>{to}</strong>?
+            Email invoice #{number} to <strong>{to}</strong> with a secure link to review and sign it?
             <span className="mt-1 block text-xs text-gray-400">From {from}. A copy is also sent to you.</span>
           </p>
           <div className="flex gap-2">
@@ -84,13 +92,15 @@ export default function SendPanel({ invoiceId, number, status, to, from, problem
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
         <a href={`/api/invoices/${invoiceId}/pdf?download=1`} className="flex min-h-[44px] items-center gap-1 text-gray-300 hover:text-gold">
-          <Download size={14} /> Download PDF
+          <Download size={14} /> {signed ? 'Download signed PDF' : 'Download PDF'}
         </a>
-        <Link href={`/admin/invoices/${invoiceId}`} className="flex min-h-[44px] items-center gap-1 text-gray-300 hover:text-gold">
-          <Pencil size={14} /> Edit invoice
-        </Link>
+        {!signed && (
+          <Link href={`/admin/invoices/${invoiceId}`} className="flex min-h-[44px] items-center gap-1 text-gray-300 hover:text-gold">
+            <Pencil size={14} /> Edit invoice
+          </Link>
+        )}
         <Link href="/admin/invoices" className="flex min-h-[44px] items-center text-gray-400 hover:text-gold">All invoices</Link>
-        <DeleteInvoiceButton id={invoiceId} number={number} status={alreadySent ? 'sent' : status} variant="text" redirectTo="/admin/invoices" />
+        <DeleteInvoiceButton id={invoiceId} number={number} status={signed ? 'signed' : alreadySent ? 'sent' : status} variant="text" redirectTo="/admin/invoices" />
       </div>
     </div>
   )

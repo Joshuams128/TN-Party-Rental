@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/alt-text -- react-pdf's <Image> is not an HTML <img>; PDFs have no alt text */
-import { Document, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { formatMoney } from '@/lib/money'
 import type { InvoiceDoc } from '@/lib/invoice-data'
+
+// Never split words with a hyphen: it would break email addresses across lines.
+Font.registerHyphenationCallback((word) => [word])
 
 const GOLD = '#B8941F'
 const INK = '#1a1a1a'
@@ -33,10 +36,14 @@ const s = StyleSheet.create({
   totalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 2.5 },
   grand: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: INK, marginTop: 4, paddingTop: 6, fontSize: 13, fontFamily: 'Helvetica-Bold' },
   notes: { marginTop: 22 },
-  sign: { marginTop: 46, flexDirection: 'row', justifyContent: 'space-between' },
-  signBox: { width: '58%' },
-  signDate: { width: '34%' },
+  signArea: { marginTop: 34, flexDirection: 'row', gap: 24 },
+  signCol: { flex: 1 },
+  signImg: { height: 48, objectFit: 'contain', objectPosition: 'left' },
+  signTyped: { fontFamily: 'Times-Italic', fontSize: 26, height: 48 },
   signLine: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 4, fontSize: 8, color: MUTED },
+  signOnline: { height: 48, justifyContent: 'center', paddingHorizontal: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: GOLD, borderRadius: 3, backgroundColor: '#f6f3e8' },
+  link: { color: '#8a6d12', textDecoration: 'underline', fontFamily: 'Helvetica-Bold' },
+  cert: { marginTop: 8, fontSize: 7.5, color: MUTED, lineHeight: 1.4 },
   footer: { position: 'absolute', bottom: 24, left: 40, right: 40, textAlign: 'center', fontSize: 8, color: MUTED },
 })
 
@@ -52,9 +59,16 @@ type Props = {
   doc: InvoiceDoc
   logo: Buffer | null
   thumbs: Record<string, Buffer | null> // line id -> jpeg
+  customerSignature: Buffer | null // PNG of the customer's signature, once signed
+  ownerSignature: Buffer | null // PNG of the owner's saved signature
+  signUrl?: string // where the customer signs, while unsigned
 }
 
-export default function InvoicePdf({ doc, logo, thumbs }: Props) {
+function formatDateTime(iso: string): string {
+  return new Date(iso).toLocaleString('en-CA', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Toronto' }) + ' (Toronto time)'
+}
+
+export default function InvoicePdf({ doc, logo, thumbs, customerSignature, ownerSignature, signUrl }: Props) {
   const b = doc.settings
   const t = doc.totals
   return (
@@ -131,15 +145,37 @@ export default function InvoicePdf({ doc, logo, thumbs }: Props) {
           )}
 
           <View wrap={false}>
-            <View style={s.sign}>
-              <View style={s.signBox}><Text style={s.signLine}>Customer signature</Text></View>
-              <View style={s.signDate}><Text style={s.signLine}>Date</Text></View>
-            </View>
-            {doc.owner_signature && (
-              <View style={[s.sign, { marginTop: 36 }]}>
-                <View style={s.signBox}><Text style={s.signLine}>Authorized signature - {b.business_name}</Text></View>
-                <View style={s.signDate}><Text style={s.signLine}>Date</Text></View>
+            <View style={s.signArea}>
+              <View style={s.signCol}>
+                {doc.signature ? (
+                  customerSignature ? <Image src={customerSignature} style={s.signImg} /> : <Text style={s.signTyped}>{doc.signature.name}</Text>
+                ) : (
+                  <View style={s.signOnline}>
+                    {signUrl ? (
+                      <Text>Review and sign this invoice online: <Link src={signUrl} style={s.link}>Open secure signing page</Link></Text>
+                    ) : (
+                      <Text style={s.muted}>A secure link to sign this invoice online is included when it is sent.</Text>
+                    )}
+                  </View>
+                )}
+                <Text style={s.signLine}>
+                  {doc.signature ? `Customer: ${doc.signature.name}` : 'Customer signature'}
+                </Text>
               </View>
+              {doc.owner_signature && (
+                <View style={s.signCol}>
+                  {ownerSignature ? <Image src={ownerSignature} style={s.signImg} /> : <Text style={s.signTyped}>{b.business_name}</Text>}
+                  <Text style={s.signLine}>Authorized: {b.business_name}</Text>
+                </View>
+              )}
+            </View>
+            {doc.signature && (
+              <Text style={s.cert}>
+                Electronically signed by {doc.signature.name} on {formatDateTime(doc.signature.signedAt)}.
+                {doc.signature.ip ? ` IP address ${doc.signature.ip}.` : ''}
+                {doc.signature.hash ? ` Document ID ${doc.signature.hash.slice(0, 16).toUpperCase()}.` : ''}
+                {' '}The signer agreed that this electronic signature has the same effect as a handwritten one.
+              </Text>
             )}
           </View>
         </View>
