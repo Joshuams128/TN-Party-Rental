@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/alt-text -- react-pdf's <Image> is not an HTML <img>; PDFs have no alt text */
-import { Document, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { formatMoney } from '@/lib/money'
 import type { InvoiceDoc } from '@/lib/invoice-data'
+
+// Never split words with a hyphen: it would break email addresses across lines.
+Font.registerHyphenationCallback((word) => [word])
 
 const GOLD = '#B8941F'
 const INK = '#1a1a1a'
@@ -36,6 +39,7 @@ const s = StyleSheet.create({
   sign: { marginTop: 46, flexDirection: 'row', justifyContent: 'space-between' },
   signBox: { width: '58%' },
   signDate: { width: '34%' },
+  howTo: { marginTop: 14, padding: 8, borderRadius: 3, backgroundColor: '#f6f3e8', fontSize: 8.5, lineHeight: 1.45, color: INK },
   signLine: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 4, fontSize: 8, color: MUTED },
   footer: { position: 'absolute', bottom: 24, left: 40, right: 40, textAlign: 'center', fontSize: 8, color: MUTED },
 })
@@ -141,6 +145,13 @@ export default function InvoicePdf({ doc, logo, thumbs }: Props) {
                 <View style={s.signDate}><Text style={s.signLine}>Date</Text></View>
               </View>
             )}
+            <View style={s.howTo}>
+              <Text>
+                <Text style={s.strong}>How to sign and return: </Text>
+                Print this page and sign above, or sign it on your phone or computer (iPhone: open the PDF, tap Markup, then Signature.
+                Android or computer: the free Adobe Acrobat Reader app, Fill &amp; Sign). Then send the signed page back{b.email ? ` to ${b.email}` : ''} by replying to the email this invoice came in. A clear photo or scan is fine.
+              </Text>
+            </View>
           </View>
         </View>
 

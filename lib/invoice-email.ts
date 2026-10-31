@@ -33,6 +33,7 @@ export function invoiceEmailHtml(doc: InvoiceDoc): string {
     </table>
     ${doc.due_date ? `<p><strong>Due:</strong> ${formatDate(doc.due_date)}</p>` : ''}
     ${doc.notes ? `<p style="white-space:pre-line">${esc(doc.notes)}</p>` : ''}
+    <p><strong>Please sign and send it back.</strong> Print the last page and sign it, or sign it on your phone or computer, then reply to this email with the signed page. A clear photo or scan is fine.</p>
     <p>Reply to this email if you have any questions.</p>
     <p style="margin-top:24px">Thank you,<br><strong>${esc(b.business_name)}</strong>${contact ? `<br><span style="color:#666">${contact}</span>` : ''}</p>
   </div>`
@@ -47,6 +48,8 @@ export function invoiceEmailText(doc: InvoiceDoc): string {
     `Total: ${formatMoney(doc.totals.total)}`,
     doc.due_date ? `Due: ${formatDate(doc.due_date)}` : '',
     doc.notes ? `\n${doc.notes}` : '',
+    '',
+    'Please sign and send it back: print the last page and sign it, or sign it on your phone or computer, then reply to this email with the signed page. A clear photo or scan is fine.',
     '',
     'Reply to this email if you have any questions.',
     '',
