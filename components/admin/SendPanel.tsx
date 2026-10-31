@@ -14,10 +14,11 @@ type Props = {
   signedOn?: string
   to: string
   from: string
+  replyTo: string
   problems: string[] // reasons sending is blocked
 }
 
-export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, problems }: Props) {
+export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, replyTo, problems }: Props) {
   const router = useRouter()
   const [confirming, setConfirming] = useState(false)
   const [sending, setSending] = useState(false)
@@ -75,7 +76,7 @@ export default function SendPanel({ invoiceId, number, status, signedBy, signedO
         <div className="space-y-3 rounded-lg border border-gold/40 p-4">
           <p className="text-sm">
             Email invoice #{number} to <strong>{to}</strong> with a secure link to review and sign it?
-            <span className="mt-1 block text-xs text-gray-400">From {from}. A copy is also sent to you.</span>
+            <span className="mt-1 block text-xs text-gray-400">From {from}. Replies and a copy go to {replyTo}.</span>
           </p>
           <div className="flex gap-2">
             <button onClick={send} disabled={sending} className="flex-1 rounded-lg bg-gold px-4 py-2.5 font-semibold text-black hover:bg-gold-dark disabled:opacity-60">
