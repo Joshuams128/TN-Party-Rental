@@ -15,6 +15,7 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
         <div>
           <p className="text-lg font-bold">{b.business_name}</p>
           <p className="text-xs text-gray-300">{[b.phone, b.email].filter(Boolean).join(' · ')}</p>
+          {b.tax_number && <p className="text-xs text-gray-300">{b.tax_label} #: {b.tax_number}</p>}
         </div>
         <div className="text-right">
           <p className="text-xl font-bold text-[#D4AF37]">INVOICE</p>
