@@ -429,7 +429,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               }}
               className="h-5 w-5 accent-[#D4AF37]"
             />
-            Include my signature <span className="text-gray-400">(save it once under Settings. The customer always signs online.)</span>
+            <span>Include my signature <span className="text-gray-400">(save it once under Settings. The customer always signs online.)</span></span>
           </label>
 
           {!showDetails ? (
