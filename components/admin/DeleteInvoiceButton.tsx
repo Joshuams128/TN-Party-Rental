@@ -9,12 +9,15 @@ import { pruneOrphanCustomers } from '@/lib/customers'
 type Props = {
   id: string
   number: number
-  status: 'draft' | 'sent'
+  status: 'draft' | 'sent' | 'signed'
   variant?: 'icon' | 'text'
   redirectTo?: string // go here after deleting; otherwise just refresh the current page
 }
 
-export function deleteInvoiceMessage(number: number, status: 'draft' | 'sent') {
+export function deleteInvoiceMessage(number: number, status: 'draft' | 'sent' | 'signed') {
+  if (status === 'signed') {
+    return `Delete invoice #${number}?\n\nThe customer has SIGNED this invoice. Deleting permanently removes the signed record (and their signature) from this app. Download the signed PDF first if you need to keep it.\n\nThis can't be undone.`
+  }
   return status === 'sent'
     ? `Delete invoice #${number}?\n\nIt was already emailed to the customer. Deleting removes it from your records here, but it can't unsend that email.\n\nThis can't be undone.`
     : `Delete draft invoice #${number}? This can't be undone.`

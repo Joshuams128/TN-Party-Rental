@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { loadBuilderData } from '@/lib/builder-data'
 import InvoiceBuilder from '@/components/admin/InvoiceBuilder'
@@ -14,6 +14,8 @@ export default async function EditInvoicePage({ params }: { params: { id: string
     loadBuilderData(),
   ])
   if (!invoice) notFound()
+  // A signed invoice is a record of what the customer agreed to, so it can't be edited.
+  if (invoice.signed_at) redirect(`/admin/invoices/${invoice.id}/review`)
 
   const lines: Line[] = (rows ?? []).map((r) => ({
     key: r.id,

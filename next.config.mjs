@@ -20,6 +20,8 @@ const nextConfig = {
     outputFileTracingIncludes: {
       '/api/invoices/[id]/pdf': ['./node_modules/pdfkit/js/**/*'],
       '/api/invoices/[id]/send': ['./node_modules/pdfkit/js/**/*'],
+      '/api/sign/[token]': ['./node_modules/pdfkit/js/**/*'],
+      '/api/sign/[token]/pdf': ['./node_modules/pdfkit/js/**/*'],
     },
   },
   poweredByHeader: false,

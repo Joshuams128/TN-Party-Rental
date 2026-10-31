@@ -12,7 +12,7 @@ export function invoiceSubject(doc: InvoiceDoc): string {
 }
 
 // All user-entered text is escaped: this goes to customers, unlike the owner-only contact notification.
-export function invoiceEmailHtml(doc: InvoiceDoc): string {
+export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
   const b = doc.settings
   const rows = doc.lines
     .map(
@@ -33,13 +33,14 @@ export function invoiceEmailHtml(doc: InvoiceDoc): string {
     </table>
     ${doc.due_date ? `<p><strong>Due:</strong> ${formatDate(doc.due_date)}</p>` : ''}
     ${doc.notes ? `<p style="white-space:pre-line">${esc(doc.notes)}</p>` : ''}
-    <p><strong>Please sign and send it back.</strong> Print the last page and sign it, or sign it on your phone or computer, then reply to this email with the signed page. A clear photo or scan is fine.</p>
+    <p style="margin:24px 0 8px"><a href="${esc(signLink)}" style="display:inline-block;background:#D4AF37;color:#000;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px">Review &amp; sign invoice</a></p>
+    <p style="font-size:13px;color:#666;margin:0 0 16px">Takes about 20 seconds. Nothing to download or print. Or copy this link: <br><span style="word-break:break-all">${esc(signLink)}</span></p>
     <p>Reply to this email if you have any questions.</p>
     <p style="margin-top:24px">Thank you,<br><strong>${esc(b.business_name)}</strong>${contact ? `<br><span style="color:#666">${contact}</span>` : ''}</p>
   </div>`
 }
 
-export function invoiceEmailText(doc: InvoiceDoc): string {
+export function invoiceEmailText(doc: InvoiceDoc, signLink: string): string {
   const b = doc.settings
   return [
     `Hi ${doc.customer_name || 'there'},`,
@@ -49,7 +50,7 @@ export function invoiceEmailText(doc: InvoiceDoc): string {
     doc.due_date ? `Due: ${formatDate(doc.due_date)}` : '',
     doc.notes ? `\n${doc.notes}` : '',
     '',
-    'Please sign and send it back: print the last page and sign it, or sign it on your phone or computer, then reply to this email with the signed page. A clear photo or scan is fine.',
+    `Review and sign your invoice online (takes about 20 seconds, nothing to download or print):\n${signLink}`,
     '',
     'Reply to this email if you have any questions.',
     '',

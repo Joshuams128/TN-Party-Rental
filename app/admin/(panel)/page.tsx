@@ -10,6 +10,7 @@ type Row = {
   id: string
   number: number
   status: 'draft' | 'sent'
+  signed_at: string | null
   customer_name: string
   issue_date: string
   discount_cents: number
@@ -21,11 +22,12 @@ type Row = {
 export default async function DashboardPage() {
   const { data } = await createClient()
     .from('invoices')
-    .select('id, number, status, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity)')
+    .select('id, number, status, signed_at, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity)')
     .order('number', { ascending: false })
   const invoices = (data ?? []) as Row[]
   const drafts = invoices.filter((i) => i.status === 'draft').length
-  const sent = invoices.length - drafts
+  const signed = invoices.filter((i) => i.signed_at).length
+  const awaiting = invoices.length - drafts - signed
 
   return (
     <div className="space-y-6">
@@ -34,14 +36,18 @@ export default async function DashboardPage() {
         <Plus size={18} /> New invoice
       </Link>
 
-      <div className="grid grid-cols-2 gap-3 sm:max-w-md">
+      <div className="grid grid-cols-3 gap-3 sm:max-w-lg">
         <div className="rounded-xl border border-gray-800 bg-gray-900 p-4">
           <p className="text-2xl font-bold">{drafts}</p>
           <p className="text-sm text-gray-400">Drafts</p>
         </div>
         <div className="rounded-xl border border-gray-800 bg-gray-900 p-4">
-          <p className="text-2xl font-bold">{sent}</p>
-          <p className="text-sm text-gray-400">Sent</p>
+          <p className="text-2xl font-bold">{awaiting}</p>
+          <p className="text-sm text-gray-400">Awaiting signature</p>
+        </div>
+        <div className="rounded-xl border border-gray-800 bg-gray-900 p-4">
+          <p className="text-2xl font-bold">{signed}</p>
+          <p className="text-sm text-gray-400">Signed</p>
         </div>
       </div>
 
@@ -59,7 +65,7 @@ export default async function DashboardPage() {
                 <InvoiceListItem
                   id={inv.id}
                   number={inv.number}
-                  status={inv.status}
+                  status={inv.signed_at ? 'signed' : inv.status}
                   customerName={inv.customer_name}
                   issueDate={inv.issue_date}
                   totalCents={totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate))}

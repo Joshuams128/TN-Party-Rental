@@ -6,7 +6,7 @@ import DeleteInvoiceButton from './DeleteInvoiceButton'
 type Props = {
   id: string
   number: number
-  status: 'draft' | 'sent'
+  status: 'draft' | 'sent' | 'signed'
   customerName: string
   issueDate: string
   totalCents: number
@@ -27,10 +27,10 @@ export default function InvoiceListItem({ id, number, status, customerName, issu
         </span>
         <span
           className={`justify-self-end rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
-            status === 'sent' ? 'bg-green-950 text-green-300' : 'bg-gray-800 text-gray-300'
+            status === 'signed' ? 'bg-green-900 text-green-200' : status === 'sent' ? 'bg-blue-950 text-blue-300' : 'bg-gray-800 text-gray-300'
           }`}
         >
-          {status}
+          {status === 'sent' ? 'Awaiting signature' : status}
         </span>
       </Link>
       {deletable && (
