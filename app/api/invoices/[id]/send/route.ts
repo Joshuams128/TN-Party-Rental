@@ -5,12 +5,11 @@ import { loadInvoiceDoc } from '@/lib/invoice-data'
 import { buildInvoicePdf } from '@/lib/pdf/build'
 import { invoiceEmailHtml, invoiceEmailText, invoiceSubject } from '@/lib/invoice-email'
 import { newSignToken, requestOrigin, signUrl } from '@/lib/signing'
+import { EMAIL_RE, emailRoute, friendlySendError } from '@/lib/sender'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 30
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const fail = (message: string, status = 400) => NextResponse.json({ message }, { status })
 
@@ -25,11 +24,12 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   if (!doc) return fail('Invoice not found.', 404)
 
   const to = doc.customer_email.trim()
-  const from = doc.settings.email.trim()
+  const route = emailRoute(doc.settings)
   if (!doc.customer_name.trim()) return fail('Add the customer’s name first.')
   if (!EMAIL_RE.test(to)) return fail('Add a valid customer email first.')
   if (doc.lines.length === 0) return fail('Add at least one item first.')
-  if (!EMAIL_RE.test(from)) return fail('Add your business email in Settings first. Invoices are sent from it.')
+  if (!EMAIL_RE.test(route.replyTo)) return fail('Add your business email in Settings first. Replies and your copy go to it.')
+  if (!EMAIL_RE.test(route.fromAddress)) return fail('The “Send invoices from” address in Settings isn’t a valid email.')
 
   if (doc.signature) return fail('This invoice has already been signed, so it can’t be sent again.')
 
@@ -49,10 +49,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
   const resend = new Resend(apiKey)
   const { error } = await resend.emails.send({
-    from: `${doc.settings.business_name} <${from}>`,
+    from: route.from,
     to: [to],
-    bcc: [from], // the owner keeps a copy in their own inbox
-    replyTo: from,
+    bcc: [route.replyTo], // the owner keeps a copy in their own inbox
+    replyTo: route.replyTo,
     subject: invoiceSubject(doc),
     html: invoiceEmailHtml(doc, link),
     text: invoiceEmailText(doc, link),
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   })
   if (error) {
     console.error('Invoice email failed:', error)
-    return fail(`Couldn’t send: ${error.message}`, 502)
+    return fail(friendlySendError(error.message, route.fromAddress), 502)
   }
 
   const { error: dbErr } = await owner.supabase

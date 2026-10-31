@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { loadInvoiceDoc } from '@/lib/invoice-data'
 import { formatMoney } from '@/lib/money'
 import SendPanel from '@/components/admin/SendPanel'
+import { emailRoute } from '@/lib/sender'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,7 +18,7 @@ export default async function ReviewPage({ params }: { params: { id: string } })
   if (!doc.customer_name.trim()) problems.push('Customer name is missing.')
   if (!EMAIL_RE.test(doc.customer_email.trim())) problems.push('Customer email is missing or invalid.')
   if (doc.lines.length === 0) problems.push('There are no items on this invoice.')
-  if (!EMAIL_RE.test(doc.settings.email.trim())) problems.push('Your business email isn’t set. Add it in Settings.')
+  if (!EMAIL_RE.test(doc.settings.email.trim())) problems.push('Your business email isn’t set. Add it in Settings (replies and your copy go there).')
 
   return (
     <div className="space-y-5">
@@ -55,7 +56,8 @@ export default async function ReviewPage({ params }: { params: { id: string } })
             signedBy={doc.signature?.name}
             signedOn={doc.signature ? new Date(doc.signature.signedAt).toLocaleString('en-CA', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Toronto' }) : undefined}
             to={doc.customer_email}
-            from={doc.settings.email}
+            from={emailRoute(doc.settings).fromAddress}
+            replyTo={doc.settings.email}
             problems={problems}
           />
         </div>

@@ -19,6 +19,8 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
     e.preventDefault()
     const rate = Number(s.tax_rate)
     if (!Number.isFinite(rate) || rate < 0 || rate > 100) return setError('Tax rate must be between 0 and 100.')
+    const fromValue = s.send_from_email.trim()
+    if (fromValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fromValue)) return setError('“Send invoices from” must be a valid email address.')
     setError('')
     setState('saving')
     const { error: dbErr } = await createClient()
@@ -28,6 +30,7 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
         address: s.address.trim(),
         phone: s.phone.trim(),
         email: s.email.trim(),
+        send_from_email: s.send_from_email.trim(),
         tax_number: s.tax_number.trim(),
         tax_label: s.tax_label.trim() || 'HST',
         tax_rate: rate,
@@ -57,8 +60,8 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
           <input value={s.phone} onChange={(e) => set('phone', e.target.value)} className={input} />
         </label>
         <label className="block text-sm font-medium">
-          Email <span className="font-normal text-gray-400">(invoices are sent from here)</span>
-          <input type="email" value={s.email} onChange={(e) => set('email', e.target.value)} className={input} placeholder="info@truenorthpartyrentals.com" />
+          Email <span className="font-normal text-gray-400">(replies and your copy go here)</span>
+          <input type="email" value={s.email} onChange={(e) => set('email', e.target.value)} className={input} placeholder="you@gmail.com" />
         </label>
       </div>
       <div className="grid gap-4 sm:grid-cols-3">
@@ -80,9 +83,13 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
         <input value={s.invoice_footer} onChange={(e) => set('invoice_footer', e.target.value)} className={input} placeholder="Thank you for your business!" />
       </label>
 
+      <label className="block text-sm font-medium">
+        Send invoices from <span className="font-normal text-gray-400">(the address customers see)</span>
+        <input type="email" value={s.send_from_email} onChange={(e) => set('send_from_email', e.target.value)} className={input} placeholder="noreply@truenorthpartyrentals.com" />
+      </label>
       <p className="rounded-lg bg-gray-900 p-3 text-xs text-gray-400">
-        Invoices are emailed from the address above, and customer replies go back to it. That address must belong to a domain
-        verified in Resend, otherwise sending will be rejected.
+        Use an address on your website’s domain (the one verified in Resend). It doesn’t need a real inbox, because replies go to
+        your Email above. Gmail, Yahoo and similar addresses can’t be used here.
       </p>
 
       {error && <p role="alert" className="text-sm text-red-400">{error}</p>}

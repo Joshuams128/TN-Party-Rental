@@ -5,7 +5,8 @@ export type BusinessSettings = {
   business_name: string
   address: string
   phone: string
-  email: string
+  email: string // where replies and the owner's copy go
+  send_from_email: string // address invoices are sent from (must be on a domain verified in Resend); '' = use email
   tax_number: string
   tax_label: string
   tax_rate: number
@@ -51,11 +52,15 @@ export type InvoiceDoc = {
   settings: BusinessSettings
 }
 
+// Same sender the website's contact form already uses, so it's known to be on the verified domain.
+export const DEFAULT_SEND_FROM = 'noreply@truenorthpartyrentals.com'
+
 export const DEFAULT_SETTINGS: BusinessSettings = {
   business_name: 'True North Party Rentals',
   address: '',
   phone: '',
   email: '',
+  send_from_email: DEFAULT_SEND_FROM,
   tax_number: '',
   tax_label: 'HST',
   tax_rate: 13,
