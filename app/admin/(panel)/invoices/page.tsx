@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { totalFromRows } from '@/lib/invoice'
+import { totalFromRows, type LineRow } from '@/lib/invoice'
 import InvoiceListItem from '@/components/admin/InvoiceListItem'
 
 export const dynamic = 'force-dynamic'
@@ -16,13 +16,13 @@ type Row = {
   discount_cents: number
   apply_tax: boolean
   tax_rate: number
-  invoice_lines: { unit_price_cents: number; quantity: number }[]
+  invoice_lines: LineRow[]
 }
 
 export default async function InvoicesPage() {
   const { data, error } = await createClient()
     .from('invoices')
-    .select('id, number, status, signed_at, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity)')
+    .select('id, number, status, signed_at, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)')
     .order('number', { ascending: false })
   const invoices = (data ?? []) as Row[]
 

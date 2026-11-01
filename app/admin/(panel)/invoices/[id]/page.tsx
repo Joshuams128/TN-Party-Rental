@@ -2,7 +2,8 @@ import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { loadBuilderData } from '@/lib/builder-data'
 import InvoiceBuilder from '@/components/admin/InvoiceBuilder'
-import type { Line } from '@/lib/invoice'
+import { blankDiscount, type DiscountType, type Line } from '@/lib/invoice'
+import { toInputValue } from '@/lib/rental'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,6 +26,9 @@ export default async function EditInvoicePage({ params }: { params: { id: string
     image_path: r.image_path,
     price: (r.unit_price_cents / 100).toFixed(2),
     quantity: r.quantity,
+    discountName: r.discount_name ?? blankDiscount.discountName,
+    discountType: (r.discount_type ?? blankDiscount.discountType) as DiscountType,
+    discountValue: Number(r.discount_value) > 0 ? String(Number(r.discount_value)) : '',
   }))
 
   return (
@@ -41,6 +45,8 @@ export default async function EditInvoicePage({ params }: { params: { id: string
           customer_name: invoice.customer_name,
           customer_email: invoice.customer_email,
           customer_address: invoice.customer_address,
+          rental_start: toInputValue(invoice.rental_start),
+          rental_end: toInputValue(invoice.rental_end),
           issue_date: invoice.issue_date,
           due_date: invoice.due_date ?? '',
           notes: invoice.notes,

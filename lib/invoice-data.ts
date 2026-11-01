@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { breakdownFromRows } from '@/lib/invoice'
+import { breakdownFromRows, type DiscountType } from '@/lib/invoice'
+import { toInputValue } from '@/lib/rental'
 
 export type BusinessSettings = {
   business_name: string
@@ -30,6 +31,9 @@ export type DocLine = {
   image_path: string | null
   unit_price_cents: number
   quantity: number
+  discount_name: string
+  discount_type: DiscountType
+  discount_value: number
 }
 
 export type InvoiceDoc = {
@@ -41,6 +45,8 @@ export type InvoiceDoc = {
   customer_address: string
   issue_date: string
   due_date: string | null
+  rental_start: string | null // 'YYYY-MM-DDTHH:mm'
+  rental_end: string | null
   notes: string
   apply_tax: boolean
   owner_signature: boolean
@@ -68,6 +74,16 @@ export const DEFAULT_SETTINGS: BusinessSettings = {
   owner_signature_image: '',
 }
 
+// Rows saved before line discounts existed (or before the migration) simply have no discount.
+export function withDiscountDefaults(r: Partial<DocLine>): DocLine {
+  return {
+    ...(r as DocLine),
+    discount_name: r.discount_name ?? '',
+    discount_type: r.discount_type ?? 'amount',
+    discount_value: Number(r.discount_value) || 0,
+  }
+}
+
 export async function loadSettings(supabase: SupabaseClient): Promise<BusinessSettings> {
   const { data } = await supabase.from('business_settings').select('*').eq('id', 1).maybeSingle()
   return data ? { ...DEFAULT_SETTINGS, ...data, tax_rate: Number(data.tax_rate) } : DEFAULT_SETTINGS
@@ -80,7 +96,7 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     loadSettings(supabase),
   ])
   if (!inv) return null
-  const lines = (rows ?? []) as DocLine[]
+  const lines = ((rows ?? []) as Partial<DocLine>[]).map(withDiscountDefaults)
   const taxRate = Number(inv.tax_rate)
   return {
     id: inv.id,
@@ -91,6 +107,8 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     customer_address: inv.customer_address,
     issue_date: inv.issue_date,
     due_date: inv.due_date,
+    rental_start: toInputValue(inv.rental_start) || null,
+    rental_end: toInputValue(inv.rental_end) || null,
     notes: inv.notes,
     apply_tax: inv.apply_tax,
     owner_signature: !!inv.include_owner_signature,

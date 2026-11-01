@@ -7,7 +7,8 @@ import { createClient } from '@/lib/supabase/client'
 import { formatMoney, parseMoneyToCents } from '@/lib/money'
 import { pruneOrphanCustomers } from '@/lib/customers'
 import { deleteInvoiceMessage } from './DeleteInvoiceButton'
-import { computeTotals, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
+import { blankDiscount, computeTotals, lineDiscountCents, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
+import { formatRentalPeriod, rentalHours } from '@/lib/rental'
 import type { Item } from '@/lib/items'
 import ItemImage from './ItemImage'
 import ItemPicker from './ItemPicker'
@@ -58,8 +59,13 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const deleted = useRef(false) // once deleted, autosave must not recreate or touch the invoice
   // The owner-signature column comes from a later migration, so only write it once the owner has used it.
   const ownerSigTouched = useRef(initial.fields.owner_signature)
+  // Same idea for the rental period and line discounts: columns from newer migrations are only written once used.
+  const rentalTouched = useRef(!!(initial.fields.rental_start || initial.fields.rental_end))
 
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
+  const [discountOpen, setDiscountOpen] = useState<Record<string, boolean>>({})
+  const rentalText = formatRentalPeriod(fields.rental_start, fields.rental_end)
+  const rentalBad = !!fields.rental_start && !!fields.rental_end && rentalHours(fields.rental_start, fields.rental_end) === null
 
   const persist = useCallback(async () => {
     const { fields: f, lines: ls, invoiceId: currentId } = latest.current
@@ -92,6 +98,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       discount_cents: parseMoneyToCents(f.discount) ?? 0,
       apply_tax: f.apply_tax,
       ...(ownerSigTouched.current ? { include_owner_signature: f.owner_signature } : {}),
+      ...(rentalTouched.current ? { rental_start: f.rental_start || null, rental_end: f.rental_end || null } : {}),
       updated_at: new Date().toISOString(),
     }
 
@@ -120,6 +127,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
     const { error: delErr } = await supabase.from('invoice_lines').delete().eq('invoice_id', id)
     if (delErr) throw delErr
     if (ls.length > 0) {
+      const anyDiscount = ls.some((l) => l.discountName.trim() || Number(l.discountValue) > 0)
       const { error: insErr } = await supabase.from('invoice_lines').insert(
         ls.map((l, position) => ({
           invoice_id: id,
@@ -130,6 +138,9 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           image_path: l.image_path,
           unit_price_cents: parseMoneyToCents(l.price) ?? 0,
           quantity: l.quantity,
+          ...(anyDiscount
+            ? { discount_name: l.discountName.trim(), discount_type: l.discountType, discount_value: Number(l.discountValue) || 0 }
+            : {}),
         }))
       )
       if (insErr) throw insErr
@@ -219,6 +230,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           image_path: item.image_path,
           price: (item.price_cents / 100).toFixed(2),
           quantity: 1,
+          ...blankDiscount,
         },
       ]
     })
@@ -227,7 +239,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   function addCustom() {
     setLines((ls) => [
       ...ls,
-      { key: crypto.randomUUID(), item_id: null, name: '', description: '', image_path: null, price: '', quantity: 1 },
+      { key: crypto.randomUUID(), item_id: null, name: '', description: '', image_path: null, price: '', quantity: 1, ...blankDiscount },
     ])
   }
 
@@ -330,6 +342,41 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               Mailing address
               <textarea value={fields.customer_address} onChange={(e) => setField('customer_address', e.target.value)} rows={2} className={input} placeholder="Street, city, province, postal code" />
             </label>
+            <div className="sm:col-span-2">
+              <p className="text-sm font-medium">Rental period <span className="font-normal text-gray-400">(optional)</span></p>
+              <div className="mt-1 grid gap-3 sm:grid-cols-2">
+                <label className="block text-xs text-gray-400">
+                  Starts
+                  <input
+                    type="datetime-local"
+                    value={fields.rental_start}
+                    onChange={(e) => {
+                      rentalTouched.current = true
+                      setField('rental_start', e.target.value)
+                    }}
+                    className={`${input} h-12 text-base text-white`}
+                  />
+                </label>
+                <label className="block text-xs text-gray-400">
+                  Ends
+                  <input
+                    type="datetime-local"
+                    value={fields.rental_end}
+                    min={fields.rental_start || undefined}
+                    onChange={(e) => {
+                      rentalTouched.current = true
+                      setField('rental_end', e.target.value)
+                    }}
+                    className={`${input} h-12 text-base text-white`}
+                  />
+                </label>
+              </div>
+              {rentalBad ? (
+                <p role="alert" className="mt-2 text-sm text-red-400">The end needs to be after the start.</p>
+              ) : (
+                rentalText && <p className="mt-2 text-sm font-medium text-gold">{rentalText}</p>
+              )}
+            </div>
           </div>
         </section>
 
@@ -344,7 +391,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
             <ul className="mt-4 divide-y divide-gray-800">
               {lines.map((l) => (
                 // Phone: photo + name + remove on one row, quantity / price / total on the next. Desktop: a single row.
-                <li key={l.key} className="flex flex-wrap items-center gap-x-3 gap-y-3 py-4 sm:flex-nowrap sm:gap-y-0 sm:py-3">
+                <li key={l.key} className="py-4 sm:py-3">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-3 sm:flex-nowrap sm:gap-y-0">
                   <ItemImage path={l.image_path} className="h-14 w-14" />
                   <div className="min-w-0 flex-1 basis-0">
                     {l.item_id ? (
@@ -395,6 +443,70 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                     />
                   </label>
                   <span className="ml-auto min-w-[4.5rem] text-right font-semibold sm:ml-0 sm:w-24">{formatMoney(lineTotalCents(l))}</span>
+                  </div>
+
+                  {/* Optional discount on just this item or service, with a name the customer sees. */}
+                  {discountOpen[l.key] || l.discountName || Number(l.discountValue) > 0 ? (
+                    <div className="mt-3 rounded-lg border border-gray-800 bg-gray-950/60 p-3 sm:ml-[68px]">
+                      <div className="grid gap-3 sm:grid-cols-[1fr_auto_8rem]">
+                        <label className="block text-xs font-medium text-gray-400">
+                          Discount name
+                          <input
+                            value={l.discountName}
+                            onChange={(e) => updateLine(l.key, { discountName: e.target.value })}
+                            placeholder="e.g. Repeat customer"
+                            className="mt-1 h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-base text-white placeholder-gray-500"
+                          />
+                        </label>
+                        <div role="group" aria-label="Discount type" className="flex h-11 self-end overflow-hidden rounded-lg border border-gray-700">
+                          {(['amount', 'percent'] as const).map((t) => (
+                            <button
+                              key={t}
+                              type="button"
+                              aria-pressed={l.discountType === t}
+                              onClick={() => updateLine(l.key, { discountType: t })}
+                              className={`w-16 text-sm font-semibold ${l.discountType === t ? 'bg-gold text-black' : 'text-gray-300 hover:bg-gray-800'}`}
+                            >
+                              {t === 'amount' ? '$ off' : '% off'}
+                            </button>
+                          ))}
+                        </div>
+                        <label className="block text-xs font-medium text-gray-400">
+                          {l.discountType === 'percent' ? 'Percent' : 'Amount'}
+                          <input
+                            inputMode="decimal"
+                            value={l.discountValue}
+                            onChange={(e) => updateLine(l.key, { discountValue: e.target.value })}
+                            placeholder={l.discountType === 'percent' ? '10' : '0.00'}
+                            className="mt-1 h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-right text-base text-white"
+                          />
+                        </label>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between gap-3 text-sm">
+                        <span className={`min-w-0 ${lineDiscountCents(l) > 0 ? 'font-medium text-green-400' : 'text-gray-500'}`}>
+                          {lineDiscountCents(l) > 0 ? `${l.discountName.trim() || 'Discount'}: −${formatMoney(lineDiscountCents(l))}` : 'Enter an amount to apply'}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            updateLine(l.key, { ...blankDiscount })
+                            setDiscountOpen((o) => ({ ...o, [l.key]: false }))
+                          }}
+                          className="min-h-[44px] shrink-0 whitespace-nowrap text-gray-400 hover:text-red-400"
+                        >
+                          Remove discount
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setDiscountOpen((o) => ({ ...o, [l.key]: true }))}
+                      className="mt-1 min-h-[44px] text-sm text-gray-400 hover:text-gold sm:ml-[68px]"
+                    >
+                      + Discount this item
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
