@@ -1,5 +1,6 @@
 import { formatMoney } from '@/lib/money'
-import { formatDateShort } from '@/lib/invoice'
+import { formatDateShort, rowDiscountCents, rowNetCents } from '@/lib/invoice'
+import { formatRentalPeriod } from '@/lib/rental'
 import { itemImageUrl } from '@/lib/items'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -33,6 +34,12 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
           <p><span className="text-gray-500">Invoice date: </span>{formatDateShort(doc.issue_date)}</p>
           {doc.due_date && <p><span className="text-gray-500">Due date: </span>{formatDateShort(doc.due_date)}</p>}
         </div>
+        {doc.rental_start && (
+          <div className="sm:col-span-2">
+            <p className="mb-1 text-[11px] font-bold tracking-widest text-[#B8941F]">RENTAL PERIOD</p>
+            <p className="font-medium">{formatRentalPeriod(doc.rental_start, doc.rental_end)}</p>
+          </div>
+        )}
       </div>
 
       <ul className="divide-y divide-gray-100 border-y border-gray-100">
@@ -47,8 +54,14 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
               <div className="min-w-0 flex-1">
                 <p className="font-medium leading-snug">{l.name}</p>
                 <p className="text-xs text-gray-500">{l.quantity} × {formatMoney(l.unit_price_cents)}</p>
+                {rowDiscountCents(l) > 0 && (
+                  <p className="text-xs font-medium text-green-700">
+                    {l.discount_name || 'Discount'}: -{formatMoney(rowDiscountCents(l))}
+                    {l.discount_type === 'percent' ? ` (${l.discount_value}% off)` : ''}
+                  </p>
+                )}
               </div>
-              <p className="shrink-0 font-semibold">{formatMoney(l.unit_price_cents * l.quantity)}</p>
+              <p className="shrink-0 font-semibold">{formatMoney(rowNetCents(l))}</p>
             </li>
           )
         })}

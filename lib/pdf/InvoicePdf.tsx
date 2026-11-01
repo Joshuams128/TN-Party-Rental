@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text -- react-pdf's <Image> is not an HTML <img>; PDFs have no alt text */
 import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { formatMoney } from '@/lib/money'
+import { rowDiscountCents, rowNetCents } from '@/lib/invoice'
+import { formatRentalPeriod } from '@/lib/rental'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
 // Never split words with a hyphen: it would break email addresses across lines.
@@ -42,6 +44,7 @@ const s = StyleSheet.create({
   signTyped: { fontFamily: 'Times-Italic', fontSize: 26, height: 48 },
   signLine: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 4, fontSize: 8, color: MUTED },
   signOnline: { height: 48, justifyContent: 'center', paddingHorizontal: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: GOLD, borderRadius: 3, backgroundColor: '#f6f3e8' },
+  discount: { fontSize: 8, color: '#2e7d32', marginTop: 1 },
   link: { color: '#8a6d12', textDecoration: 'underline', fontFamily: 'Helvetica-Bold' },
   cert: { marginTop: 8, fontSize: 7.5, color: MUTED, lineHeight: 1.4 },
   footer: { position: 'absolute', bottom: 24, left: 40, right: 40, textAlign: 'center', fontSize: 8, color: MUTED },
@@ -103,6 +106,12 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
               {!!doc.due_date && (
                 <Text style={s.line}><Text style={s.muted}>Due date: </Text>{formatDate(doc.due_date)}</Text>
               )}
+              {!!doc.rental_start && (
+                <View style={{ marginTop: 8 }}>
+                  <Text style={s.label}>RENTAL PERIOD</Text>
+                  <Text style={s.line}>{formatRentalPeriod(doc.rental_start, doc.rental_end)}</Text>
+                </View>
+              )}
             </View>
           </View>
 
@@ -121,11 +130,17 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
                   <View style={{ flex: 1 }}>
                     <Text>{l.name}</Text>
                     {!!l.description && l.description !== l.name && <Text style={[s.muted, { fontSize: 8 }]}>{l.description}</Text>}
+                    {rowDiscountCents(l) > 0 && (
+                      <Text style={s.discount}>
+                        {l.discount_name || 'Discount'}: -{formatMoney(rowDiscountCents(l))}
+                        {l.discount_type === 'percent' ? ` (${l.discount_value}% off)` : ''}
+                      </Text>
+                    )}
                   </View>
                 </View>
                 <Text style={s.cQty}>{l.quantity}</Text>
                 <Text style={s.cPrice}>{formatMoney(l.unit_price_cents)}</Text>
-                <Text style={s.cAmt}>{formatMoney(l.unit_price_cents * l.quantity)}</Text>
+                <Text style={s.cAmt}>{formatMoney(rowNetCents(l))}</Text>
               </View>
             )
           })}

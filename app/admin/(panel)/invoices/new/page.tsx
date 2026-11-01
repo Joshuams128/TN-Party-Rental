@@ -20,6 +20,8 @@ export default async function NewInvoicePage() {
           customer_name: '',
           customer_email: '',
           customer_address: '',
+          rental_start: '',
+          rental_end: '',
           issue_date: todayISO(),
           due_date: '',
           notes: '',

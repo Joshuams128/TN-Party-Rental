@@ -1,5 +1,7 @@
 import { escapeHtml as esc } from '@/lib/escape'
 import { formatMoney } from '@/lib/money'
+import { formatRentalPeriod } from '@/lib/rental'
+import { rowDiscountCents, rowNetCents } from '@/lib/invoice'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
 function formatDate(iso: string): string {
@@ -17,8 +19,8 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
   const rows = doc.lines
     .map(
       (l) => `<tr>
-        <td style="padding:6px 0;border-bottom:1px solid #eee">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}</td>
-        <td style="padding:6px 0;border-bottom:1px solid #eee;text-align:right">${formatMoney(l.unit_price_cents * l.quantity)}</td>
+        <td style="padding:6px 0;border-bottom:1px solid #eee">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${rowDiscountCents(l) > 0 ? `<br><span style="font-size:12px;color:#2e7d32">${esc(l.discount_name || 'Discount')}: -${formatMoney(rowDiscountCents(l))}</span>` : ''}</td>
+        <td style="padding:6px 0;border-bottom:1px solid #eee;text-align:right">${formatMoney(rowNetCents(l))}</td>
       </tr>`
     )
     .join('')
@@ -31,6 +33,7 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
       <tr><td style="padding:10px 0 0;font-weight:bold">Total${doc.apply_tax ? ` (incl. ${esc(b.tax_label)})` : ''}</td>
           <td style="padding:10px 0 0;text-align:right;font-weight:bold">${formatMoney(doc.totals.total)}</td></tr>
     </table>
+    ${doc.rental_start ? `<p><strong>Rental period:</strong> ${esc(formatRentalPeriod(doc.rental_start, doc.rental_end))}</p>` : ''}
     ${doc.due_date ? `<p><strong>Due:</strong> ${formatDate(doc.due_date)}</p>` : ''}
     ${doc.notes ? `<p style="white-space:pre-line">${esc(doc.notes)}</p>` : ''}
     <p style="margin:24px 0 8px"><a href="${esc(signLink)}" style="display:inline-block;background:#D4AF37;color:#000;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px">Review &amp; sign invoice</a></p>
@@ -47,6 +50,7 @@ export function invoiceEmailText(doc: InvoiceDoc, signLink: string): string {
     '',
     `Please find your invoice #${doc.number} from ${b.business_name} attached as a PDF.`,
     `Total: ${formatMoney(doc.totals.total)}`,
+    doc.rental_start ? `Rental period: ${formatRentalPeriod(doc.rental_start, doc.rental_end)}` : '',
     doc.due_date ? `Due: ${formatDate(doc.due_date)}` : '',
     doc.notes ? `\n${doc.notes}` : '',
     '',

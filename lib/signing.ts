@@ -1,7 +1,8 @@
 import { createHash, randomBytes } from 'crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { breakdownFromRows } from '@/lib/invoice'
-import { DEFAULT_SETTINGS, type DocLine, type InvoiceDoc } from '@/lib/invoice-data'
+import { DEFAULT_SETTINGS, withDiscountDefaults, type DocLine, type InvoiceDoc } from '@/lib/invoice-data'
+import { toInputValue } from '@/lib/rental'
 
 // 43 URL-safe characters = 256 bits. The link is the credential, so it must be unguessable.
 export const newSignToken = () => randomBytes(32).toString('base64url')
@@ -26,9 +27,10 @@ export function documentHash(doc: InvoiceDoc): string {
     number: doc.number,
     customer: [doc.customer_name, doc.customer_email, doc.customer_address],
     dates: [doc.issue_date, doc.due_date],
+    rental: [doc.rental_start, doc.rental_end],
     notes: doc.notes,
     tax: [doc.apply_tax, doc.tax_rate],
-    lines: doc.lines.map((l) => [l.name, l.description, l.unit_price_cents, l.quantity]),
+    lines: doc.lines.map((l) => [l.name, l.description, l.unit_price_cents, l.quantity, l.discount_name, l.discount_type, l.discount_value]),
     totals: doc.totals,
   })
   return createHash('sha256').update(canonical).digest('hex')
@@ -42,7 +44,7 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
   const { data } = await supabase.rpc('get_invoice_for_signing', { p_token: token })
   if (!data) return null
   const r = data as Raw
-  const lines = (r.lines ?? []) as DocLine[]
+  const lines = ((r.lines ?? []) as Partial<DocLine>[]).map(withDiscountDefaults)
   const taxRate = Number(r.tax_rate)
   return {
     id: r.id,
@@ -53,6 +55,8 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     customer_address: r.customer_address,
     issue_date: r.issue_date,
     due_date: r.due_date,
+    rental_start: toInputValue(r.rental_start) || null,
+    rental_end: toInputValue(r.rental_end) || null,
     notes: r.notes,
     apply_tax: r.apply_tax,
     owner_signature: !!r.include_owner_signature,
