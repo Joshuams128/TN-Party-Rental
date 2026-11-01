@@ -41,6 +41,7 @@ export default async function EditInvoicePage({ params }: { params: { id: string
         id: invoice.id,
         number: invoice.number,
         status: invoice.status,
+        updatedAt: invoice.updated_at ?? null,
         fields: {
           customer_name: invoice.customer_name,
           customer_email: invoice.customer_email,

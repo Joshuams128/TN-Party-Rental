@@ -13,6 +13,9 @@ import type { Item } from '@/lib/items'
 import ItemImage from './ItemImage'
 import ItemPicker from './ItemPicker'
 
+// Thrown when the invoice was saved by someone/something else since this page loaded.
+class ConflictError extends Error {}
+
 export type CustomerOption = { id: string; name: string; email: string; address: string }
 
 type Props = {
@@ -24,6 +27,7 @@ type Props = {
     id: string | null
     number: number | null
     status: 'draft' | 'sent'
+    updatedAt: string | null // when the invoice was last saved, as loaded; used to detect stale pages
     fields: InvoiceFields
     lines: Line[]
   }
@@ -60,6 +64,9 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   // The owner-signature column comes from a later migration, so only write it once the owner has used it.
   const ownerSigTouched = useRef(initial.fields.owner_signature)
   // Same idea for the rental period and line discounts: columns from newer migrations are only written once used.
+  const knownUpdatedAt = useRef<string | null>(initial.updatedAt)
+  const conflictRef = useRef(false)
+  const [conflict, setConflict] = useState(false)
   const rentalTouched = useRef(!!(initial.fields.rental_start || initial.fields.rental_end))
 
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
@@ -119,9 +126,14 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       latest.current.invoiceId = id
       window.history.replaceState(null, '', `/admin/invoices/${id}`)
     } else {
-      const { error } = await supabase.from('invoices').update(row).eq('id', id)
+      // Only save if nobody saved a newer version meanwhile; otherwise this (older) page would overwrite their items.
+      let update = supabase.from('invoices').update(row).eq('id', id)
+      if (knownUpdatedAt.current) update = update.eq('updated_at', knownUpdatedAt.current)
+      const { data: hit, error } = await update.select('id')
       if (error) throw error
+      if (knownUpdatedAt.current && (!hit || hit.length === 0)) throw new ConflictError()
     }
+    knownUpdatedAt.current = row.updated_at
 
     // Replace the lines wholesale: simple and safe for a single-user app.
     const { error: delErr } = await supabase.from('invoice_lines').delete().eq('invoice_id', id)
@@ -149,6 +161,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
 
   const flush = useCallback(async (): Promise<boolean> => {
     if (deleted.current) return true
+    if (conflictRef.current) return false
     if (saving.current) {
       dirty.current = true
       return true
@@ -167,6 +180,10 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       setSaveError('')
     } catch (e) {
       ok = false
+      if (e instanceof ConflictError) {
+        conflictRef.current = true
+        setConflict(true)
+      }
       setSaveState('error')
       setSaveError(e instanceof Error ? e.message : (e as { message?: string })?.message ?? 'Could not save')
     } finally {
@@ -301,7 +318,17 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
             {statusText}
           </span>
         </div>
-        {saveError && <p role="alert" className="rounded-lg bg-red-950 p-3 text-sm text-red-300">Couldn&apos;t save: {saveError}</p>}
+        {conflict ? (
+          <div role="alert" className="space-y-3 rounded-lg border border-red-800 bg-red-950 p-4 text-sm text-red-200">
+            <p className="font-semibold">This invoice was changed somewhere else, so your edits here were not saved.</p>
+            <p>This usually means it&apos;s open in another tab, or this page is an older copy. Reload to see the latest version, then re-apply what you just changed. Nothing has been overwritten.</p>
+            <button type="button" onClick={() => window.location.reload()} className="min-h-[44px] rounded-lg bg-white px-4 font-semibold text-black">
+              Reload the latest version
+            </button>
+          </div>
+        ) : (
+          saveError && <p role="alert" className="rounded-lg bg-red-950 p-3 text-sm text-red-300">Couldn&apos;t save: {saveError}</p>
+        )}
 
         {/* Customer */}
         <section className={card}>
