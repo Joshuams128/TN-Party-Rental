@@ -1,7 +1,7 @@
 import { escapeHtml as esc } from '@/lib/escape'
 import { formatMoney } from '@/lib/money'
 import { formatRentalPeriod } from '@/lib/rental'
-import { rowDiscountCents, rowNetCents } from '@/lib/invoice'
+import { discountLabel, rowDiscountCents } from '@/lib/invoice'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
 function formatDate(iso: string): string {
@@ -17,12 +17,20 @@ export function invoiceSubject(doc: InvoiceDoc): string {
 export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
   const b = doc.settings
   const rows = doc.lines
-    .map(
-      (l) => `<tr>
-        <td style="padding:6px 0;border-bottom:1px solid #eee">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${rowDiscountCents(l) > 0 ? `<br><span style="font-size:12px;color:#2e7d32">${esc(l.discount_name || 'Discount')}: -${formatMoney(rowDiscountCents(l))}</span>` : ''}</td>
-        <td style="padding:6px 0;border-bottom:1px solid #eee;text-align:right">${formatMoney(rowNetCents(l))}</td>
+    .map((l) => {
+      const off = rowDiscountCents(l)
+      return `<tr>
+        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}</td>
+        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'};text-align:right">${formatMoney(l.unit_price_cents * l.quantity)}</td>
+      </tr>${
+        off > 0
+          ? `<tr>
+        <td style="padding:0 0 6px 12px;border-bottom:1px solid #eee;color:#2e7d32;font-weight:bold">${esc(discountLabel(l))}</td>
+        <td style="padding:0 0 6px;border-bottom:1px solid #eee;text-align:right;color:#2e7d32;font-weight:bold">-${formatMoney(off)}</td>
       </tr>`
-    )
+          : ''
+      }`
+    })
     .join('')
   const contact = [b.phone, b.email].filter(Boolean).map(esc).join(' &middot; ')
 

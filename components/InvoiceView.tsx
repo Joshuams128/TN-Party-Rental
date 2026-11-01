@@ -1,5 +1,5 @@
 import { formatMoney } from '@/lib/money'
-import { formatDateShort, rowDiscountCents, rowNetCents } from '@/lib/invoice'
+import { discountLabel, formatDateShort, rowDiscountCents } from '@/lib/invoice'
 import { formatRentalPeriod } from '@/lib/rental'
 import { itemImageUrl } from '@/lib/items'
 import type { InvoiceDoc } from '@/lib/invoice-data'
@@ -45,23 +45,26 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
       <ul className="divide-y divide-gray-100 border-y border-gray-100">
         {doc.lines.map((l) => {
           const img = itemImageUrl(l.image_path)
+          const off = rowDiscountCents(l)
           return (
-            <li key={l.id} className="flex items-center gap-3 px-5 py-3">
-              {img && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={img} alt="" loading="lazy" className="h-12 w-12 shrink-0 rounded-lg bg-gray-100 object-cover" />
-              )}
-              <div className="min-w-0 flex-1">
-                <p className="font-medium leading-snug">{l.name}</p>
-                <p className="text-xs text-gray-500">{l.quantity} × {formatMoney(l.unit_price_cents)}</p>
-                {rowDiscountCents(l) > 0 && (
-                  <p className="text-xs font-medium text-green-700">
-                    {l.discount_name || 'Discount'}: -{formatMoney(rowDiscountCents(l))}
-                    {l.discount_type === 'percent' ? ` (${l.discount_value}% off)` : ''}
-                  </p>
+            <li key={l.id} className="px-5 py-3">
+              <div className="flex items-center gap-3">
+                {img && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={img} alt="" loading="lazy" className="h-12 w-12 shrink-0 rounded-lg bg-gray-100 object-cover" />
                 )}
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium leading-snug">{l.name}</p>
+                  <p className="text-xs text-gray-500">{l.quantity} × {formatMoney(l.unit_price_cents)}</p>
+                </div>
+                <p className="shrink-0 font-semibold">{formatMoney(l.unit_price_cents * l.quantity)}</p>
               </div>
-              <p className="shrink-0 font-semibold">{formatMoney(rowNetCents(l))}</p>
+              {off > 0 && (
+                <div className={`mt-2 flex items-start justify-between gap-3 text-sm font-semibold text-green-700 ${img ? 'pl-[60px]' : ''}`}>
+                  <span>{discountLabel(l)}</span>
+                  <span className="shrink-0">-{formatMoney(off)}</span>
+                </div>
+              )}
             </li>
           )
         })}
