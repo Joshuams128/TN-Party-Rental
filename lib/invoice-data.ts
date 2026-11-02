@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { breakdownFromRows, type DiscountType } from '@/lib/invoice'
+import { breakdownFromRows, type DiscountSign, type DiscountTypeRaw } from '@/lib/invoice'
 import { toInputValue } from '@/lib/rental'
 
 export type BusinessSettings = {
@@ -32,7 +32,8 @@ export type DocLine = {
   unit_price_cents: number
   quantity: number
   discount_name: string
-  discount_type: DiscountType
+  discount_type: DiscountTypeRaw // 'info_*' = show-only (does not change the price)
+  discount_sign: DiscountSign
   discount_value: number
   rental_start: string | null // this item's own rental period, 'YYYY-MM-DDTHH:mm'
   rental_end: string | null
@@ -82,6 +83,7 @@ export function withDiscountDefaults(r: Partial<DocLine>): DocLine {
     ...(r as DocLine),
     discount_name: r.discount_name ?? '',
     discount_type: r.discount_type ?? 'amount',
+    discount_sign: r.discount_sign === 'plus' ? 'plus' : 'minus',
     discount_value: Number(r.discount_value) || 0,
     rental_start: toInputValue(r.rental_start) || null,
     rental_end: toInputValue(r.rental_end) || null,

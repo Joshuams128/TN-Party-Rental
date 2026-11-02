@@ -1,7 +1,7 @@
 import { escapeHtml as esc } from '@/lib/escape'
 import { formatMoney } from '@/lib/money'
 import { formatRentalPeriod } from '@/lib/rental'
-import { discountLabel, rowDiscountCents } from '@/lib/invoice'
+import { discountLabel, discountSignChar, rowDiscountCents } from '@/lib/invoice'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
 function formatDate(iso: string): string {
@@ -26,7 +26,7 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
         off > 0
           ? `<tr>
         <td style="padding:0 0 6px 12px;border-bottom:1px solid #eee;color:#2e7d32;font-weight:bold">${esc(discountLabel(l))}</td>
-        <td style="padding:0 0 6px;border-bottom:1px solid #eee;text-align:right;color:#2e7d32;font-weight:bold">-${formatMoney(off)}</td>
+        <td style="padding:0 0 6px;border-bottom:1px solid #eee;text-align:right;color:#2e7d32;font-weight:bold">${discountSignChar(l)}${formatMoney(off)}</td>
       </tr>`
           : ''
       }`

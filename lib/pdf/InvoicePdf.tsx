@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text -- react-pdf's <Image> is not an HTML <img>; PDFs have no alt text */
 import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { formatMoney } from '@/lib/money'
-import { discountLabel, rowDiscountCents } from '@/lib/invoice'
+import { discountLabel, discountSignChar, rowDiscountCents } from '@/lib/invoice'
 import { formatRentalPeriod } from '@/lib/rental'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -147,7 +147,7 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
                     </View>
                     <Text style={s.cQty} />
                     <Text style={s.cPrice} />
-                    <Text style={[s.cAmt, s.discountRow]}>-{formatMoney(off)}</Text>
+                    <Text style={[s.cAmt, s.discountRow]}>{discountSignChar(l)}{formatMoney(off)}</Text>
                   </View>
                 )}
               </View>

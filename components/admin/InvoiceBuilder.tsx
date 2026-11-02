@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { formatMoney, parseMoneyToCents } from '@/lib/money'
 import { pruneOrphanCustomers } from '@/lib/customers'
 import { deleteInvoiceMessage } from './DeleteInvoiceButton'
-import { blankDiscount, blankRental, computeTotals, lineDiscountCents, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
+import { blankDiscount, blankRental, computeTotals, encodeDiscountType, lineDiscountCents, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
 import { formatRentalPeriod } from '@/lib/rental'
 import RentalPeriodInput from './RentalPeriodInput'
 import type { Item } from '@/lib/items'
@@ -141,6 +141,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
     if (ls.length > 0) {
       const anyDiscount = ls.some((l) => l.discountName.trim() || Number(l.discountValue) > 0)
       const anyLineRental = ls.some((l) => l.rentalStart || l.rentalEnd)
+      const anyShowOnly = ls.some((l) => l.discountShowOnly)
       const { error: insErr } = await supabase.from('invoice_lines').insert(
         ls.map((l, position) => ({
           invoice_id: id,
@@ -152,7 +153,13 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           unit_price_cents: parseMoneyToCents(l.price) ?? 0,
           quantity: l.quantity,
           ...(anyDiscount
-            ? { discount_name: l.discountName.trim(), discount_type: l.discountType, discount_value: Number(l.discountValue) || 0 }
+            ? {
+                discount_name: l.discountName.trim(),
+                discount_type: encodeDiscountType(l.discountType, !l.discountShowOnly),
+                discount_value: Number(l.discountValue) || 0,
+                // Only sent once a show-only discount exists, so older databases keep saving normal invoices.
+                ...(anyShowOnly ? { discount_sign: l.discountSign } : {}),
+              }
             : {}),
           ...(anyLineRental ? { rental_start: l.rentalStart || null, rental_end: l.rentalEnd || null } : {}),
         }))
@@ -518,9 +525,56 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                           />
                         </label>
                       </div>
+                      <div role="radiogroup" aria-label="What this discount does" className="mt-3 grid gap-2 sm:grid-cols-2">
+                        {[
+                          { showOnly: false, title: 'Take it off the price', note: 'The customer pays less. Example: $10 off a $70 item makes it $60.' },
+                          { showOnly: true, title: 'Show only, price stays the same', note: 'The invoice lists the discount but the price does not change. Use it for something you are giving free, like an extra hour.' },
+                        ].map((o) => (
+                          <button
+                            key={o.title}
+                            type="button"
+                            role="radio"
+                            aria-checked={l.discountShowOnly === o.showOnly}
+                            onClick={() => updateLine(l.key, { discountShowOnly: o.showOnly })}
+                            className={`rounded-lg border p-3 text-left text-sm ${
+                              l.discountShowOnly === o.showOnly ? 'border-gold bg-gold/10' : 'border-gray-700 hover:bg-gray-800'
+                            }`}
+                          >
+                            <span className="flex items-center gap-2 font-semibold">
+                              <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${l.discountShowOnly === o.showOnly ? 'border-gold' : 'border-gray-500'}`}>
+                                {l.discountShowOnly === o.showOnly && <span className="h-2 w-2 rounded-full bg-gold" />}
+                              </span>
+                              {o.title}
+                            </span>
+                            <span className="mt-1 block text-xs text-gray-400">{o.note}</span>
+                          </button>
+                        ))}
+                      </div>
+                      {l.discountShowOnly && (
+                        <div className="mt-1 flex flex-wrap items-center gap-3 text-sm">
+                          <span className="text-xs font-medium text-gray-400">Show the amount as</span>
+                          <div role="group" aria-label="Show the amount as" className="flex h-11 overflow-hidden rounded-lg border border-gray-700">
+                            {(['minus', 'plus'] as const).map((sg) => (
+                              <button
+                                key={sg}
+                                type="button"
+                                aria-pressed={l.discountSign === sg}
+                                onClick={() => updateLine(l.key, { discountSign: sg })}
+                                className={`w-28 text-sm font-semibold ${l.discountSign === sg ? 'bg-gold text-black' : 'text-gray-300 hover:bg-gray-800'}`}
+                              >
+                                {sg === 'minus' ? `−${formatMoney(lineDiscountCents(l) || 12500)}` : `+${formatMoney(lineDiscountCents(l) || 12500)}`}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       <div className="mt-2 flex items-center justify-between gap-3 text-sm">
                         <span className={`min-w-0 ${lineDiscountCents(l) > 0 ? 'font-medium text-green-400' : 'text-gray-500'}`}>
-                          {lineDiscountCents(l) > 0 ? `${l.discountName.trim() || 'Discount'}: −${formatMoney(lineDiscountCents(l))}` : 'Enter an amount to apply'}
+                          {lineDiscountCents(l) > 0
+                            ? l.discountShowOnly
+                              ? `${l.discountName.trim() || 'Discount'}: ${l.discountSign === 'plus' ? '+' : '−'}${formatMoney(lineDiscountCents(l))} shown. Price stays ${formatMoney(lineTotalCents(l))}.`
+                              : `${l.discountName.trim() || 'Discount'}: −${formatMoney(lineDiscountCents(l))}`
+                            : 'Enter an amount to apply'}
                         </span>
                         <button
                           type="button"
