@@ -1,6 +1,20 @@
 import { parseMoneyToCents } from '@/lib/money'
 
 export type DiscountType = 'amount' | 'percent'
+export type DiscountSign = 'minus' | 'plus'
+
+// A discount can be "show only": it prints on the invoice (e.g. "Free additional hour -$125.00") but does NOT
+// change the price. In the database that is stored in discount_type as 'info_amount' / 'info_percent', so totals
+// calculated anywhere (including older code and the invoice lists) ignore it safely.
+export type DiscountTypeRaw = DiscountType | 'info_amount' | 'info_percent'
+
+export function parseDiscountType(raw?: string | null): { kind: DiscountType; applies: boolean } {
+  const info = !!raw && raw.startsWith('info_')
+  const base = info ? raw!.slice(5) : raw
+  return { kind: base === 'percent' ? 'percent' : 'amount', applies: !info }
+}
+
+export const encodeDiscountType = (kind: DiscountType, applies: boolean): DiscountTypeRaw => (applies ? kind : (`info_${kind}` as DiscountTypeRaw))
 
 export type Line = {
   key: string
@@ -14,6 +28,11 @@ export type Line = {
   discountName: string
   discountType: DiscountType
   discountValue: string // dollars or percent, as typed
+  discountShowOnly: boolean // true = print the discount but do not change the price
+  discountSign: DiscountSign // how a show-only amount is printed: -$125.00 or +$125.00
+  // Optional rental period for just this item ('YYYY-MM-DDTHH:mm' or ''), for items rented at different times.
+  rentalStart: string
+  rentalEnd: string
 }
 
 export type InvoiceFields = {
@@ -32,7 +51,15 @@ export type InvoiceFields = {
 
 export type InvoiceStatus = 'draft' | 'sent'
 
-export const blankDiscount = { discountName: '', discountType: 'amount' as DiscountType, discountValue: '' }
+export const blankRental = { rentalStart: '', rentalEnd: '' }
+
+export const blankDiscount = {
+  discountName: '',
+  discountType: 'amount' as DiscountType,
+  discountValue: '',
+  discountShowOnly: false,
+  discountSign: 'minus' as DiscountSign,
+}
 
 // How much comes off a line: a fixed dollar amount or a percentage of that line, never more than the line itself.
 export function discountCentsFor(grossCents: number, type: DiscountType, value: number): number {
@@ -49,13 +76,18 @@ export function lineDiscountCents(line: Pick<Line, 'price' | 'quantity' | 'disco
   return discountCentsFor(lineGrossCents(line), line.discountType, Number(line.discountValue) || 0)
 }
 
+// The part of the discount that actually reduces the price (0 for a show-only discount).
+export function lineAppliedDiscountCents(line: Pick<Line, 'price' | 'quantity' | 'discountType' | 'discountValue' | 'discountShowOnly'>): number {
+  return line.discountShowOnly ? 0 : lineDiscountCents(line)
+}
+
 // What the customer pays for the line, after its own discount.
-export function lineTotalCents(line: Pick<Line, 'price' | 'quantity' | 'discountType' | 'discountValue'>): number {
-  return lineGrossCents(line) - lineDiscountCents(line)
+export function lineTotalCents(line: Pick<Line, 'price' | 'quantity' | 'discountType' | 'discountValue' | 'discountShowOnly'>): number {
+  return lineGrossCents(line) - lineAppliedDiscountCents(line)
 }
 
 export function computeTotals(
-  lines: Pick<Line, 'price' | 'quantity' | 'discountType' | 'discountValue'>[],
+  lines: Pick<Line, 'price' | 'quantity' | 'discountType' | 'discountValue' | 'discountShowOnly'>[],
   discount: string,
   applyTax: boolean,
   taxRate: number
@@ -71,22 +103,39 @@ export function computeTotals(
 export type LineRow = {
   unit_price_cents: number
   quantity: number
-  discount_type?: DiscountType | null
+  discount_type?: string | null // 'amount' | 'percent' | 'info_amount' | 'info_percent'
   discount_value?: number | string | null
 }
 
+// The amount printed next to a line's discount (for a show-only discount this is the value, not a deduction).
 export function rowDiscountCents(l: LineRow): number {
-  return discountCentsFor(l.unit_price_cents * l.quantity, l.discount_type ?? 'amount', Number(l.discount_value) || 0)
+  return discountCentsFor(l.unit_price_cents * l.quantity, parseDiscountType(l.discount_type).kind, Number(l.discount_value) || 0)
+}
+
+export function rowDiscountApplies(l: Pick<LineRow, 'discount_type'>): boolean {
+  return parseDiscountType(l.discount_type).applies
+}
+
+// The part that really comes off the price.
+export function rowAppliedDiscountCents(l: LineRow): number {
+  return rowDiscountApplies(l) ? rowDiscountCents(l) : 0
+}
+
+// "-" for a real discount; for a show-only one, whichever sign the owner chose.
+export function discountSignChar(l: { discount_type?: string | null; discount_sign?: string | null }): '-' | '+' {
+  return !rowDiscountApplies(l) && l.discount_sign === 'plus' ? '+' : '-'
 }
 
 // What the customer sees next to the amount taken off, e.g. "Additional hours (10% off)".
-export function discountLabel(l: { discount_name?: string | null; discount_type?: DiscountType | null; discount_value?: number | string | null }): string {
+export function discountLabel(l: { discount_name?: string | null; discount_type?: string | null; discount_value?: number | string | null }): string {
   const name = (l.discount_name ?? '').trim() || 'Discount'
-  return l.discount_type === 'percent' ? `${name} (${Number(l.discount_value)}% off)` : name
+  const { kind, applies } = parseDiscountType(l.discount_type)
+  const withPercent = kind === 'percent' ? `${name} (${Number(l.discount_value)}% off)` : name
+  return applies ? withPercent : `${withPercent} (included, price unchanged)`
 }
 
 export function rowNetCents(l: LineRow): number {
-  return l.unit_price_cents * l.quantity - rowDiscountCents(l)
+  return l.unit_price_cents * l.quantity - rowAppliedDiscountCents(l)
 }
 
 // Same math for rows read straight from the database.
