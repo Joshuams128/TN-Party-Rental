@@ -16,6 +16,7 @@ export default async function NewInvoicePage() {
         id: null,
         number: null,
         status: 'draft',
+        updatedAt: null,
         fields: {
           customer_name: '',
           customer_email: '',

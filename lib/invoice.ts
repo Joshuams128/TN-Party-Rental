@@ -79,6 +79,12 @@ export function rowDiscountCents(l: LineRow): number {
   return discountCentsFor(l.unit_price_cents * l.quantity, l.discount_type ?? 'amount', Number(l.discount_value) || 0)
 }
 
+// What the customer sees next to the amount taken off, e.g. "Additional hours (10% off)".
+export function discountLabel(l: { discount_name?: string | null; discount_type?: DiscountType | null; discount_value?: number | string | null }): string {
+  const name = (l.discount_name ?? '').trim() || 'Discount'
+  return l.discount_type === 'percent' ? `${name} (${Number(l.discount_value)}% off)` : name
+}
+
 export function rowNetCents(l: LineRow): number {
   return l.unit_price_cents * l.quantity - rowDiscountCents(l)
 }

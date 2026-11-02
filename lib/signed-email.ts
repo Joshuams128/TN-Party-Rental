@@ -19,6 +19,8 @@ export async function sendSignedCopies(doc: InvoiceDoc, pdf: Buffer): Promise<bo
   const owner = await resend.emails.send({
     from: route.from,
     to: [route.replyTo],
+    // Replying to this notice goes to the customer who signed (never to the no-inbox sender).
+    ...(doc.customer_email.trim() ? { replyTo: doc.customer_email.trim() } : {}),
     subject: `Invoice #${doc.number} was signed by ${doc.signature.name}`,
     html: `<div style="font-family:Arial,sans-serif;line-height:1.5"><p><strong>${esc(doc.signature.name)}</strong> just signed invoice <strong>#${doc.number}</strong> (${total}).</p><p>The signed PDF is attached.</p></div>`,
     text: `${doc.signature.name} just signed invoice #${doc.number} (${total}). The signed PDF is attached.`,
@@ -36,8 +38,8 @@ export async function sendSignedCopies(doc: InvoiceDoc, pdf: Buffer): Promise<bo
       to: [to],
       replyTo: route.replyTo,
       subject: `Your signed invoice #${doc.number} from ${biz}`,
-      html: `<div style="font-family:Arial,sans-serif;line-height:1.5"><p>Hi ${esc(doc.customer_name || 'there')},</p><p>Thank you for signing invoice <strong>#${doc.number}</strong> (${total}). Your signed copy is attached for your records.</p><p>${esc(biz)}</p></div>`,
-      text: `Hi ${doc.customer_name || 'there'},\n\nThank you for signing invoice #${doc.number} (${total}). Your signed copy is attached for your records.\n\n${biz}`,
+      html: `<div style="font-family:Arial,sans-serif;line-height:1.5"><p>Hi ${esc(doc.customer_name || 'there')},</p><p>Thank you for signing invoice <strong>#${doc.number}</strong> (${total}). Your signed copy is attached for your records.</p><p>Questions? Reply to this email or write to ${esc(route.replyTo)}.</p><p>${esc(biz)}</p></div>`,
+      text: `Hi ${doc.customer_name || 'there'},\n\nThank you for signing invoice #${doc.number} (${total}). Your signed copy is attached for your records.\n\nQuestions? Reply to this email or write to ${route.replyTo}.\n\n${biz}`,
       attachments,
     })
     if (cust.error) {

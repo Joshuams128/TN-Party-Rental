@@ -1,7 +1,7 @@
 import { escapeHtml as esc } from '@/lib/escape'
 import { formatMoney } from '@/lib/money'
 import { formatRentalPeriod } from '@/lib/rental'
-import { rowDiscountCents, rowNetCents } from '@/lib/invoice'
+import { discountLabel, rowDiscountCents } from '@/lib/invoice'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
 function formatDate(iso: string): string {
@@ -17,14 +17,26 @@ export function invoiceSubject(doc: InvoiceDoc): string {
 export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
   const b = doc.settings
   const rows = doc.lines
-    .map(
-      (l) => `<tr>
-        <td style="padding:6px 0;border-bottom:1px solid #eee">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${rowDiscountCents(l) > 0 ? `<br><span style="font-size:12px;color:#2e7d32">${esc(l.discount_name || 'Discount')}: -${formatMoney(rowDiscountCents(l))}</span>` : ''}</td>
-        <td style="padding:6px 0;border-bottom:1px solid #eee;text-align:right">${formatMoney(rowNetCents(l))}</td>
+    .map((l) => {
+      const off = rowDiscountCents(l)
+      return `<tr>
+        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}</td>
+        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'};text-align:right">${formatMoney(l.unit_price_cents * l.quantity)}</td>
+      </tr>${
+        off > 0
+          ? `<tr>
+        <td style="padding:0 0 6px 12px;border-bottom:1px solid #eee;color:#2e7d32;font-weight:bold">${esc(discountLabel(l))}</td>
+        <td style="padding:0 0 6px;border-bottom:1px solid #eee;text-align:right;color:#2e7d32;font-weight:bold">-${formatMoney(off)}</td>
       </tr>`
-    )
+          : ''
+      }`
+    })
     .join('')
   const contact = [b.phone, b.email].filter(Boolean).map(esc).join(' &middot; ')
+  // The sending address (noreply@) has no inbox, so also print where to write in case a mail app ignores Reply-To.
+  const contactHtml = b.email.trim()
+    ? `Questions? Reply to this email or write to <a href="mailto:${esc(b.email.trim())}">${esc(b.email.trim())}</a>.`
+    : 'Reply to this email if you have any questions.'
 
   return `<div style="font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:560px;margin:0 auto;line-height:1.5">
     <p>Hi ${esc(doc.customer_name || 'there')},</p>
@@ -38,7 +50,7 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
     ${doc.notes ? `<p style="white-space:pre-line">${esc(doc.notes)}</p>` : ''}
     <p style="margin:24px 0 8px"><a href="${esc(signLink)}" style="display:inline-block;background:#D4AF37;color:#000;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px">Review &amp; sign invoice</a></p>
     <p style="font-size:13px;color:#666;margin:0 0 16px">Takes about 20 seconds. Nothing to download or print. Or copy this link: <br><span style="word-break:break-all">${esc(signLink)}</span></p>
-    <p>Reply to this email if you have any questions.</p>
+    <p>${contactHtml}</p>
     <p style="margin-top:24px">Thank you,<br><strong>${esc(b.business_name)}</strong>${contact ? `<br><span style="color:#666">${contact}</span>` : ''}</p>
   </div>`
 }
@@ -56,7 +68,7 @@ export function invoiceEmailText(doc: InvoiceDoc, signLink: string): string {
     '',
     `Review and sign your invoice online (takes about 20 seconds, nothing to download or print):\n${signLink}`,
     '',
-    'Reply to this email if you have any questions.',
+    b.email.trim() ? `Questions? Reply to this email or write to ${b.email.trim()}.` : 'Reply to this email if you have any questions.',
     '',
     `Thank you,\n${b.business_name}`,
   ]
