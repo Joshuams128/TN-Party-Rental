@@ -55,6 +55,9 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="font-medium leading-snug">{l.name}</p>
+                  {l.rental_start && (
+                    <p className="text-xs font-medium text-[#8a6d12]">{formatRentalPeriod(l.rental_start, l.rental_end)}</p>
+                  )}
                   <p className="text-xs text-gray-500">{l.quantity} × {formatMoney(l.unit_price_cents)}</p>
                 </div>
                 <p className="shrink-0 font-semibold">{formatMoney(l.unit_price_cents * l.quantity)}</p>

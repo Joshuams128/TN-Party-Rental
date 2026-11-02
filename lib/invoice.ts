@@ -14,6 +14,9 @@ export type Line = {
   discountName: string
   discountType: DiscountType
   discountValue: string // dollars or percent, as typed
+  // Optional rental period for just this item ('YYYY-MM-DDTHH:mm' or ''), for items rented at different times.
+  rentalStart: string
+  rentalEnd: string
 }
 
 export type InvoiceFields = {
@@ -31,6 +34,8 @@ export type InvoiceFields = {
 }
 
 export type InvoiceStatus = 'draft' | 'sent'
+
+export const blankRental = { rentalStart: '', rentalEnd: '' }
 
 export const blankDiscount = { discountName: '', discountType: 'amount' as DiscountType, discountValue: '' }
 

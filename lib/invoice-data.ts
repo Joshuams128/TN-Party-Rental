@@ -34,6 +34,8 @@ export type DocLine = {
   discount_name: string
   discount_type: DiscountType
   discount_value: number
+  rental_start: string | null // this item's own rental period, 'YYYY-MM-DDTHH:mm'
+  rental_end: string | null
 }
 
 export type InvoiceDoc = {
@@ -81,6 +83,8 @@ export function withDiscountDefaults(r: Partial<DocLine>): DocLine {
     discount_name: r.discount_name ?? '',
     discount_type: r.discount_type ?? 'amount',
     discount_value: Number(r.discount_value) || 0,
+    rental_start: toInputValue(r.rental_start) || null,
+    rental_end: toInputValue(r.rental_end) || null,
   }
 }
 

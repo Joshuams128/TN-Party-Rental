@@ -44,6 +44,7 @@ const s = StyleSheet.create({
   signTyped: { fontFamily: 'Times-Italic', fontSize: 26, height: 48 },
   signLine: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 4, fontSize: 8, color: MUTED },
   signOnline: { height: 48, justifyContent: 'center', paddingHorizontal: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: GOLD, borderRadius: 3, backgroundColor: '#f6f3e8' },
+  itemRental: { fontSize: 8.5, color: '#8a6d12', marginTop: 1 },
   discountRow: { fontSize: 9, color: '#2e7d32', fontFamily: 'Helvetica-Bold' },
   link: { color: '#8a6d12', textDecoration: 'underline', fontFamily: 'Helvetica-Bold' },
   cert: { marginTop: 8, fontSize: 7.5, color: MUTED, lineHeight: 1.4 },
@@ -131,6 +132,7 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
                     {thumb && <Image src={thumb} style={s.thumb} />}
                     <View style={{ flex: 1 }}>
                       <Text>{l.name}</Text>
+                      {!!l.rental_start && <Text style={s.itemRental}>{formatRentalPeriod(l.rental_start, l.rental_end)}</Text>}
                       {!!l.description && l.description !== l.name && <Text style={[s.muted, { fontSize: 8 }]}>{l.description}</Text>}
                     </View>
                   </View>

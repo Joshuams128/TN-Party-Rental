@@ -7,8 +7,9 @@ import { createClient } from '@/lib/supabase/client'
 import { formatMoney, parseMoneyToCents } from '@/lib/money'
 import { pruneOrphanCustomers } from '@/lib/customers'
 import { deleteInvoiceMessage } from './DeleteInvoiceButton'
-import { blankDiscount, computeTotals, lineDiscountCents, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
-import { formatRentalPeriod, rentalHours } from '@/lib/rental'
+import { blankDiscount, blankRental, computeTotals, lineDiscountCents, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
+import { formatRentalPeriod } from '@/lib/rental'
+import RentalPeriodInput from './RentalPeriodInput'
 import type { Item } from '@/lib/items'
 import ItemImage from './ItemImage'
 import ItemPicker from './ItemPicker'
@@ -71,33 +72,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
 
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
   const [discountOpen, setDiscountOpen] = useState<Record<string, boolean>>({})
-  // The rental period is entered as one date + start/end times (same day), or with an end date for multi-day rentals.
-  const [rp, setRp] = useState(() => {
-    const st = initial.fields.rental_start
-    const en = initial.fields.rental_end
-    return {
-      startDate: st.slice(0, 10),
-      startTime: st.slice(11, 16),
-      endDate: en.slice(0, 10),
-      endTime: en.slice(11, 16),
-      otherDay: !!en && en.slice(0, 10) !== st.slice(0, 10),
-    }
-  })
-  function updateRental(patch: Partial<typeof rp>) {
-    const next = { ...rp, ...patch }
-    // Same-day rental: the end date simply follows the start date.
-    if (!next.otherDay) next.endDate = next.startDate
-    else if (!next.endDate) next.endDate = next.startDate
-    setRp(next)
-    rentalTouched.current = true
-    setFields((f) => ({
-      ...f,
-      rental_start: next.startDate && next.startTime ? `${next.startDate}T${next.startTime}` : '',
-      rental_end: next.endDate && next.endTime ? `${next.endDate}T${next.endTime}` : '',
-    }))
-  }
-  const rentalText = formatRentalPeriod(fields.rental_start, fields.rental_end)
-  const rentalBad = !!fields.rental_start && !!fields.rental_end && rentalHours(fields.rental_start, fields.rental_end) === null
+  const [rentalOpen, setRentalOpen] = useState<Record<string, boolean>>({})
 
   const persist = useCallback(async () => {
     const { fields: f, lines: ls, invoiceId: currentId } = latest.current
@@ -165,6 +140,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
     if (delErr) throw delErr
     if (ls.length > 0) {
       const anyDiscount = ls.some((l) => l.discountName.trim() || Number(l.discountValue) > 0)
+      const anyLineRental = ls.some((l) => l.rentalStart || l.rentalEnd)
       const { error: insErr } = await supabase.from('invoice_lines').insert(
         ls.map((l, position) => ({
           invoice_id: id,
@@ -178,6 +154,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           ...(anyDiscount
             ? { discount_name: l.discountName.trim(), discount_type: l.discountType, discount_value: Number(l.discountValue) || 0 }
             : {}),
+          ...(anyLineRental ? { rental_start: l.rentalStart || null, rental_end: l.rentalEnd || null } : {}),
         }))
       )
       if (insErr) throw insErr
@@ -273,6 +250,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
           price: (item.price_cents / 100).toFixed(2),
           quantity: 1,
           ...blankDiscount,
+          ...blankRental,
         },
       ]
     })
@@ -281,7 +259,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   function addCustom() {
     setLines((ls) => [
       ...ls,
-      { key: crypto.randomUUID(), item_id: null, name: '', description: '', image_path: null, price: '', quantity: 1, ...blankDiscount },
+      { key: crypto.randomUUID(), item_id: null, name: '', description: '', image_path: null, price: '', quantity: 1, ...blankDiscount, ...blankRental },
     ])
   }
 
@@ -395,64 +373,15 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               <textarea value={fields.customer_address} onChange={(e) => setField('customer_address', e.target.value)} rows={2} className={input} placeholder="Street, city, province, postal code" />
             </label>
             <div className="sm:col-span-2">
-              <p className="text-sm font-medium">Rental period <span className="font-normal text-gray-400">(optional)</span></p>
-              <div className="mt-1 grid gap-3 sm:grid-cols-3">
-                <label className="block text-xs text-gray-400">
-                  {rp.otherDay ? 'Start date' : 'Date'}
-                  <input
-                    type="date"
-                    value={rp.startDate}
-                    onChange={(e) => updateRental({ startDate: e.target.value })}
-                    className={`${input} h-12 text-base text-white`}
-                  />
-                </label>
-                <label className="block text-xs text-gray-400">
-                  Start time
-                  <input
-                    type="time"
-                    value={rp.startTime}
-                    onChange={(e) => updateRental({ startTime: e.target.value })}
-                    className={`${input} h-12 text-base text-white`}
-                  />
-                </label>
-                <label className="block text-xs text-gray-400">
-                  End time
-                  <input
-                    type="time"
-                    value={rp.endTime}
-                    onChange={(e) => updateRental({ endTime: e.target.value })}
-                    className={`${input} h-12 text-base text-white`}
-                  />
-                </label>
-              </div>
-              <label className="mt-1 flex min-h-[44px] items-center gap-3 text-sm">
-                <input
-                  type="checkbox"
-                  checked={rp.otherDay}
-                  onChange={(e) => updateRental({ otherDay: e.target.checked })}
-                  className="h-5 w-5 accent-[#D4AF37]"
-                />
-                Ends on a different day <span className="text-gray-400">(multi-day or overnight)</span>
-              </label>
-              {rp.otherDay && (
-                <label className="mt-1 block text-xs text-gray-400 sm:w-1/3">
-                  End date
-                  <input
-                    type="date"
-                    value={rp.endDate}
-                    min={rp.startDate || undefined}
-                    onChange={(e) => updateRental({ endDate: e.target.value })}
-                    className={`${input} h-12 text-base text-white`}
-                  />
-                </label>
-              )}
-              {rentalBad ? (
-                <p role="alert" className="mt-2 text-sm text-red-400">
-                  The end needs to be after the start.{!rp.otherDay && ' If it finishes the next day, tick “Ends on a different day”.'}
-                </p>
-              ) : (
-                rentalText && <p className="mt-2 text-sm font-medium text-gold">{rentalText}</p>
-              )}
+              <p className="mb-1 text-sm font-medium">Rental period <span className="font-normal text-gray-400">(optional)</span></p>
+              <RentalPeriodInput
+                start={fields.rental_start}
+                end={fields.rental_end}
+                onChange={(rental_start, rental_end) => {
+                  rentalTouched.current = true
+                  setFields((f) => ({ ...f, rental_start, rental_end }))
+                }}
+              />
             </div>
           </div>
         </section>
@@ -466,7 +395,10 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
             <p className="py-8 text-center text-sm text-gray-400">Search above to add items to this invoice.</p>
           ) : (
             <ul className="mt-4 divide-y divide-gray-800">
-              {lines.map((l) => (
+              {lines.map((l) => {
+                const rentalNow = !!(rentalOpen[l.key] || l.rentalStart || l.rentalEnd)
+                const discountNow = !!(discountOpen[l.key] || l.discountName || Number(l.discountValue) > 0)
+                return (
                 // Phone: photo + name + remove on one row, quantity / price / total on the next. Desktop: a single row.
                 <li key={l.key} className="py-4 sm:py-3">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-3 sm:flex-nowrap sm:gap-y-0">
@@ -482,6 +414,9 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                         className="h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-white placeholder-gray-500"
                         autoFocus={!l.name}
                       />
+                    )}
+                    {l.rentalStart && (
+                      <p className="mt-0.5 text-xs font-medium text-gold">{formatRentalPeriod(l.rentalStart, l.rentalEnd)}</p>
                     )}
                   </div>
                   <button
@@ -523,7 +458,31 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                   </div>
 
                   {/* Optional discount on just this item or service, with a name the customer sees. */}
-                  {discountOpen[l.key] || l.discountName || Number(l.discountValue) > 0 ? (
+                  {rentalNow && (
+                    <div className="mt-3 rounded-lg border border-gray-800 bg-gray-950/60 p-3 sm:ml-[68px]">
+                      <p className="mb-1 text-xs font-medium text-gray-400">Rental period for this item</p>
+                      <RentalPeriodInput
+                        key={l.key}
+                        start={l.rentalStart}
+                        end={l.rentalEnd}
+                        onChange={(rentalStart, rentalEnd) => updateLine(l.key, { rentalStart, rentalEnd })}
+                      />
+                      <div className="text-right">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            updateLine(l.key, { ...blankRental })
+                            setRentalOpen((o) => ({ ...o, [l.key]: false }))
+                          }}
+                          className="min-h-[44px] text-sm text-gray-400 hover:text-red-400"
+                        >
+                          Remove rental period
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {discountNow ? (
                     <div className="mt-3 rounded-lg border border-gray-800 bg-gray-950/60 p-3 sm:ml-[68px]">
                       <div className="grid gap-3 sm:grid-cols-[1fr_auto_8rem]">
                         <label className="block text-xs font-medium text-gray-400">
@@ -575,17 +534,33 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                         </button>
                       </div>
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setDiscountOpen((o) => ({ ...o, [l.key]: true }))}
-                      className="mt-1 min-h-[44px] text-sm text-gray-400 hover:text-gold sm:ml-[68px]"
-                    >
-                      + Discount this item
-                    </button>
+                  ) : null}
+
+                  {(!rentalNow || !discountNow) && (
+                    <div className="mt-1 flex flex-wrap gap-x-5 sm:ml-[68px]">
+                      {!rentalNow && (
+                        <button
+                          type="button"
+                          onClick={() => setRentalOpen((o) => ({ ...o, [l.key]: true }))}
+                          className="min-h-[44px] text-sm text-gray-400 hover:text-gold"
+                        >
+                          + Rental period for this item
+                        </button>
+                      )}
+                      {!discountNow && (
+                        <button
+                          type="button"
+                          onClick={() => setDiscountOpen((o) => ({ ...o, [l.key]: true }))}
+                          className="min-h-[44px] text-sm text-gray-400 hover:text-gold"
+                        >
+                          + Discount this item
+                        </button>
+                      )}
+                    </div>
                   )}
                 </li>
-              ))}
+                )
+              })}
             </ul>
           )}
 

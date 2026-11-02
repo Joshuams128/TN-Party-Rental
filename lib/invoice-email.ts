@@ -20,7 +20,7 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
     .map((l) => {
       const off = rowDiscountCents(l)
       return `<tr>
-        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}</td>
+        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${l.rental_start ? `<br><span style="font-size:12px;color:#8a6d12">${esc(formatRentalPeriod(l.rental_start, l.rental_end))}</span>` : ''}</td>
         <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'};text-align:right">${formatMoney(l.unit_price_cents * l.quantity)}</td>
       </tr>${
         off > 0

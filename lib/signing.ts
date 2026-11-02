@@ -30,7 +30,7 @@ export function documentHash(doc: InvoiceDoc): string {
     rental: [doc.rental_start, doc.rental_end],
     notes: doc.notes,
     tax: [doc.apply_tax, doc.tax_rate],
-    lines: doc.lines.map((l) => [l.name, l.description, l.unit_price_cents, l.quantity, l.discount_name, l.discount_type, l.discount_value]),
+    lines: doc.lines.map((l) => [l.name, l.description, l.unit_price_cents, l.quantity, l.discount_name, l.discount_type, l.discount_value, l.rental_start, l.rental_end]),
     totals: doc.totals,
   })
   return createHash('sha256').update(canonical).digest('hex')
