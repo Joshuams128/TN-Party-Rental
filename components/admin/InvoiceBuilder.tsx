@@ -73,8 +73,6 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
   const [discountOpen, setDiscountOpen] = useState<Record<string, boolean>>({})
   const [rentalOpen, setRentalOpen] = useState<Record<string, boolean>>({})
-  // "Free extra": something given at no charge (e.g. an extra hour) that is shown on the invoice without changing the total.
-  const [extraDraft, setExtraDraft] = useState<Record<string, { name: string; price: string; qty: string } | undefined>>({})
 
   const persist = useCallback(async () => {
     const { fields: f, lines: ls, invoiceId: currentId } = latest.current
@@ -256,30 +254,6 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
         },
       ]
     })
-  }
-
-  // The extra shows at its normal price and is then taken off again with a named line, so the customer sees
-  // what they are getting for free while the total does not change.
-  function addFreeExtra(afterKey: string, draft: { name: string; price: string; qty: string }) {
-    const name = draft.name.trim() || 'Additional hour'
-    const line: Line = {
-      key: crypto.randomUUID(),
-      item_id: null,
-      name,
-      description: '',
-      image_path: null,
-      price: draft.price,
-      quantity: Math.max(1, parseInt(draft.qty, 10) || 1),
-      discountName: `Free ${name.toLowerCase()}`,
-      discountType: 'percent',
-      discountValue: '100',
-      ...blankRental,
-    }
-    setLines((ls) => {
-      const at = ls.findIndex((l) => l.key === afterKey)
-      return at === -1 ? [...ls, line] : [...ls.slice(0, at + 1), line, ...ls.slice(at + 1)]
-    })
-    setExtraDraft((d) => ({ ...d, [afterKey]: undefined }))
   }
 
   function addCustom() {
@@ -510,9 +484,6 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
 
                   {discountNow ? (
                     <div className="mt-3 rounded-lg border border-gray-800 bg-gray-950/60 p-3 sm:ml-[68px]">
-                      <p className="mb-2 text-xs text-gray-400">
-                        This takes money off this item&apos;s price. To give something free <em>without</em> changing the price (like a free extra hour), use &ldquo;+ Free extra&rdquo; instead.
-                      </p>
                       <div className="grid gap-3 sm:grid-cols-[1fr_auto_8rem]">
                         <label className="block text-xs font-medium text-gray-400">
                           Discount name
@@ -565,73 +536,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                     </div>
                   ) : null}
 
-                  {extraDraft[l.key] && (
-                    <div className="mt-3 rounded-lg border border-gold/40 bg-gray-950/60 p-3 sm:ml-[68px]">
-                      <p className="text-sm font-medium">Give something free</p>
-                      <p className="mb-2 text-xs text-gray-400">
-                        It shows on the invoice at its normal price, then a matching “free” line takes it off, so the total does not change.
-                      </p>
-                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-[1fr_7rem_5rem]">
-                        <label className="col-span-2 block text-xs font-medium text-gray-400 sm:col-span-1">
-                          What is free?
-                          <input
-                            value={extraDraft[l.key]!.name}
-                            onChange={(e) => setExtraDraft((d) => ({ ...d, [l.key]: { ...d[l.key]!, name: e.target.value } }))}
-                            placeholder="Additional hour"
-                            className="mt-1 h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-base text-white placeholder-gray-500"
-                          />
-                        </label>
-                        <label className="block text-xs font-medium text-gray-400">
-                          Worth (each)
-                          <input
-                            inputMode="decimal"
-                            value={extraDraft[l.key]!.price}
-                            onChange={(e) => setExtraDraft((d) => ({ ...d, [l.key]: { ...d[l.key]!, price: e.target.value } }))}
-                            placeholder="125.00"
-                            className="mt-1 h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-right text-base text-white"
-                          />
-                        </label>
-                        <label className="block text-xs font-medium text-gray-400">
-                          How many
-                          <input
-                            inputMode="numeric"
-                            value={extraDraft[l.key]!.qty}
-                            onChange={(e) => setExtraDraft((d) => ({ ...d, [l.key]: { ...d[l.key]!, qty: e.target.value.replace(/\D/g, '') } }))}
-                            className="mt-1 h-11 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 text-center text-base text-white"
-                          />
-                        </label>
-                      </div>
-                      <div className="mt-2 flex items-center justify-end gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setExtraDraft((d) => ({ ...d, [l.key]: undefined }))}
-                          className="min-h-[44px] px-3 text-sm text-gray-400 hover:text-white"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          disabled={!(parseMoneyToCents(extraDraft[l.key]!.price) ?? 0)}
-                          onClick={() => addFreeExtra(l.key, extraDraft[l.key]!)}
-                          className="min-h-[44px] rounded-lg bg-gold px-4 text-sm font-semibold text-black hover:bg-gold-dark disabled:opacity-50"
-                        >
-                          Add free extra
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {(!rentalNow || !discountNow || !extraDraft[l.key]) && (
+                  {(!rentalNow || !discountNow) && (
                     <div className="mt-1 flex flex-wrap gap-x-5 sm:ml-[68px]">
-                      {!extraDraft[l.key] && (
-                        <button
-                          type="button"
-                          onClick={() => setExtraDraft((d) => ({ ...d, [l.key]: { name: 'Additional hour', price: '', qty: '1' } }))}
-                          className="min-h-[44px] text-sm font-medium text-gold hover:underline"
-                        >
-                          + Free extra (like a free hour)
-                        </button>
-                      )}
                       {!rentalNow && (
                         <button
                           type="button"
