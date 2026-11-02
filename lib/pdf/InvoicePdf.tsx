@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text -- react-pdf's <Image> is not an HTML <img>; PDFs have no alt text */
 import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { formatMoney } from '@/lib/money'
-import { rowDiscountCents, rowNetCents } from '@/lib/invoice'
+import { discountLabel, rowDiscountCents } from '@/lib/invoice'
 import { formatRentalPeriod } from '@/lib/rental'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -44,7 +44,7 @@ const s = StyleSheet.create({
   signTyped: { fontFamily: 'Times-Italic', fontSize: 26, height: 48 },
   signLine: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 4, fontSize: 8, color: MUTED },
   signOnline: { height: 48, justifyContent: 'center', paddingHorizontal: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: GOLD, borderRadius: 3, backgroundColor: '#f6f3e8' },
-  discount: { fontSize: 8, color: '#2e7d32', marginTop: 1 },
+  discountRow: { fontSize: 9, color: '#2e7d32', fontFamily: 'Helvetica-Bold' },
   link: { color: '#8a6d12', textDecoration: 'underline', fontFamily: 'Helvetica-Bold' },
   cert: { marginTop: 8, fontSize: 7.5, color: MUTED, lineHeight: 1.4 },
   footer: { position: 'absolute', bottom: 24, left: 40, right: 40, textAlign: 'center', fontSize: 8, color: MUTED },
@@ -123,24 +123,31 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
           </View>
           {doc.lines.map((l) => {
             const thumb = thumbs[l.id]
+            const off = rowDiscountCents(l)
             return (
-              <View key={l.id} style={s.row} wrap={false}>
-                <View style={s.cItem}>
-                  {thumb && <Image src={thumb} style={s.thumb} />}
-                  <View style={{ flex: 1 }}>
-                    <Text>{l.name}</Text>
-                    {!!l.description && l.description !== l.name && <Text style={[s.muted, { fontSize: 8 }]}>{l.description}</Text>}
-                    {rowDiscountCents(l) > 0 && (
-                      <Text style={s.discount}>
-                        {l.discount_name || 'Discount'}: -{formatMoney(rowDiscountCents(l))}
-                        {l.discount_type === 'percent' ? ` (${l.discount_value}% off)` : ''}
-                      </Text>
-                    )}
+              <View key={l.id} wrap={false}>
+                <View style={off > 0 ? [s.row, { borderBottomWidth: 0, paddingBottom: 3 }] : s.row}>
+                  <View style={s.cItem}>
+                    {thumb && <Image src={thumb} style={s.thumb} />}
+                    <View style={{ flex: 1 }}>
+                      <Text>{l.name}</Text>
+                      {!!l.description && l.description !== l.name && <Text style={[s.muted, { fontSize: 8 }]}>{l.description}</Text>}
+                    </View>
                   </View>
+                  <Text style={s.cQty}>{l.quantity}</Text>
+                  <Text style={s.cPrice}>{formatMoney(l.unit_price_cents)}</Text>
+                  <Text style={s.cAmt}>{formatMoney(l.unit_price_cents * l.quantity)}</Text>
                 </View>
-                <Text style={s.cQty}>{l.quantity}</Text>
-                <Text style={s.cPrice}>{formatMoney(l.unit_price_cents)}</Text>
-                <Text style={s.cAmt}>{formatMoney(rowNetCents(l))}</Text>
+                {off > 0 && (
+                  <View style={[s.row, { paddingTop: 0 }]}>
+                    <View style={[s.cItem, { paddingLeft: thumb ? 38 : 0 }]}>
+                      <Text style={s.discountRow}>{discountLabel(l)}</Text>
+                    </View>
+                    <Text style={s.cQty} />
+                    <Text style={s.cPrice} />
+                    <Text style={[s.cAmt, s.discountRow]}>-{formatMoney(off)}</Text>
+                  </View>
+                )}
               </View>
             )
           })}
