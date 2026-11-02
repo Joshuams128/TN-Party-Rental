@@ -71,6 +71,31 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
 
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
   const [discountOpen, setDiscountOpen] = useState<Record<string, boolean>>({})
+  // The rental period is entered as one date + start/end times (same day), or with an end date for multi-day rentals.
+  const [rp, setRp] = useState(() => {
+    const st = initial.fields.rental_start
+    const en = initial.fields.rental_end
+    return {
+      startDate: st.slice(0, 10),
+      startTime: st.slice(11, 16),
+      endDate: en.slice(0, 10),
+      endTime: en.slice(11, 16),
+      otherDay: !!en && en.slice(0, 10) !== st.slice(0, 10),
+    }
+  })
+  function updateRental(patch: Partial<typeof rp>) {
+    const next = { ...rp, ...patch }
+    // Same-day rental: the end date simply follows the start date.
+    if (!next.otherDay) next.endDate = next.startDate
+    else if (!next.endDate) next.endDate = next.startDate
+    setRp(next)
+    rentalTouched.current = true
+    setFields((f) => ({
+      ...f,
+      rental_start: next.startDate && next.startTime ? `${next.startDate}T${next.startTime}` : '',
+      rental_end: next.endDate && next.endTime ? `${next.endDate}T${next.endTime}` : '',
+    }))
+  }
   const rentalText = formatRentalPeriod(fields.rental_start, fields.rental_end)
   const rentalBad = !!fields.rental_start && !!fields.rental_end && rentalHours(fields.rental_start, fields.rental_end) === null
 
@@ -371,35 +396,60 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
             </label>
             <div className="sm:col-span-2">
               <p className="text-sm font-medium">Rental period <span className="font-normal text-gray-400">(optional)</span></p>
-              <div className="mt-1 grid gap-3 sm:grid-cols-2">
+              <div className="mt-1 grid gap-3 sm:grid-cols-3">
                 <label className="block text-xs text-gray-400">
-                  Starts
+                  {rp.otherDay ? 'Start date' : 'Date'}
                   <input
-                    type="datetime-local"
-                    value={fields.rental_start}
-                    onChange={(e) => {
-                      rentalTouched.current = true
-                      setField('rental_start', e.target.value)
-                    }}
+                    type="date"
+                    value={rp.startDate}
+                    onChange={(e) => updateRental({ startDate: e.target.value })}
                     className={`${input} h-12 text-base text-white`}
                   />
                 </label>
                 <label className="block text-xs text-gray-400">
-                  Ends
+                  Start time
                   <input
-                    type="datetime-local"
-                    value={fields.rental_end}
-                    min={fields.rental_start || undefined}
-                    onChange={(e) => {
-                      rentalTouched.current = true
-                      setField('rental_end', e.target.value)
-                    }}
+                    type="time"
+                    value={rp.startTime}
+                    onChange={(e) => updateRental({ startTime: e.target.value })}
+                    className={`${input} h-12 text-base text-white`}
+                  />
+                </label>
+                <label className="block text-xs text-gray-400">
+                  End time
+                  <input
+                    type="time"
+                    value={rp.endTime}
+                    onChange={(e) => updateRental({ endTime: e.target.value })}
                     className={`${input} h-12 text-base text-white`}
                   />
                 </label>
               </div>
+              <label className="mt-1 flex min-h-[44px] items-center gap-3 text-sm">
+                <input
+                  type="checkbox"
+                  checked={rp.otherDay}
+                  onChange={(e) => updateRental({ otherDay: e.target.checked })}
+                  className="h-5 w-5 accent-[#D4AF37]"
+                />
+                Ends on a different day <span className="text-gray-400">(multi-day or overnight)</span>
+              </label>
+              {rp.otherDay && (
+                <label className="mt-1 block text-xs text-gray-400 sm:w-1/3">
+                  End date
+                  <input
+                    type="date"
+                    value={rp.endDate}
+                    min={rp.startDate || undefined}
+                    onChange={(e) => updateRental({ endDate: e.target.value })}
+                    className={`${input} h-12 text-base text-white`}
+                  />
+                </label>
+              )}
               {rentalBad ? (
-                <p role="alert" className="mt-2 text-sm text-red-400">The end needs to be after the start.</p>
+                <p role="alert" className="mt-2 text-sm text-red-400">
+                  The end needs to be after the start.{!rp.otherDay && ' If it finishes the next day, tick “Ends on a different day”.'}
+                </p>
               ) : (
                 rentalText && <p className="mt-2 text-sm font-medium text-gold">{rentalText}</p>
               )}
