@@ -135,9 +135,11 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
     }
     knownUpdatedAt.current = row.updated_at
 
-    // Replace the lines wholesale: simple and safe for a single-user app.
-    const { error: delErr } = await supabase.from('invoice_lines').delete().eq('invoice_id', id)
-    if (delErr) throw delErr
+    // Replace the lines wholesale, but NEVER delete before the new ones are safely saved: if the insert fails
+    // (e.g. the database is missing a column), the previously saved items must still be there.
+    const { data: oldRows, error: oldErr } = await supabase.from('invoice_lines').select('id').eq('invoice_id', id)
+    if (oldErr) throw oldErr
+    const oldIds = (oldRows ?? []).map((r) => r.id as string)
     if (ls.length > 0) {
       const anyDiscount = ls.some((l) => l.discountName.trim() || Number(l.discountValue) > 0)
       const anyLineRental = ls.some((l) => l.rentalStart || l.rentalEnd)
@@ -165,6 +167,11 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
         }))
       )
       if (insErr) throw insErr
+    }
+    // Only now that the new lines exist, remove the previous ones.
+    if (oldIds.length > 0) {
+      const { error: delErr } = await supabase.from('invoice_lines').delete().in('id', oldIds)
+      if (delErr) throw delErr
     }
   }, [supabase, taxRate])
 
