@@ -10,6 +10,7 @@ type Props = {
   items: Item[]
   quantities: Record<string, number> // item id -> qty already on the invoice
   onAdd: (item: Item) => void
+  onAddSeparate: (item: Item) => void // add the item again as its own line (own time, price or discount)
 }
 
 function rank(items: Item[], query: string, category: string): Item[] {
@@ -29,7 +30,7 @@ function rank(items: Item[], query: string, category: string): Item[] {
     .map((x) => x.i)
 }
 
-export default function ItemPicker({ items, quantities, onAdd }: Props) {
+export default function ItemPicker({ items, quantities, onAdd, onAddSeparate }: Props) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('')
   const [open, setOpen] = useState(false)
@@ -120,12 +121,12 @@ export default function ItemPicker({ items, quantities, onAdd }: Props) {
               {results.map((item, idx) => {
                 const qty = quantities[item.id] ?? 0
                 return (
-                  <li key={item.id} role="option" aria-selected={idx === active}>
+                  <li key={item.id} role="option" aria-selected={idx === active} className="flex items-center gap-1">
                     <button
                       type="button"
                       onClick={() => onAdd(item)}
                       onMouseEnter={() => setActive(idx)}
-                      className={`flex w-full items-center gap-3 rounded-lg p-2 text-left ${idx === active ? 'bg-gray-800' : ''}`}
+                      className={`flex min-w-0 flex-1 items-center gap-3 rounded-lg p-2 text-left ${idx === active ? 'bg-gray-800' : ''}`}
                     >
                       <ItemImage path={item.image_path} className="h-12 w-12" />
                       <div className="min-w-0 flex-1">
@@ -141,6 +142,16 @@ export default function ItemPicker({ items, quantities, onAdd }: Props) {
                       </div>
                       <span className="shrink-0 text-right font-semibold">{formatMoney(item.price_cents)}</span>
                     </button>
+                    {qty > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => onAddSeparate(item)}
+                        aria-label={`Add ${item.name} as a separate line`}
+                        className="shrink-0 rounded-lg border border-gray-600 px-3 py-2.5 text-xs font-semibold text-gray-200 hover:bg-gray-800"
+                      >
+                        New line
+                      </button>
+                    )}
                   </li>
                 )
               })}
@@ -148,7 +159,7 @@ export default function ItemPicker({ items, quantities, onAdd }: Props) {
           )}
 
           <div className="flex items-center justify-between border-t border-gray-800 px-3 py-2 text-xs text-gray-400">
-            <span className="pr-3">Tap an item to add it. Tap again for more.</span>
+            <span className="pr-3">Tap an item to add it. Tap again for one more, or use “New line” for a separate time or price.</span>
             <button type="button" onClick={() => setOpen(false)} className="rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-700">
               Done
             </button>

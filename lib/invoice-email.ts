@@ -1,6 +1,7 @@
 import { escapeHtml as esc } from '@/lib/escape'
 import { formatMoney } from '@/lib/money'
 import { formatRentalPeriod } from '@/lib/rental'
+import { itemImageUrl } from '@/lib/items'
 import { discountLabel, discountSignChar, rowDiscountCents } from '@/lib/invoice'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -16,22 +17,36 @@ export function invoiceSubject(doc: InvoiceDoc): string {
 // All user-entered text is escaped: this goes to customers, unlike the owner-only contact notification.
 export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
   const b = doc.settings
+  // Item photos need absolute URLs in an email: site images live on the same host the signing link points at.
+  const origin = new URL(signLink).origin
+  const thumb = (path: string | null) => {
+    const url = itemImageUrl(path)
+    if (!url) return ''
+    const abs = url.startsWith('/') ? origin + url : url
+    return `<img src="${esc(abs)}" width="48" height="48" alt="" style="display:block;width:48px;height:48px;object-fit:cover;border-radius:6px;background:#f3f3f3">`
+  }
   const rows = doc.lines
     .map((l) => {
       const off = rowDiscountCents(l)
+      const border = off > 0 ? '' : 'border-bottom:1px solid #eee;'
       return `<tr>
-        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${l.rental_start ? `<br><span style="font-size:12px;color:#8a6d12">${esc(formatRentalPeriod(l.rental_start, l.rental_end))}</span>` : ''}</td>
-        <td style="padding:6px 0;${off > 0 ? '' : 'border-bottom:1px solid #eee'};text-align:right">${formatMoney(l.unit_price_cents * l.quantity)}</td>
+        <td style="width:60px;padding:8px 12px 8px 0;vertical-align:top;${border}">${thumb(l.image_path)}</td>
+        <td style="padding:8px 0;vertical-align:top;${border}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${l.rental_start ? `<br><span style="font-size:12px;color:#8a6d12">${esc(formatRentalPeriod(l.rental_start, l.rental_end))}</span>` : ''}</td>
+        <td style="padding:8px 0;vertical-align:top;text-align:right;${border}">${formatMoney(l.unit_price_cents * l.quantity)}</td>
       </tr>${
         off > 0
           ? `<tr>
-        <td style="padding:0 0 6px 12px;border-bottom:1px solid #eee;color:#2e7d32;font-weight:bold">${esc(discountLabel(l))}</td>
-        <td style="padding:0 0 6px;border-bottom:1px solid #eee;text-align:right;color:#2e7d32;font-weight:bold">${discountSignChar(l)}${formatMoney(off)}</td>
+        <td style="border-bottom:1px solid #eee"></td>
+        <td style="padding:0 0 8px;border-bottom:1px solid #eee;color:#2e7d32;font-weight:bold">${esc(discountLabel(l))}</td>
+        <td style="padding:0 0 8px;border-bottom:1px solid #eee;text-align:right;color:#2e7d32;font-weight:bold">${discountSignChar(l)}${formatMoney(off)}</td>
       </tr>`
           : ''
       }`
     })
     .join('')
+  const rentalBlock = doc.rental_start
+    ? `<div style="margin:16px 0;padding:10px 14px;background:#f6f3e8;border-left:4px solid #D4AF37;border-radius:4px"><div style="font-size:11px;font-weight:bold;letter-spacing:1px;color:#B8941F">RENTAL PERIOD</div><div style="font-size:15px;font-weight:bold">${esc(formatRentalPeriod(doc.rental_start, doc.rental_end))}</div></div>`
+    : ''
   const contact = [b.phone, b.email].filter(Boolean).map(esc).join(' &middot; ')
   // The sending address (noreply@) has no inbox, so also print where to write in case a mail app ignores Reply-To.
   const contactHtml = b.email.trim()
@@ -41,11 +56,11 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
   return `<div style="font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:560px;margin:0 auto;line-height:1.5">
     <p>Hi ${esc(doc.customer_name || 'there')},</p>
     <p>Please find your invoice <strong>#${doc.number}</strong> from ${esc(b.business_name)} attached as a PDF.</p>
+    ${rentalBlock}
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0">${rows}
-      <tr><td style="padding:10px 0 0;font-weight:bold">Total${doc.apply_tax ? ` (incl. ${esc(b.tax_label)})` : ''}</td>
+      <tr><td></td><td style="padding:10px 0 0;font-weight:bold">Total${doc.apply_tax ? ` (incl. ${esc(b.tax_label)})` : ''}</td>
           <td style="padding:10px 0 0;text-align:right;font-weight:bold">${formatMoney(doc.totals.total)}</td></tr>
     </table>
-    ${doc.rental_start ? `<p><strong>Rental period:</strong> ${esc(formatRentalPeriod(doc.rental_start, doc.rental_end))}</p>` : ''}
     ${doc.due_date ? `<p><strong>Due:</strong> ${formatDate(doc.due_date)}</p>` : ''}
     ${doc.notes ? `<p style="white-space:pre-line">${esc(doc.notes)}</p>` : ''}
     <p style="margin:24px 0 8px"><a href="${esc(signLink)}" style="display:inline-block;background:#D4AF37;color:#000;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px">Review &amp; sign invoice</a></p>

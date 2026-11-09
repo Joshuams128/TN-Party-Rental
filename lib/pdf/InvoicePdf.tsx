@@ -44,6 +44,8 @@ const s = StyleSheet.create({
   signTyped: { fontFamily: 'Times-Italic', fontSize: 26, height: 48 },
   signLine: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 4, fontSize: 8, color: MUTED },
   signOnline: { height: 48, justifyContent: 'center', paddingHorizontal: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: GOLD, borderRadius: 3, backgroundColor: '#f6f3e8' },
+  rentalBar: { marginBottom: 16, paddingVertical: 8, paddingHorizontal: 10, backgroundColor: '#f6f3e8', borderLeftWidth: 3, borderLeftColor: '#D4AF37' },
+  rentalText: { fontSize: 11, fontFamily: 'Helvetica-Bold', marginTop: 2 },
   itemRental: { fontSize: 8.5, color: '#8a6d12', marginTop: 1 },
   discountRow: { fontSize: 9, color: '#2e7d32', fontFamily: 'Helvetica-Bold' },
   link: { color: '#8a6d12', textDecoration: 'underline', fontFamily: 'Helvetica-Bold' },
@@ -107,14 +109,15 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
               {!!doc.due_date && (
                 <Text style={s.line}><Text style={s.muted}>Due date: </Text>{formatDate(doc.due_date)}</Text>
               )}
-              {!!doc.rental_start && (
-                <View style={{ marginTop: 8 }}>
-                  <Text style={s.label}>RENTAL PERIOD</Text>
-                  <Text style={s.line}>{formatRentalPeriod(doc.rental_start, doc.rental_end)}</Text>
-                </View>
-              )}
             </View>
           </View>
+
+          {!!doc.rental_start && (
+            <View style={s.rentalBar} wrap={false}>
+              <Text style={s.label}>RENTAL PERIOD</Text>
+              <Text style={s.rentalText}>{formatRentalPeriod(doc.rental_start, doc.rental_end)}</Text>
+            </View>
+          )}
 
           <View style={s.th} fixed>
             <Text style={{ flex: 1 }}>ITEM</Text>

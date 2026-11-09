@@ -249,9 +249,10 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const setField = <K extends keyof InvoiceFields>(key: K, value: InvoiceFields[K]) =>
     setFields((f) => ({ ...f, [key]: value }))
 
-  function addItem(item: Item) {
+  // separate = true adds another line for the same item (e.g. rented at a different time) instead of raising the quantity.
+  function addItem(item: Item, separate = false) {
     setLines((ls) => {
-      const existing = ls.find((l) => l.item_id === item.id)
+      const existing = separate ? undefined : ls.find((l) => l.item_id === item.id)
       if (existing) return ls.map((l) => (l.key === existing.key ? { ...l, quantity: l.quantity + 1 } : l))
       return [
         ...ls,
@@ -403,7 +404,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
         {/* Items */}
         <section className={card}>
           <h2 className="mb-3 font-semibold">Items</h2>
-          <ItemPicker items={items} quantities={quantities} onAdd={addItem} />
+          <ItemPicker items={items} quantities={quantities} onAdd={(item) => addItem(item)} onAddSeparate={(item) => addItem(item, true)} />
 
           {lines.length === 0 ? (
             <p className="py-8 text-center text-sm text-gray-400">Search above to add items to this invoice.</p>
