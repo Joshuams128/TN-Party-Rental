@@ -26,6 +26,7 @@ export type Signature = {
 
 export type DocLine = {
   id: string
+  item_id?: string | null // null = a custom line she typed herself
   name: string
   description: string
   image_path: string | null

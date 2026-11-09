@@ -51,13 +51,13 @@ export function formatRentalPeriod(start: string | null | undefined, end: string
 // 'YYYY-MM-DDTHH:mm' from whatever the database returns ('2026-04-02T09:00:00').
 export const toInputValue = (value: string | null | undefined): string => (parse(value) ? String(value).replace(' ', 'T').slice(0, 16) : '')
 
-type PeriodFields = { rental_start?: string | null; rental_end?: string | null; rental_start2?: string | null; rental_end2?: string | null }
+type PeriodFields = { item_id?: string | null; rental_start?: string | null; rental_end?: string | null; rental_start2?: string | null; rental_end2?: string | null }
 
-// What prints under one item: its own period(s) (up to two, e.g. 10-3 and 4-7), or, when it has none of its own,
-// the invoice-wide period as a default. Used identically on the page, PDF and emails.
+// What prints under one item: its own period(s) (up to two, e.g. 10-3 and 4-7), or, for a catalog item with none of
+// its own, the invoice-wide period as a default. Custom lines (a painting, Delivery...) only show a time if one is set. Used identically on the page, PDF and emails.
 export function linePeriodTexts(line: PeriodFields, invoice: { rental_start?: string | null; rental_end?: string | null }): string[] {
   const own = [formatRentalPeriod(line.rental_start, line.rental_end), formatRentalPeriod(line.rental_start2, line.rental_end2)].filter(Boolean)
-  if (own.length) return own
+  if (own.length || !line.item_id) return own
   const all = formatRentalPeriod(invoice.rental_start, invoice.rental_end)
   return all ? [all] : []
 }
