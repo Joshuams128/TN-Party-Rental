@@ -35,9 +35,9 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
           {doc.due_date && <p><span className="text-gray-500">Due date: </span>{formatDateShort(doc.due_date)}</p>}
         </div>
         {doc.rental_start && (
-          <div className="sm:col-span-2">
-            <p className="mb-1 text-[11px] font-bold tracking-widest text-[#B8941F]">RENTAL PERIOD</p>
-            <p className="font-medium">{formatRentalPeriod(doc.rental_start, doc.rental_end)}</p>
+          <div className="rounded-lg border-l-4 border-[#D4AF37] bg-[#f6f3e8] px-4 py-3 sm:col-span-2">
+            <p className="mb-0.5 text-[11px] font-bold tracking-widest text-[#B8941F]">RENTAL PERIOD</p>
+            <p className="text-base font-semibold">{formatRentalPeriod(doc.rental_start, doc.rental_end)}</p>
           </div>
         )}
       </div>
