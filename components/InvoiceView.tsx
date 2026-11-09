@@ -1,6 +1,6 @@
 import { formatMoney } from '@/lib/money'
-import { discountLabel, discountSignChar, formatDateShort, rowDiscountCents } from '@/lib/invoice'
-import { formatRentalPeriod } from '@/lib/rental'
+import { discountLabel, discountSignChar, formatDateShort, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
+import { linePeriodTexts } from '@/lib/rental'
 import { itemImageUrl } from '@/lib/items'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -34,12 +34,6 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
           <p><span className="text-gray-500">Invoice date: </span>{formatDateShort(doc.issue_date)}</p>
           {doc.due_date && <p><span className="text-gray-500">Due date: </span>{formatDateShort(doc.due_date)}</p>}
         </div>
-        {doc.rental_start && (
-          <div className="rounded-lg border-l-4 border-[#D4AF37] bg-[#f6f3e8] px-4 py-3 sm:col-span-2">
-            <p className="mb-0.5 text-[11px] font-bold tracking-widest text-[#B8941F]">RENTAL PERIOD</p>
-            <p className="text-base font-semibold">{formatRentalPeriod(doc.rental_start, doc.rental_end)}</p>
-          </div>
-        )}
       </div>
 
       <ul className="divide-y divide-gray-100 border-y border-gray-100">
@@ -55,9 +49,9 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="font-medium leading-snug">{l.name}</p>
-                  {l.rental_start && (
-                    <p className="text-xs font-medium text-[#8a6d12]">{formatRentalPeriod(l.rental_start, l.rental_end)}</p>
-                  )}
+                  {linePeriodTexts(l, doc).map((p, i) => (
+                    <p key={i} className="text-xs font-semibold text-green-700">{p}</p>
+                  ))}
                   <p className="text-xs text-gray-500">{l.quantity} × {formatMoney(l.unit_price_cents)}</p>
                 </div>
                 <p className="shrink-0 font-semibold">{formatMoney(l.unit_price_cents * l.quantity)}</p>
@@ -66,6 +60,12 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
                 <div className={`mt-2 flex items-start justify-between gap-3 text-sm font-semibold text-green-700 ${img ? 'pl-[60px]' : ''}`}>
                   <span>{discountLabel(l)}</span>
                   <span className="shrink-0">{discountSignChar(l)}{formatMoney(off)}</span>
+                </div>
+              )}
+              {off > 0 && (
+                <div className={`mt-0.5 flex items-start justify-between gap-3 text-sm font-semibold text-green-700 ${img ? 'pl-[60px]' : ''}`}>
+                  <span>Price after discount</span>
+                  <span className="shrink-0">{formatMoney(rowPriceAfterDiscountCents(l))}</span>
                 </div>
               )}
             </li>

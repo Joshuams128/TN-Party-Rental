@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text -- react-pdf's <Image> is not an HTML <img>; PDFs have no alt text */
 import { Document, Font, Image, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { formatMoney } from '@/lib/money'
-import { discountLabel, discountSignChar, rowDiscountCents } from '@/lib/invoice'
-import { formatRentalPeriod } from '@/lib/rental'
+import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
+import { linePeriodTexts } from '@/lib/rental'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
 // Never split words with a hyphen: it would break email addresses across lines.
@@ -44,9 +44,7 @@ const s = StyleSheet.create({
   signTyped: { fontFamily: 'Times-Italic', fontSize: 26, height: 48 },
   signLine: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 4, fontSize: 8, color: MUTED },
   signOnline: { height: 48, justifyContent: 'center', paddingHorizontal: 10, borderWidth: 1, borderStyle: 'dashed', borderColor: GOLD, borderRadius: 3, backgroundColor: '#f6f3e8' },
-  rentalBar: { marginBottom: 16, paddingVertical: 8, paddingHorizontal: 10, backgroundColor: '#f6f3e8', borderLeftWidth: 3, borderLeftColor: '#D4AF37' },
-  rentalText: { fontSize: 11, fontFamily: 'Helvetica-Bold', marginTop: 2 },
-  itemRental: { fontSize: 8.5, color: '#8a6d12', marginTop: 1 },
+  itemRental: { fontSize: 8.5, color: '#2e7d32', fontFamily: 'Helvetica-Bold', marginTop: 1 },
   discountRow: { fontSize: 9, color: '#2e7d32', fontFamily: 'Helvetica-Bold' },
   link: { color: '#8a6d12', textDecoration: 'underline', fontFamily: 'Helvetica-Bold' },
   cert: { marginTop: 8, fontSize: 7.5, color: MUTED, lineHeight: 1.4 },
@@ -112,13 +110,6 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
             </View>
           </View>
 
-          {!!doc.rental_start && (
-            <View style={s.rentalBar} wrap={false}>
-              <Text style={s.label}>RENTAL PERIOD</Text>
-              <Text style={s.rentalText}>{formatRentalPeriod(doc.rental_start, doc.rental_end)}</Text>
-            </View>
-          )}
-
           <View style={s.th} fixed>
             <Text style={{ flex: 1 }}>ITEM</Text>
             <Text style={s.cQty}>QTY</Text>
@@ -135,7 +126,7 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
                     {thumb && <Image src={thumb} style={s.thumb} />}
                     <View style={{ flex: 1 }}>
                       <Text>{l.name}</Text>
-                      {!!l.rental_start && <Text style={s.itemRental}>{formatRentalPeriod(l.rental_start, l.rental_end)}</Text>}
+                      {linePeriodTexts(l, doc).map((p, i) => <Text key={i} style={s.itemRental}>{p}</Text>)}
                       {!!l.description && l.description !== l.name && <Text style={[s.muted, { fontSize: 8 }]}>{l.description}</Text>}
                     </View>
                   </View>
@@ -144,13 +135,23 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
                   <Text style={s.cAmt}>{formatMoney(l.unit_price_cents * l.quantity)}</Text>
                 </View>
                 {off > 0 && (
-                  <View style={[s.row, { paddingTop: 0 }]}>
+                  <View style={[s.row, { paddingTop: 0, paddingBottom: 2, borderBottomWidth: 0 }]}>
                     <View style={[s.cItem, { paddingLeft: thumb ? 38 : 0 }]}>
                       <Text style={s.discountRow}>{discountLabel(l)}</Text>
                     </View>
                     <Text style={s.cQty} />
                     <Text style={s.cPrice} />
                     <Text style={[s.cAmt, s.discountRow]}>{discountSignChar(l)}{formatMoney(off)}</Text>
+                  </View>
+                )}
+                {off > 0 && (
+                  <View style={[s.row, { paddingTop: 0 }]}>
+                    <View style={[s.cItem, { paddingLeft: thumb ? 38 : 0 }]}>
+                      <Text style={s.discountRow}>Price after discount</Text>
+                    </View>
+                    <Text style={s.cQty} />
+                    <Text style={s.cPrice} />
+                    <Text style={[s.cAmt, s.discountRow]}>{formatMoney(rowPriceAfterDiscountCents(l))}</Text>
                   </View>
                 )}
               </View>
