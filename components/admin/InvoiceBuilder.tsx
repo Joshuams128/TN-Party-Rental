@@ -73,6 +73,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
   const [discountOpen, setDiscountOpen] = useState<Record<string, boolean>>({})
   const [rentalOpen, setRentalOpen] = useState<Record<string, boolean>>({})
+  const [secondOpen, setSecondOpen] = useState<Record<string, boolean>>({})
 
   const persist = useCallback(async () => {
     const { fields: f, lines: ls, invoiceId: currentId } = latest.current
@@ -143,6 +144,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
     if (ls.length > 0) {
       const anyDiscount = ls.some((l) => l.discountName.trim() || Number(l.discountValue) > 0)
       const anyLineRental = ls.some((l) => l.rentalStart || l.rentalEnd)
+      const anyLineRental2 = ls.some((l) => l.rentalStart2 || l.rentalEnd2)
       const anyShowOnly = ls.some((l) => l.discountShowOnly)
       const { error: insErr } = await supabase.from('invoice_lines').insert(
         ls.map((l, position) => ({
@@ -164,6 +166,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               }
             : {}),
           ...(anyLineRental ? { rental_start: l.rentalStart || null, rental_end: l.rentalEnd || null } : {}),
+          // Only sent once a second period is used, so databases without the newest column keep working.
+          ...(anyLineRental2 ? { rental_start2: l.rentalStart2 || null, rental_end2: l.rentalEnd2 || null } : {}),
         }))
       )
       if (insErr) throw insErr
@@ -388,7 +392,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               <textarea value={fields.customer_address} onChange={(e) => setField('customer_address', e.target.value)} rows={2} className={input} placeholder="Street, city, province, postal code" />
             </label>
             <div className="sm:col-span-2">
-              <p className="mb-1 text-sm font-medium">Rental period <span className="font-normal text-gray-400">(optional)</span></p>
+              <p className="mb-1 text-sm font-medium">Rental period for all items <span className="font-normal text-gray-400">(optional)</span></p>
+              <p className="mb-2 text-xs text-gray-400">Shows in green under each item. An item with its own time (below) shows that instead.</p>
               <RentalPeriodInput
                 start={fields.rental_start}
                 end={fields.rental_end}
@@ -412,6 +417,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
             <ul className="mt-4 divide-y divide-gray-800">
               {lines.map((l) => {
                 const rentalNow = !!(rentalOpen[l.key] || l.rentalStart || l.rentalEnd)
+                const second = !!(secondOpen[l.key] || l.rentalStart2 || l.rentalEnd2)
                 const discountNow = !!(discountOpen[l.key] || l.discountName || Number(l.discountValue) > 0)
                 return (
                 // Phone: photo + name + remove on one row, quantity / price / total on the next. Desktop: a single row.
@@ -430,9 +436,9 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                         autoFocus={!l.name}
                       />
                     )}
-                    {l.rentalStart && (
-                      <p className="mt-0.5 text-xs font-medium text-gold">{formatRentalPeriod(l.rentalStart, l.rentalEnd)}</p>
-                    )}
+                    {[formatRentalPeriod(l.rentalStart, l.rentalEnd), formatRentalPeriod(l.rentalStart2, l.rentalEnd2)].filter(Boolean).map((p, i) => (
+                      <p key={i} className="mt-0.5 text-xs font-medium text-green-400">{p}</p>
+                    ))}
                   </div>
                   <button
                     type="button"
@@ -482,12 +488,44 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                         end={l.rentalEnd}
                         onChange={(rentalStart, rentalEnd) => updateLine(l.key, { rentalStart, rentalEnd })}
                       />
+                      {second ? (
+                        <div className="mt-3 border-t border-gray-800 pt-3">
+                          <p className="mb-1 text-xs font-medium text-gray-400">Second time for this item</p>
+                          <RentalPeriodInput
+                            key={`${l.key}-2`}
+                            start={l.rentalStart2}
+                            end={l.rentalEnd2}
+                            onChange={(rentalStart2, rentalEnd2) => updateLine(l.key, { rentalStart2, rentalEnd2 })}
+                          />
+                          <div className="text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                updateLine(l.key, { rentalStart2: '', rentalEnd2: '' })
+                                setSecondOpen((o) => ({ ...o, [l.key]: false }))
+                              }}
+                              className="min-h-[44px] text-sm text-gray-400 hover:text-red-400"
+                            >
+                              Remove second time
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setSecondOpen((o) => ({ ...o, [l.key]: true }))}
+                          className="mt-1 min-h-[44px] text-sm text-gray-400 hover:text-gold"
+                        >
+                          + Add a second time (e.g. 10–3, then 4–7)
+                        </button>
+                      )}
                       <div className="text-right">
                         <button
                           type="button"
                           onClick={() => {
                             updateLine(l.key, { ...blankRental })
                             setRentalOpen((o) => ({ ...o, [l.key]: false }))
+                            setSecondOpen((o) => ({ ...o, [l.key]: false }))
                           }}
                           className="min-h-[44px] text-sm text-gray-400 hover:text-red-400"
                         >

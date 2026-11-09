@@ -1,9 +1,9 @@
 import { escapeHtml as esc } from '@/lib/escape'
 import { formatMoney } from '@/lib/money'
-import { formatRentalPeriod } from '@/lib/rental'
+import { linePeriodTexts } from '@/lib/rental'
 import { itemImageUrl } from '@/lib/items'
-import { discountLabel, discountSignChar, rowDiscountCents } from '@/lib/invoice'
-import type { InvoiceDoc } from '@/lib/invoice-data'
+import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
+import { rentalSummary, type InvoiceDoc } from '@/lib/invoice-data'
 
 function formatDate(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number)
@@ -29,24 +29,26 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
     .map((l) => {
       const off = rowDiscountCents(l)
       const border = off > 0 ? '' : 'border-bottom:1px solid #eee;'
+      const green = 'color:#2e7d32;font-weight:bold;'
       return `<tr>
         <td style="width:60px;padding:8px 12px 8px 0;vertical-align:top;${border}">${thumb(l.image_path)}</td>
-        <td style="padding:8px 0;vertical-align:top;${border}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${l.rental_start ? `<br><span style="font-size:12px;color:#8a6d12">${esc(formatRentalPeriod(l.rental_start, l.rental_end))}</span>` : ''}</td>
+        <td style="padding:8px 0;vertical-align:top;${border}">${esc(l.name)}${l.quantity > 1 ? ` &times; ${l.quantity}` : ''}${linePeriodTexts(l, doc).map((p) => `<br><span style="font-size:12px;font-weight:bold;color:#2e7d32">${esc(p)}</span>`).join('')}</td>
         <td style="padding:8px 0;vertical-align:top;text-align:right;${border}">${formatMoney(l.unit_price_cents * l.quantity)}</td>
       </tr>${
         off > 0
           ? `<tr>
         <td style="border-bottom:1px solid #eee"></td>
-        <td style="padding:0 0 8px;border-bottom:1px solid #eee;color:#2e7d32;font-weight:bold">${esc(discountLabel(l))}</td>
-        <td style="padding:0 0 8px;border-bottom:1px solid #eee;text-align:right;color:#2e7d32;font-weight:bold">${discountSignChar(l)}${formatMoney(off)}</td>
+        <td style="padding:0;${green}">${esc(discountLabel(l))}</td>
+        <td style="padding:0;text-align:right;${green}">${discountSignChar(l)}${formatMoney(off)}</td>
+      </tr><tr>
+        <td style="border-bottom:1px solid #eee"></td>
+        <td style="padding:2px 0 8px;border-bottom:1px solid #eee;${green}">Price after discount</td>
+        <td style="padding:2px 0 8px;border-bottom:1px solid #eee;text-align:right;${green}">${formatMoney(rowPriceAfterDiscountCents(l))}</td>
       </tr>`
           : ''
       }`
     })
     .join('')
-  const rentalBlock = doc.rental_start
-    ? `<div style="margin:16px 0;padding:10px 14px;background:#f6f3e8;border-left:4px solid #D4AF37;border-radius:4px"><div style="font-size:11px;font-weight:bold;letter-spacing:1px;color:#B8941F">RENTAL PERIOD</div><div style="font-size:15px;font-weight:bold">${esc(formatRentalPeriod(doc.rental_start, doc.rental_end))}</div></div>`
-    : ''
   const contact = [b.phone, b.email].filter(Boolean).map(esc).join(' &middot; ')
   // The sending address (noreply@) has no inbox, so also print where to write in case a mail app ignores Reply-To.
   const contactHtml = b.email.trim()
@@ -56,7 +58,6 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
   return `<div style="font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:560px;margin:0 auto;line-height:1.5">
     <p>Hi ${esc(doc.customer_name || 'there')},</p>
     <p>Please find your invoice <strong>#${doc.number}</strong> from ${esc(b.business_name)} attached as a PDF.</p>
-    ${rentalBlock}
     <table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0">${rows}
       <tr><td></td><td style="padding:10px 0 0;font-weight:bold">Total${doc.apply_tax ? ` (incl. ${esc(b.tax_label)})` : ''}</td>
           <td style="padding:10px 0 0;text-align:right;font-weight:bold">${formatMoney(doc.totals.total)}</td></tr>
@@ -77,7 +78,7 @@ export function invoiceEmailText(doc: InvoiceDoc, signLink: string): string {
     '',
     `Please find your invoice #${doc.number} from ${b.business_name} attached as a PDF.`,
     `Total: ${formatMoney(doc.totals.total)}`,
-    doc.rental_start ? `Rental period: ${formatRentalPeriod(doc.rental_start, doc.rental_end)}` : '',
+    ...(rentalSummary(doc).length ? ['Rental period:', ...rentalSummary(doc).map((r) => `  ${r}`)] : []),
     doc.due_date ? `Due: ${formatDate(doc.due_date)}` : '',
     doc.notes ? `\n${doc.notes}` : '',
     '',

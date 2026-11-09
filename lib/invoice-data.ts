@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { breakdownFromRows, type DiscountSign, type DiscountTypeRaw } from '@/lib/invoice'
-import { toInputValue } from '@/lib/rental'
+import { linePeriodTexts, toInputValue } from '@/lib/rental'
 
 export type BusinessSettings = {
   business_name: string
@@ -37,6 +37,8 @@ export type DocLine = {
   discount_value: number
   rental_start: string | null // this item's own rental period, 'YYYY-MM-DDTHH:mm'
   rental_end: string | null
+  rental_start2: string | null // optional second period for the same item
+  rental_end2: string | null
 }
 
 export type InvoiceDoc = {
@@ -87,6 +89,8 @@ export function withDiscountDefaults(r: Partial<DocLine>): DocLine {
     discount_value: Number(r.discount_value) || 0,
     rental_start: toInputValue(r.rental_start) || null,
     rental_end: toInputValue(r.rental_end) || null,
+    rental_start2: toInputValue(r.rental_start2) || null,
+    rental_end2: toInputValue(r.rental_end2) || null,
   }
 }
 
@@ -134,4 +138,9 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     totals: breakdownFromRows(lines, inv.discount_cents, inv.apply_tax, taxRate),
     settings: inv.include_owner_signature ? settings : { ...settings, owner_signature_image: '' },
   }
+}
+
+// One "Item: period" line per rented item, for the plain-text emails.
+export function rentalSummary(doc: Pick<InvoiceDoc, 'lines' | 'rental_start' | 'rental_end'>): string[] {
+  return doc.lines.flatMap((l) => linePeriodTexts(l, doc).map((p) => `${l.name}: ${p}`))
 }

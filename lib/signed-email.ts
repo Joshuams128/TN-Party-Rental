@@ -2,8 +2,7 @@ import { Resend } from 'resend'
 import { escapeHtml as esc } from '@/lib/escape'
 import { formatMoney } from '@/lib/money'
 import { emailRoute } from '@/lib/sender'
-import { formatRentalPeriod } from '@/lib/rental'
-import type { InvoiceDoc } from '@/lib/invoice-data'
+import { rentalSummary, type InvoiceDoc } from '@/lib/invoice-data'
 
 // After a customer signs: email the signed PDF to the customer and to the owner. Never throws; signing already succeeded.
 export async function sendSignedCopies(doc: InvoiceDoc, pdf: Buffer): Promise<boolean> {
@@ -15,9 +14,9 @@ export async function sendSignedCopies(doc: InvoiceDoc, pdf: Buffer): Promise<bo
   const biz = doc.settings.business_name
   const attachments = [{ filename: `Invoice-${doc.number}-signed.pdf`, content: pdf }]
   const total = formatMoney(doc.totals.total)
-  const rental = doc.rental_start ? formatRentalPeriod(doc.rental_start, doc.rental_end) : ''
-  const rentalHtml = rental ? `<p><strong>Rental period:</strong> ${esc(rental)}</p>` : ''
-  const rentalText = rental ? `\nRental period: ${rental}` : ''
+  const rental = rentalSummary(doc)
+  const rentalHtml = rental.length ? `<p><strong>Rental period:</strong><br>${rental.map(esc).join('<br>')}</p>` : ''
+  const rentalText = rental.length ? `\nRental period:\n${rental.join('\n')}` : ''
   let ok = true
 
   const owner = await resend.emails.send({

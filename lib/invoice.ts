@@ -33,6 +33,9 @@ export type Line = {
   // Optional rental period for just this item ('YYYY-MM-DDTHH:mm' or ''), for items rented at different times.
   rentalStart: string
   rentalEnd: string
+  // Optional second period for the same item (e.g. 10-3 and then 4-7).
+  rentalStart2: string
+  rentalEnd2: string
 }
 
 export type InvoiceFields = {
@@ -51,7 +54,7 @@ export type InvoiceFields = {
 
 export type InvoiceStatus = 'draft' | 'sent'
 
-export const blankRental = { rentalStart: '', rentalEnd: '' }
+export const blankRental = { rentalStart: '', rentalEnd: '', rentalStart2: '', rentalEnd2: '' }
 
 export const blankDiscount = {
   discountName: '',
@@ -132,6 +135,14 @@ export function discountLabel(l: { discount_name?: string | null; discount_type?
   const { kind, applies } = parseDiscountType(l.discount_type)
   const withPercent = kind === 'percent' ? `${name} (${Number(l.discount_value)}% off)` : name
   return applies ? withPercent : `${withPercent} (included, price unchanged)`
+}
+
+// The line's price once its discount is applied, shown under the discount: $350 with -$50 => $300.
+// A show-only discount prints the same figure, following the sign chosen (a "+" adds instead).
+export function rowPriceAfterDiscountCents(l: LineRow & { discount_sign?: string | null }): number {
+  const gross = l.unit_price_cents * l.quantity
+  const off = rowDiscountCents(l)
+  return discountSignChar(l) === '+' ? gross + off : gross - off
 }
 
 export function rowNetCents(l: LineRow): number {

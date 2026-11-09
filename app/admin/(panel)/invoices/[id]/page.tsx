@@ -33,6 +33,8 @@ export default async function EditInvoicePage({ params }: { params: { id: string
     discountValue: Number(r.discount_value) > 0 ? String(Number(r.discount_value)) : '',
     rentalStart: toInputValue(r.rental_start),
     rentalEnd: toInputValue(r.rental_end),
+    rentalStart2: toInputValue(r.rental_start2),
+    rentalEnd2: toInputValue(r.rental_end2),
   }))
 
   return (
