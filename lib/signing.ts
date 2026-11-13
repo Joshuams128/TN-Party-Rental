@@ -32,6 +32,8 @@ export function documentHash(doc: InvoiceDoc): string {
     tax: [doc.apply_tax, doc.tax_rate],
     lines: doc.lines.map((l) => [l.name, l.description, l.unit_price_cents, l.quantity, l.discount_name, l.discount_type, l.discount_value, l.discount_sign, l.rental_start, l.rental_end, ...(l.rental_start2 ? [l.rental_start2, l.rental_end2] : [])]),
     totals: doc.totals,
+    // Only present when the invoice has terms, so hashes of older invoices stay the same.
+    ...(doc.terms_text ? { terms: [doc.terms_key_points, doc.terms_text] } : {}),
   })
   return createHash('sha256').update(canonical).digest('hex')
 }
@@ -58,6 +60,8 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     rental_start: toInputValue(r.rental_start) || null,
     rental_end: toInputValue(r.rental_end) || null,
     notes: r.notes,
+    terms_key_points: r.terms_key_points ?? '',
+    terms_text: r.terms_text ?? '',
     apply_tax: r.apply_tax,
     owner_signature: !!r.include_owner_signature,
     sign_token: token,

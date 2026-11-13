@@ -4,6 +4,7 @@ import { linePeriodTexts } from '@/lib/rental'
 import { itemImageUrl } from '@/lib/items'
 import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
 import { rentalSummary, type InvoiceDoc } from '@/lib/invoice-data'
+import { keyPoints } from '@/lib/terms'
 
 function formatDate(iso: string): string {
   const [y, m, d] = iso.split('-').map(Number)
@@ -62,6 +63,7 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
       <tr><td></td><td style="padding:10px 0 0;font-weight:bold">Total${doc.apply_tax ? ` (incl. ${esc(b.tax_label)})` : ''}</td>
           <td style="padding:10px 0 0;text-align:right;font-weight:bold">${formatMoney(doc.totals.total)}</td></tr>
     </table>
+    ${doc.terms_text ? `<div style="margin:16px 0;padding:10px 14px;background:#faf8f0;border-left:4px solid #D4AF37;border-radius:4px;font-size:14px"><div style="font-size:11px;font-weight:bold;letter-spacing:1px;color:#B8941F;margin-bottom:4px">KEY TERMS</div><ul style="margin:0;padding-left:18px">${keyPoints(doc.terms_key_points).map((k) => `<li>${esc(k)}</li>`).join('')}</ul><div style="margin-top:6px">The full payment terms are in the attached PDF and on the signing page. <strong>By signing, you agree to the invoice and these terms.</strong></div></div>` : ''}
     ${doc.due_date ? `<p><strong>Due:</strong> ${formatDate(doc.due_date)}</p>` : ''}
     ${doc.notes ? `<p style="white-space:pre-line">${esc(doc.notes)}</p>` : ''}
     <p style="margin:24px 0 8px"><a href="${esc(signLink)}" style="display:inline-block;background:#D4AF37;color:#000;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px">Review &amp; sign invoice</a></p>
@@ -80,6 +82,7 @@ export function invoiceEmailText(doc: InvoiceDoc, signLink: string): string {
     `Total: ${formatMoney(doc.totals.total)}`,
     ...(rentalSummary(doc).length ? ['Rental period:', ...rentalSummary(doc).map((r) => `  ${r}`)] : []),
     doc.due_date ? `Due: ${formatDate(doc.due_date)}` : '',
+    ...(doc.terms_text ? ['', 'Key terms:', ...keyPoints(doc.terms_key_points).map((k) => `  - ${k}`), 'The full payment terms are in the attached PDF and on the signing page. By signing, you agree to the invoice and these terms.'] : []),
     doc.notes ? `\n${doc.notes}` : '',
     '',
     `Review and sign your invoice online (takes about 20 seconds, nothing to download or print):\n${signLink}`,

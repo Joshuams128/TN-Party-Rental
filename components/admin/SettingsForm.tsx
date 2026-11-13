@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { BusinessSettings } from '@/lib/invoice-data'
+import { DEFAULT_KEY_POINTS, DEFAULT_TERMS, termsPlaceholders } from '@/lib/terms'
 
 const input = 'mt-1 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500'
 
@@ -10,10 +11,14 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
   const [s, setS] = useState({ ...initial, tax_rate: String(initial.tax_rate) })
   const [state, setState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [error, setError] = useState('')
+  // Terms columns come from a newer database update, so they are only written once used.
+  const termsTouched = useRef(!!(initial.terms_text || initial.terms_key_points))
   const set = (k: keyof typeof s, v: string) => {
+    if (k === 'terms_text' || k === 'terms_key_points') termsTouched.current = true
     setS((cur) => ({ ...cur, [k]: v }))
     setState('idle')
   }
+  const blanks = termsPlaceholders(s.terms_text + '\n' + s.terms_key_points)
 
   async function save(e: React.FormEvent) {
     e.preventDefault()
@@ -35,6 +40,7 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
         tax_label: s.tax_label.trim() || 'HST',
         tax_rate: rate,
         invoice_footer: s.invoice_footer.trim(),
+        ...(termsTouched.current ? { terms_key_points: s.terms_key_points.trim(), terms_text: s.terms_text.trim() } : {}),
       })
       .eq('id', 1)
     if (dbErr) {
@@ -91,6 +97,40 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
         Use an address on your website’s domain (the one verified in Resend). It doesn’t need a real inbox, because replies go to
         your Email above. Gmail, Yahoo and similar addresses can’t be used here.
       </p>
+
+      <div className="space-y-3 border-t border-gray-800 pt-5">
+        <h2 className="text-lg font-semibold">Payment terms</h2>
+        <p className="text-xs text-gray-400">
+          Sent with every invoice: a short “key terms” box on the invoice, a “Please read full terms here” link, and the full terms as the
+          second part of the PDF. Customers agree to them when they sign. Each invoice keeps the wording it was sent with, so changing
+          this later never affects invoices already sent. Leave both boxes empty to send invoices without terms.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            if ((s.terms_text.trim() || s.terms_key_points.trim()) && !confirm('Replace what is in the boxes with the standard True North terms?')) return
+            set('terms_key_points', DEFAULT_KEY_POINTS)
+            set('terms_text', DEFAULT_TERMS)
+          }}
+          className="min-h-[44px] rounded-lg border border-gray-700 px-4 text-sm hover:bg-gray-800"
+        >
+          Load the standard True North terms
+        </button>
+        <label className="block text-sm font-medium">
+          Key terms <span className="font-normal text-gray-400">(shown on the invoice, one short point per line)</span>
+          <textarea value={s.terms_key_points} onChange={(e) => set('terms_key_points', e.target.value)} rows={5} className={input} />
+        </label>
+        <label className="block text-sm font-medium">
+          Full terms
+          <textarea value={s.terms_text} onChange={(e) => set('terms_text', e.target.value)} rows={16} className={input + ' font-mono text-xs leading-relaxed'} />
+        </label>
+        {blanks.length > 0 && (
+          <p role="status" className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200">
+            <strong>{blanks.length} blank{blanks.length > 1 ? 's' : ''} still to fill in.</strong> Replace each part in [square brackets] with your
+            final wording, for example {blanks.slice(0, 2).join(' and ')}. Invoices can’t be sent until none are left.
+          </p>
+        )}
+      </div>
 
       {error && <p role="alert" className="text-sm text-red-400">{error}</p>}
       <div className="flex items-center gap-3">

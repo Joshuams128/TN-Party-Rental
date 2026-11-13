@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { CheckCircle2, Download } from 'lucide-react'
 import SignaturePad, { typedSignatureImage } from './SignaturePad'
 
-type Props = { token: string; hash: string; number: number }
+type Props = { token: string; hash: string; number: number; hasTerms?: boolean }
 
-export default function SignForm({ token, hash, number }: Props) {
+export default function SignForm({ token, hash, number, hasTerms = false }: Props) {
   const [mode, setMode] = useState<'draw' | 'type'>('draw')
   const [name, setName] = useState('')
   const [drawn, setDrawn] = useState<string | null>(null)
@@ -45,7 +45,7 @@ export default function SignForm({ token, hash, number }: Props) {
     return (
       <div className="rounded-2xl border border-green-200 bg-green-50 p-6 text-center">
         <CheckCircle2 className="mx-auto text-green-600" size={40} />
-        <h2 className="mt-3 text-xl font-bold text-green-900">Thank you, your invoice is signed</h2>
+        <h2 className="mt-3 text-xl font-bold text-green-900">{hasTerms ? 'Thank you, your invoice and agreement are signed' : 'Thank you, your invoice is signed'}</h2>
         <p className="mt-1 text-sm text-green-800">A signed copy is being emailed to you. You can also download it now.</p>
         <a
           href={`/api/sign/${token}/pdf?download=1`}
@@ -71,7 +71,7 @@ export default function SignForm({ token, hash, number }: Props) {
   return (
     <form onSubmit={submit} className="space-y-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
       <div>
-        <h2 className="text-lg font-bold">Sign this invoice</h2>
+        <h2 className="text-lg font-bold">{hasTerms ? 'Sign the invoice and agreement' : 'Sign this invoice'}</h2>
         <p className="text-sm text-gray-500">Draw your signature or type your name. It takes about 10 seconds.</p>
       </div>
 
@@ -108,7 +108,11 @@ export default function SignForm({ token, hash, number }: Props) {
 
       <label className="flex items-start gap-3 text-sm leading-snug">
         <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-5 w-5 shrink-0 accent-black" />
-        <span>I have reviewed this invoice and agree that my electronic signature has the same effect as my handwritten signature.</span>
+        <span>
+          {hasTerms
+            ? 'I have read this invoice and the payment terms, and I agree to both. I understand my electronic signature has the same effect as my handwritten signature.'
+            : 'I have reviewed this invoice and agree that my electronic signature has the same effect as my handwritten signature.'}
+        </span>
       </label>
 
       {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
@@ -118,7 +122,7 @@ export default function SignForm({ token, hash, number }: Props) {
         disabled={!ready}
         className="h-14 w-full rounded-xl bg-black text-base font-semibold text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        {busy ? 'Signing…' : 'Sign invoice'}
+        {busy ? 'Signing…' : hasTerms ? 'Sign invoice & agree to terms' : 'Sign invoice'}
       </button>
     </form>
   )
