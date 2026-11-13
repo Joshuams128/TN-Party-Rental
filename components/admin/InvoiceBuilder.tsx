@@ -34,7 +34,7 @@ type Props = {
   }
 }
 
-const input = 'mt-1 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500'
+const input = 'mt-1 min-h-[44px] w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500'
 const card = 'rounded-xl border border-gray-800 bg-gray-900 p-4 sm:p-5'
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
@@ -458,7 +458,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                       inputMode="numeric"
                       value={l.quantity}
                       onChange={(e) => updateLine(l.key, { quantity: Math.max(1, parseInt(e.target.value.replace(/\D/g, ''), 10) || 1) })}
-                      className="w-10 bg-transparent text-center"
+                      className="h-11 w-10 bg-transparent text-center"
                     />
                     <button type="button" aria-label="Increase quantity" onClick={() => updateLine(l.key, { quantity: l.quantity + 1 })} className="flex h-11 w-10 items-center justify-center rounded-r-lg hover:bg-gray-800">
                       <Plus size={16} />

@@ -9,7 +9,7 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
       <header className="flex items-center justify-between py-4">
         <span className="font-semibold">True North · Invoicing</span>
         <form action={logout}>
-          <button className="flex items-center gap-1 py-2 text-sm text-gray-400 hover:text-white">
+          <button className="flex min-h-[44px] items-center gap-1 px-1 text-sm text-gray-400 hover:text-white">
             <LogOut size={16} /> Sign out
           </button>
         </form>

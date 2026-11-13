@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { BusinessSettings } from '@/lib/invoice-data'
 import { DEFAULT_KEY_POINTS, DEFAULT_TERMS, termsPlaceholders } from '@/lib/terms'
 
-const input = 'mt-1 w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500'
+const input = 'mt-1 min-h-[44px] w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500'
 
 export default function SettingsForm({ initial }: { initial: BusinessSettings }) {
   const [s, setS] = useState({ ...initial, tax_rate: String(initial.tax_rate) })
@@ -118,7 +118,7 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
         </button>
         <label className="block text-sm font-medium">
           Key terms <span className="font-normal text-gray-400">(shown on the invoice, one short point per line)</span>
-          <textarea value={s.terms_key_points} onChange={(e) => set('terms_key_points', e.target.value)} rows={5} className={input} />
+          <textarea value={s.terms_key_points} onChange={(e) => set('terms_key_points', e.target.value)} rows={6} className={input} />
         </label>
         <label className="block text-sm font-medium">
           Full terms
