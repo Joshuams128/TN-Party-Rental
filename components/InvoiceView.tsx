@@ -14,12 +14,12 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
   return (
     <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="flex items-start justify-between gap-4 bg-black px-5 py-4 text-white">
-        <div>
+        <div className="min-w-0 flex-1">
           <p className="text-lg font-bold">{b.business_name}</p>
-          <p className="text-xs text-gray-300">{[b.phone, b.email].filter(Boolean).join(' · ')}</p>
+          {[b.phone, b.email].filter(Boolean).map((v) => <p key={v} className="text-xs text-gray-300 [overflow-wrap:anywhere]">{v}</p>)}
           {b.tax_number && <p className="text-xs text-gray-300">{b.tax_label} #: {b.tax_number}</p>}
         </div>
-        <div className="text-right">
+        <div className="shrink-0 text-right">
           <p className="text-xl font-bold text-[#D4AF37]">INVOICE</p>
           <p className="text-sm">#{doc.number}</p>
         </div>
