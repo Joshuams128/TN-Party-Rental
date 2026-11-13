@@ -1,6 +1,7 @@
 import { formatMoney } from '@/lib/money'
 import { discountLabel, discountSignChar, formatDateShort, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
 import { linePeriodTexts } from '@/lib/rental'
+import { keyPoints, parseTerms, TERMS_TITLE } from '@/lib/terms'
 import { itemImageUrl } from '@/lib/items'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -85,6 +86,32 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
           </div>
         )}
       </div>
+
+      {doc.terms_text && (
+        <div className="border-t border-gray-100 bg-[#faf8f0] p-5 text-sm">
+          <p className="mb-2 text-[11px] font-bold tracking-widest text-[#B8941F]">KEY TERMS</p>
+          {keyPoints(doc.terms_key_points).length > 0 && (
+            <ul className="list-disc space-y-1 pl-5">
+              {keyPoints(doc.terms_key_points).map((k, i) => <li key={i}>{k}</li>)}
+            </ul>
+          )}
+          <details className="group mt-3">
+            <summary className="flex min-h-[44px] cursor-pointer list-none items-center font-semibold text-[#8a6d12] underline underline-offset-2 [&::-webkit-details-marker]:hidden">
+              Please read full terms here
+            </summary>
+            <div className="mt-2 max-h-[28rem] overflow-y-auto rounded-lg border border-gray-200 bg-white p-4">
+              <p className="mb-3 font-bold">{TERMS_TITLE}</p>
+              {parseTerms(doc.terms_text).map((b, i) => (
+                <div key={i} className="mb-3 last:mb-0">
+                  {b.heading && <p className="font-semibold">{b.heading}</p>}
+                  {b.lines.map((l, j) => <p key={j} className="mt-1 leading-snug text-gray-700">{l}</p>)}
+                </div>
+              ))}
+            </div>
+          </details>
+          <p className="mt-3 font-semibold">By signing below, you agree to this invoice and to these payment terms.</p>
+        </div>
+      )}
     </article>
   )
 }

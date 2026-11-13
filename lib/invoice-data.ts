@@ -13,6 +13,8 @@ export type BusinessSettings = {
   tax_rate: number
   invoice_footer: string
   owner_signature_image: string // PNG data URL, '' if none
+  terms_key_points: string // short points shown on the invoice itself, one per line
+  terms_text: string // the full payment terms; '' = no terms with invoices
 }
 
 export type Signature = {
@@ -54,6 +56,9 @@ export type InvoiceDoc = {
   rental_start: string | null // 'YYYY-MM-DDTHH:mm'
   rental_end: string | null
   notes: string
+  // This invoice's own copy of the payment terms (taken from Settings when it is sent), '' = none.
+  terms_key_points: string
+  terms_text: string
   apply_tax: boolean
   owner_signature: boolean
   sign_token: string | null
@@ -78,6 +83,8 @@ export const DEFAULT_SETTINGS: BusinessSettings = {
   tax_rate: 13,
   invoice_footer: '',
   owner_signature_image: '',
+  terms_key_points: '',
+  terms_text: '',
 }
 
 // Rows saved before line discounts existed (or before the migration) simply have no discount.
@@ -121,6 +128,9 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     rental_start: toInputValue(inv.rental_start) || null,
     rental_end: toInputValue(inv.rental_end) || null,
     notes: inv.notes,
+    // A draft shows the current wording; once sent, the invoice keeps the copy it was sent with.
+    terms_key_points: (inv.status === 'draft' ? settings.terms_key_points : inv.terms_key_points) ?? '',
+    terms_text: (inv.status === 'draft' ? settings.terms_text : inv.terms_text) ?? '',
     apply_tax: inv.apply_tax,
     owner_signature: !!inv.include_owner_signature,
     sign_token: inv.sign_token ?? null,

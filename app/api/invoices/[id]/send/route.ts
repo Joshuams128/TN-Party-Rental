@@ -6,6 +6,7 @@ import { buildInvoicePdf } from '@/lib/pdf/build'
 import { invoiceEmailHtml, invoiceEmailText, invoiceSubject } from '@/lib/invoice-email'
 import { newSignToken, requestOrigin, signUrl } from '@/lib/signing'
 import { EMAIL_RE, emailRoute, friendlySendError } from '@/lib/sender'
+import { termsPlaceholders } from '@/lib/terms'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -32,6 +33,23 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   if (!EMAIL_RE.test(route.fromAddress)) return fail('The “Send invoices from” address in Settings isn’t a valid email.')
 
   if (doc.signature) return fail('This invoice has already been signed, so it can’t be sent again.')
+
+  // Terms: the invoice keeps its own copy of the wording as of now, so later edits in Settings never change it.
+  const termsText = doc.settings.terms_text.trim()
+  const termsPoints = doc.settings.terms_key_points.trim()
+  const blanks = termsPlaceholders(termsText + '\n' + termsPoints)
+  if (blanks.length > 0) {
+    return fail(`Your payment terms still have blanks to fill in: ${blanks.slice(0, 3).join(', ')}${blanks.length > 3 ? '…' : ''}. Finish them in Settings first.`)
+  }
+  if (termsText || doc.terms_text) {
+    const { error: termsErr } = await owner.supabase.from('invoices').update({ terms_key_points: termsPoints, terms_text: termsText }).eq('id', doc.id)
+    if (termsErr) {
+      console.error('Could not save terms on the invoice:', termsErr)
+      return fail('Payment terms aren’t set up yet. Run the payment-terms database update (0010) in Supabase, then try again.', 500)
+    }
+    doc.terms_key_points = termsPoints
+    doc.terms_text = termsText
+  }
 
   // The customer signs through a private link; create it the first time, reuse it on a resend.
   let token = doc.sign_token

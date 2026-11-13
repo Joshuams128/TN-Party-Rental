@@ -47,7 +47,7 @@ export default async function SignPage({ params }: { params: { token: string } }
                 </a>
               </div>
             ) : (
-              <SignForm token={params.token} hash={documentHash(doc)} number={doc.number} />
+              <SignForm token={params.token} hash={documentHash(doc)} number={doc.number} hasTerms={!!doc.terms_text} />
             )}
           </>
         )}

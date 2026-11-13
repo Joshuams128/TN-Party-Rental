@@ -4,6 +4,7 @@ import { formatMoney } from '@/lib/money'
 import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
 import { linePeriodTexts } from '@/lib/rental'
 import type { InvoiceDoc } from '@/lib/invoice-data'
+import { keyPoints, parseTerms, TERMS_TITLE } from '@/lib/terms'
 
 // Never split words with a hyphen: it would break email addresses across lines.
 Font.registerHyphenationCallback((word) => [word])
@@ -38,6 +39,12 @@ const s = StyleSheet.create({
   totalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 2.5 },
   grand: { flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderTopColor: INK, marginTop: 4, paddingTop: 6, fontSize: 13, fontFamily: 'Helvetica-Bold' },
   notes: { marginTop: 22 },
+  keyTerms: { marginTop: 20, paddingVertical: 8, paddingHorizontal: 10, backgroundColor: '#faf8f0', borderLeftWidth: 3, borderLeftColor: '#D4AF37' },
+  bullet: { flexDirection: 'row', marginBottom: 2 },
+  bulletDot: { width: 10 },
+  termsTitle: { fontSize: 14, fontFamily: 'Helvetica-Bold', marginBottom: 12 },
+  termsHead: { fontFamily: 'Helvetica-Bold', fontSize: 10, marginTop: 8, marginBottom: 2 },
+  termsLine: { fontSize: 9.5, marginBottom: 3, lineHeight: 1.2 },
   signArea: { marginTop: 34, flexDirection: 'row', gap: 24 },
   signCol: { flex: 1 },
   signImg: { height: 48, objectFit: 'contain', objectPosition: 'left' },
@@ -172,6 +179,18 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
             </View>
           )}
 
+          {!!doc.terms_text && (
+            <View style={s.keyTerms} wrap={false}>
+              <Text style={s.label}>KEY TERMS</Text>
+              {keyPoints(doc.terms_key_points).map((k, i) => (
+                <View key={i} style={s.bullet}><Text style={s.bulletDot}>•</Text><Text style={{ flex: 1 }}>{k}</Text></View>
+              ))}
+              <Text style={[s.strong, { marginTop: 4 }]}>
+                By signing, you agree to this invoice and to the full Payment Terms on the next page.
+              </Text>
+            </View>
+          )}
+
           <View wrap={false}>
             <View style={s.signArea}>
               <View style={s.signCol}>
@@ -202,7 +221,7 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
                 Electronically signed by {doc.signature.name} on {formatDateTime(doc.signature.signedAt)}.
                 {doc.signature.ip ? ` IP address ${doc.signature.ip}.` : ''}
                 {doc.signature.hash ? ` Document ID ${doc.signature.hash.slice(0, 16).toUpperCase()}.` : ''}
-                {' '}The signer agreed that this electronic signature has the same effect as a handwritten one.
+                {' '}The signer agreed to this invoice{doc.terms_text ? ' and the attached payment terms' : ''} and that this electronic signature has the same effect as a handwritten one.
               </Text>
             )}
           </View>
@@ -212,6 +231,24 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
           `${b.invoice_footer ? b.invoice_footer + '  |  ' : ''}Page ${pageNumber} of ${totalPages}`
         } />
       </Page>
+
+      {!!doc.terms_text && (
+        <Page size="LETTER" style={s.page}>
+          <View style={s.body}>
+            <Text style={s.label}>INVOICE #{doc.number}</Text>
+            <Text style={s.termsTitle}>{TERMS_TITLE}</Text>
+            {parseTerms(doc.terms_text).map((blk, i) => (
+              <View key={i}>
+                {!!blk.heading && <Text style={s.termsHead}>{blk.heading}</Text>}
+                {blk.lines.map((l, j) => <Text key={j} style={s.termsLine}>{l}</Text>)}
+              </View>
+            ))}
+          </View>
+          <Text style={s.footer} fixed render={({ pageNumber, totalPages }) =>
+            `${b.invoice_footer ? b.invoice_footer + '  |  ' : ''}Page ${pageNumber} of ${totalPages}`
+          } />
+        </Page>
+      )}
     </Document>
   )
 }
