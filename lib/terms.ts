@@ -35,21 +35,21 @@ The deposit is non-refundable. It reflects a reasonable pre-estimate of the cost
 2. Final Payment
 The remaining fifty percent (50%) balance is due no later than seven (7) days before the scheduled event date. All amounts must be paid in full before delivery or setup.
 If the balance is not received by the due date, True North Party Rentals may treat the booking as cancelled by the client and retain the deposit.
-All prices are subject to applicable HST. Accepted payment methods: [e-Transfer / credit card / cash — confirm].
+All prices are subject to applicable HST. Accepted payment methods: e-Transfer, credit card or cash.
 
 3. Cancellation by the Client
 All cancellations must be submitted in writing (email is acceptable) and take effect on the date received.
-• More than seven (7) days before the event: the deposit is retained. Any amount paid beyond the deposit will be refunded within [14] days.
+• More than seven (7) days before the event: the deposit is retained. Any amount paid beyond the deposit will be refunded within 14 days.
 • Within seven (7) days of the event: all payments made are non-refundable, except where required by applicable law.
 
 4. Changes & Rescheduling
-Requests to change or reschedule an event must be made in writing and are subject to availability and approval by True North Party Rentals. Where a new date is approved and booked within [six (6) months] of the original date, the deposit will be applied to the rescheduled event. Additional charges may apply for changes to the order, date, location or setup requirements.
+Requests to change or reschedule an event must be made in writing and are subject to availability and approval by True North Party Rentals. Where a new date is approved and booked within six (6) months of the original date, the deposit will be applied to the rescheduled event. Additional charges may apply for changes to the order, date, location or setup requirements.
 
 5. Cancellation by True North Party Rentals
 If True North Party Rentals is unable to provide the booked services for reasons within its control, the client will receive a full refund of all amounts paid. If services are prevented by events beyond its reasonable control (including severe weather, emergencies or government orders), True North Party Rentals will offer a rescheduled date or a credit toward a future booking.
 
 6. Equipment Care, Damage & Loss
-The client is responsible for rented equipment from delivery until pickup. Items that are lost, stolen or damaged beyond normal wear will be charged at repair or replacement cost. True North Party Rentals may require a refundable security deposit, which will be returned within [7] days of pickup, less any such charges.
+The client is responsible for rented equipment from delivery until pickup. Items that are lost, stolen or damaged beyond normal wear will be charged at repair or replacement cost. True North Party Rentals may require a refundable security deposit, which will be returned within 7 days of pickup, less any such charges.
 
 7. Agreement
 By signing below and submitting the deposit, the client confirms that they have read, understood and agree to these payment terms and cancellation policy. These terms are governed by the laws of the Province of Ontario, and nothing in them limits any rights the client has under Ontario consumer protection law.`
