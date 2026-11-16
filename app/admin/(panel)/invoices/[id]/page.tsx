@@ -9,14 +9,17 @@ export const dynamic = 'force-dynamic'
 
 export default async function EditInvoicePage({ params }: { params: { id: string } }) {
   const supabase = createClient()
-  const [{ data: invoice }, { data: rows }, builder] = await Promise.all([
+  // The editor's data (catalog, customers) is fetched at the same time, but a signed invoice never waits for it.
+  const builderPromise = loadBuilderData()
+  builderPromise.catch(() => undefined)
+  const [{ data: invoice }, { data: rows }] = await Promise.all([
     supabase.from('invoices').select('*').eq('id', params.id).maybeSingle(),
     supabase.from('invoice_lines').select('*').eq('invoice_id', params.id).order('position'),
-    loadBuilderData(),
   ])
   if (!invoice) notFound()
   // A signed invoice is a record of what the customer agreed to, so it can't be edited.
   if (invoice.signed_at) redirect(`/admin/invoices/${invoice.id}/review`)
+  const builder = await builderPromise
 
   const lines: Line[] = (rows ?? []).map((r) => ({
     key: r.id,

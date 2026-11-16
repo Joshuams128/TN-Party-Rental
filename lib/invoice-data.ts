@@ -126,20 +126,17 @@ export async function loadSettings(supabase: SupabaseClient): Promise<BusinessSe
 }
 
 export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Promise<InvoiceDoc | null> {
-  const [{ data: inv }, { data: rows }, settings] = await Promise.all([
+  // Everything this needs is known up front, so all of it is fetched at once (one round trip, not two).
+  const [{ data: inv }, { data: rows }, settings, { data: payRows }] = await Promise.all([
     supabase.from('invoices').select('*').eq('id', id).maybeSingle(),
     supabase.from('invoice_lines').select('*').eq('invoice_id', id).order('position'),
     loadSettings(supabase),
+    // Best effort: the payments table comes from a newer database update.
+    supabase.from('invoice_payments').select('id, label, amount_cents, sent_at, cancelled_at, paid_at, paid_cents').eq('invoice_id', id).order('created_at'),
   ])
   if (!inv) return null
   const lines = ((rows ?? []) as Partial<DocLine>[]).map(withDiscountDefaults)
   const taxRate = Number(inv.tax_rate)
-  // Best effort: the payments table comes from a newer database update.
-  const { data: payRows } = await supabase
-    .from('invoice_payments')
-    .select('id, label, amount_cents, sent_at, cancelled_at, paid_at, paid_cents')
-    .eq('invoice_id', id)
-    .order('created_at')
   const payments: DocPayment[] = ((payRows ?? []) as (DocPayment & { cancelled_at: string | null })[])
     .filter((r) => r.paid_at || !r.cancelled_at)
     .map((r) => ({ id: r.id, label: r.label, amount_cents: r.amount_cents, url: null, sent_at: r.sent_at ?? null, paid_at: r.paid_at ?? null, paid_cents: Number(r.paid_cents) || 0 }))
