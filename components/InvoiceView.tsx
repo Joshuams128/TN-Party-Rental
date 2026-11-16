@@ -2,7 +2,7 @@ import { formatMoney } from '@/lib/money'
 import { discountLabel, discountSignChar, formatDateShort, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
 import { linePeriodTexts } from '@/lib/rental'
 import { keyPoints, parseTerms, TERMS_TITLE } from '@/lib/terms'
-import { balanceDueDate, depositCents, formatLongDate } from '@/lib/payment'
+import { paymentLines } from '@/lib/payment'
 import { itemImageUrl } from '@/lib/items'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -80,16 +80,16 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
         {t.discount > 0 && <div className="flex justify-between"><span className="text-gray-500">Discount</span><span>-{formatMoney(t.discount)}</span></div>}
         {doc.apply_tax && <div className="flex justify-between"><span className="text-gray-500">{b.tax_label} ({doc.tax_rate}%)</span><span>{formatMoney(t.tax)}</span></div>}
         <div className="flex justify-between border-t border-gray-200 pt-2 text-lg font-bold"><span>Total</span><span>{formatMoney(t.total)}</span></div>
-        {doc.collect_payment && (() => {
-          const dep = doc.pay_amount_cents || depositCents(t.total)
-          const due = balanceDueDate(doc)
-          return (
-            <div className="mt-2 space-y-1 rounded-lg bg-[#faf8f0] p-3 text-sm">
-              <p className="flex justify-between gap-3 font-semibold"><span>{doc.paid_at ? 'Deposit paid' : 'Deposit due now'} (50%)</span><span className="shrink-0">{formatMoney(dep)}</span></p>
-              <p className="flex justify-between gap-3 text-gray-600"><span>Balance, due {due ? formatLongDate(due) : '7 days before your event'}</span><span className="shrink-0">{formatMoney(t.total - dep)}</span></p>
-            </div>
-          )
-        })()}
+        {paymentLines(doc).length > 0 && (
+          <div className="mt-2 space-y-1 rounded-lg bg-[#faf8f0] p-3 text-sm">
+            {paymentLines(doc).map((l, i) => (
+              <p key={i} className={`flex justify-between gap-3 ${l.strong ? 'font-semibold' : 'text-gray-600'}`}>
+                <span>{l.label}</span>
+                {(l.cents > 0 || l.strong) && <span className="shrink-0">{formatMoney(l.cents)}</span>}
+              </p>
+            ))}
+          </div>
+        )}
         {doc.notes && (
           <div className="pt-4">
             <p className="mb-1 text-[11px] font-bold tracking-widest text-[#B8941F]">NOTES</p>

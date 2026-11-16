@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { breakdownFromRows } from '@/lib/invoice'
-import { DEFAULT_SETTINGS, withDiscountDefaults, type DocLine, type InvoiceDoc } from '@/lib/invoice-data'
+import { DEFAULT_SETTINGS, withDiscountDefaults, type DocLine, type DocPayment, type InvoiceDoc } from '@/lib/invoice-data'
 import { toInputValue } from '@/lib/rental'
 
 // 43 URL-safe characters = 256 bits. The link is the credential, so it must be unguessable.
@@ -69,6 +69,15 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     pay_url: r.pay_url ?? null,
     paid_at: r.paid_at ?? null,
     paid_cents: Number(r.paid_cents) || 0,
+    payments: ((r.payments ?? []) as Partial<DocPayment>[]).map((x) => ({
+      id: String(x.id),
+      label: x.label ?? 'Payment',
+      amount_cents: Number(x.amount_cents) || 0,
+      url: x.url ?? null,
+      sent_at: null,
+      paid_at: x.paid_at ?? null,
+      paid_cents: Number(x.paid_cents) || 0,
+    })),
     apply_tax: r.apply_tax,
     owner_signature: !!r.include_owner_signature,
     sign_token: token,

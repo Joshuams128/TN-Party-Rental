@@ -6,7 +6,7 @@ import { documentHash, loadInvoiceDocByToken } from '@/lib/signing'
 import InvoiceView from '@/components/InvoiceView'
 import SignForm from '@/components/SignForm'
 import { syncPaymentForToken } from '@/lib/payment-sync'
-import { depositSummary } from '@/lib/payment'
+import { depositSummary, remainingCents } from '@/lib/payment'
 import { formatMoney } from '@/lib/money'
 
 export const dynamic = 'force-dynamic'
@@ -18,13 +18,18 @@ export const metadata: Metadata = {
   referrer: 'no-referrer',
 }
 
-export default async function SignPage({ params, searchParams }: { params: { token: string }; searchParams: { paid?: string } }) {
+// What is left after paying this one (the current page's amount).
+const remainingAfter = (d: NonNullable<Awaited<ReturnType<typeof loadInvoiceDocByToken>>>, amount: number) => remainingCents(d) - amount
+
+export default async function SignPage({ params, searchParams }: { params: { token: string }; searchParams: { paid?: string; pay?: string } }) {
   const supabase = createClient()
   let doc = await loadInvoiceDocByToken(supabase, params.token)
   // Deposit invoices: ask Square whether it has been paid (covers coming back from Square, and a slow webhook).
-  if (doc && doc.collect_payment && !doc.paid_at && !doc.signature) {
-    const state = await syncPaymentForToken(params.token).catch(() => 'unknown' as const)
-    if (state === 'paid') doc = (await loadInvoiceDocByToken(supabase, params.token)) ?? doc
+  // Also covers payment links the owner emailed later (50%, 100% or the balance).
+  const hasOpenRequests = (d: typeof doc) => !!d && d.payments.some((x) => x.url && !x.paid_at)
+  if (doc && ((doc.collect_payment && !doc.paid_at && !doc.signature) || hasOpenRequests(doc))) {
+    await syncPaymentForToken(params.token).catch(() => 'unknown' as const)
+    doc = (await loadInvoiceDocByToken(supabase, params.token)) ?? doc
   }
   const needsPayment = !!doc && doc.collect_payment && !doc.paid_at && !doc.signature
   const deposit = doc && doc.collect_payment ? depositSummary(doc) : null
@@ -44,7 +49,7 @@ export default async function SignPage({ params, searchParams }: { params: { tok
         ) : (
           <>
             <InvoiceView doc={doc} />
-            {doc.signature ? (
+            {doc.signature && (
               <div className="rounded-2xl border border-green-200 bg-green-50 p-6 text-center">
                 <h2 className="text-lg font-bold text-green-900">This invoice has been signed</h2>
                 <p className="mt-1 text-sm text-green-800">
@@ -57,7 +62,28 @@ export default async function SignPage({ params, searchParams }: { params: { tok
                   <Download size={18} /> Download signed invoice
                 </a>
               </div>
-            ) : (
+            )}
+            {doc.payments.filter((x) => x.url && !x.paid_at).map((x) => (
+              <div key={x.id} className="rounded-2xl border-2 border-[#D4AF37] bg-white p-5 shadow-sm sm:p-6">
+                <h2 className="text-lg font-bold">Pay {formatMoney(x.amount_cents)}</h2>
+                <p className="mt-1 text-sm text-gray-600">
+                  {x.label}. {remainingAfter(doc, x.amount_cents) > 0
+                    ? `After this payment, ${formatMoney(remainingAfter(doc, x.amount_cents))} remains.`
+                    : 'This pays the invoice in full.'}
+                </p>
+                {searchParams.pay && (
+                  <p role="status" className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+                    We haven’t received the confirmation from Square yet. Please wait a few seconds, then{' '}
+                    <a href={`/sign/${params.token}?pay=1`} className="font-semibold underline">check again</a>.
+                  </p>
+                )}
+                <a href={x.url!} className="mt-4 flex h-14 w-full items-center justify-center rounded-xl bg-black text-base font-semibold text-white hover:bg-gray-800">
+                  Pay {formatMoney(x.amount_cents)}
+                </a>
+                <p className="mt-2 text-center text-xs text-gray-500">Secure card payment by Square.</p>
+              </div>
+            ))}
+            {!doc.signature && (
               <>
                 {doc.collect_payment && deposit && (
                   needsPayment ? (

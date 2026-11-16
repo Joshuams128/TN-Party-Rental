@@ -44,6 +44,16 @@ export type DocLine = {
   rental_end2: string | null
 }
 
+export type DocPayment = {
+  id: string
+  label: string
+  amount_cents: number
+  url: string | null // where to pay: only on the customer's signing page, only while unpaid
+  sent_at: string | null
+  paid_at: string | null
+  paid_cents: number
+}
+
 export type InvoiceDoc = {
   id: string
   number: number
@@ -65,6 +75,8 @@ export type InvoiceDoc = {
   pay_url: string | null // where the customer pays (only while unpaid, and only on the signing page)
   paid_at: string | null
   paid_cents: number
+  // Payment requests the owner emailed (50%, 100% or the balance), as many as needed.
+  payments: DocPayment[]
   apply_tax: boolean
   owner_signature: boolean
   sign_token: string | null
@@ -122,6 +134,15 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
   if (!inv) return null
   const lines = ((rows ?? []) as Partial<DocLine>[]).map(withDiscountDefaults)
   const taxRate = Number(inv.tax_rate)
+  // Best effort: the payments table comes from a newer database update.
+  const { data: payRows } = await supabase
+    .from('invoice_payments')
+    .select('id, label, amount_cents, sent_at, cancelled_at, paid_at, paid_cents')
+    .eq('invoice_id', id)
+    .order('created_at')
+  const payments: DocPayment[] = ((payRows ?? []) as (DocPayment & { cancelled_at: string | null })[])
+    .filter((r) => r.paid_at || !r.cancelled_at)
+    .map((r) => ({ id: r.id, label: r.label, amount_cents: r.amount_cents, url: null, sent_at: r.sent_at ?? null, paid_at: r.paid_at ?? null, paid_cents: Number(r.paid_cents) || 0 }))
   return {
     id: inv.id,
     number: inv.number,
@@ -142,6 +163,7 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     pay_url: null,
     paid_at: inv.paid_at ?? null,
     paid_cents: Number(inv.paid_cents) || 0,
+    payments,
     apply_tax: inv.apply_tax,
     owner_signature: !!inv.include_owner_signature,
     sign_token: inv.sign_token ?? null,
@@ -165,4 +187,12 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
 // One "Item: period" line per rented item, for the plain-text emails.
 export function rentalSummary(doc: Pick<InvoiceDoc, 'lines' | 'rental_start' | 'rental_end'>): string[] {
   return doc.lines.flatMap((l) => linePeriodTexts(l, doc).map((p) => `${l.name}: ${p}`))
+}
+
+// How much has been paid online on each invoice through payment requests (not the deposit). Best effort, like above.
+export async function loadRequestedPaidTotals(supabase: SupabaseClient): Promise<Map<string, number>> {
+  const { data } = await supabase.from('invoice_payments').select('invoice_id, paid_cents').not('paid_at', 'is', null)
+  const out = new Map<string, number>()
+  for (const r of (data ?? []) as { invoice_id: string; paid_cents: number }[]) out.set(r.invoice_id, (out.get(r.invoice_id) ?? 0) + (Number(r.paid_cents) || 0))
+  return out
 }

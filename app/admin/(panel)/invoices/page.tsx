@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { totalFromRows, type LineRow } from '@/lib/invoice'
+import { invoiceStatusLabel, totalFromRows, type LineRow } from '@/lib/invoice'
+import { loadRequestedPaidTotals } from '@/lib/invoice-data'
 import InvoiceListItem from '@/components/admin/InvoiceListItem'
 
 export const dynamic = 'force-dynamic'
@@ -11,6 +12,9 @@ type Row = {
   number: number
   status: 'draft' | 'sent'
   signed_at: string | null
+  collect_payment: boolean
+  paid_at: string | null
+  paid_cents: number
   customer_name: string
   issue_date: string
   discount_cents: number
@@ -20,11 +24,13 @@ type Row = {
 }
 
 export default async function InvoicesPage() {
-  const { data, error } = await createClient()
+  const supabase = createClient()
+  const { data, error } = await supabase
     .from('invoices')
-    .select('id, number, status, signed_at, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)')
+    .select('id, number, status, signed_at, collect_payment, paid_at, paid_cents, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)')
     .order('number', { ascending: false })
   const invoices = (data ?? []) as Row[]
+  const requestedPaid = await loadRequestedPaidTotals(supabase)
 
   return (
     <div className="space-y-5">
@@ -47,6 +53,7 @@ export default async function InvoicesPage() {
                 id={inv.id}
                 number={inv.number}
                 status={inv.signed_at ? 'signed' : inv.status}
+                label={invoiceStatusLabel({ ...inv, paidCents: (inv.collect_payment && inv.paid_at ? Number(inv.paid_cents) || 0 : 0) + (requestedPaid.get(inv.id) ?? 0), totalCents: totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate)) })}
                 customerName={inv.customer_name}
                 issueDate={inv.issue_date}
                 totalCents={totalFromRows(inv.invoice_lines, inv.discount_cents, inv.apply_tax, Number(inv.tax_rate))}

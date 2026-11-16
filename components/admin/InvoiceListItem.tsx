@@ -7,6 +7,7 @@ type Props = {
   id: string
   number: number
   status: 'draft' | 'sent' | 'signed'
+  label?: string // overrides the status wording, e.g. "Deposit paid & signed"
   customerName: string
   issueDate: string
   totalCents: number
@@ -16,7 +17,7 @@ type Props = {
 // Contents of one invoice row: customer + total on top, number/date + status below (holds up at 320px).
 // The caller renders the <li key={id}>: React Flight drops keys on server components, so a key here
 // would let a deleted row's client state (e.g. a busy delete button) leak into the row that moves up.
-export default function InvoiceListItem({ id, number, status, customerName, issueDate, totalCents, deletable }: Props) {
+export default function InvoiceListItem({ id, number, status, label, customerName, issueDate, totalCents, deletable }: Props) {
   return (
     <>
       <Link href={`/admin/invoices/${id}`} className="grid min-w-0 flex-1 grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 px-4 py-3">
@@ -26,11 +27,11 @@ export default function InvoiceListItem({ id, number, status, customerName, issu
           #{number} · {formatDateShort(issueDate)}
         </span>
         <span
-          className={`justify-self-end rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
+          className={`justify-self-end rounded-full px-2 py-0.5 text-xs font-medium ${
             status === 'signed' ? 'bg-green-900 text-green-200' : status === 'sent' ? 'bg-blue-950 text-blue-300' : 'bg-gray-800 text-gray-300'
           }`}
         >
-          {status === 'sent' ? 'Awaiting signature' : status}
+          {label ?? (status === 'sent' ? 'Awaiting signature' : status === 'signed' ? 'Signed' : 'Draft')}
         </span>
       </Link>
       {deletable && (
