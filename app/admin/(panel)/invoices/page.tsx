@@ -25,12 +25,13 @@ type Row = {
 
 export default async function InvoicesPage() {
   const supabase = createClient()
+  const requestedPaidPromise = loadRequestedPaidTotals(supabase)
   const { data, error } = await supabase
     .from('invoices')
     .select('id, number, status, signed_at, collect_payment, paid_at, paid_cents, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)')
     .order('number', { ascending: false })
   const invoices = (data ?? []) as Row[]
-  const requestedPaid = await loadRequestedPaidTotals(supabase)
+  const requestedPaid = await requestedPaidPromise
 
   return (
     <div className="space-y-5">

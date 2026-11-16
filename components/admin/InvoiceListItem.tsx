@@ -20,7 +20,7 @@ type Props = {
 export default function InvoiceListItem({ id, number, status, label, customerName, issueDate, totalCents, deletable }: Props) {
   return (
     <>
-      <Link href={`/admin/invoices/${id}`} className="grid min-w-0 flex-1 grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 px-4 py-3">
+      <Link href={status === 'signed' ? `/admin/invoices/${id}/review` : `/admin/invoices/${id}`} className="grid min-w-0 flex-1 grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 px-4 py-3">
         <span className="truncate font-medium">{customerName || 'No customer yet'}</span>
         <span className="text-right font-semibold">{formatMoney(totalCents)}</span>
         <span className="truncate text-xs text-gray-400">

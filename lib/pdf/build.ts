@@ -12,7 +12,7 @@ const dataUrlToBuffer = (url: string): Buffer | null => {
 
 export async function buildInvoicePdf(doc: InvoiceDoc, requestOrigin: string, opts: { signUrl?: string } = {}): Promise<Buffer> {
   const origins = Array.from(
-    new Set([process.env.NEXT_PUBLIC_URL, 'https://www.truenorthpartyrentals.com', requestOrigin].filter(Boolean) as string[])
+    new Set([requestOrigin, process.env.NEXT_PUBLIC_URL, 'https://www.truenorthpartyrentals.com'].filter(Boolean) as string[])
   ).map((o) => o.replace(/\/$/, ''))
 
   const cache = new Map<string, Promise<Buffer | null>>()
