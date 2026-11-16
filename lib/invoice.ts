@@ -50,6 +50,7 @@ export type InvoiceFields = {
   discount: string // dollars as typed
   apply_tax: boolean
   owner_signature: boolean
+  collect_payment: boolean // customer pays a 50% deposit online (Square) before signing
 }
 
 export type InvoiceStatus = 'draft' | 'sent'

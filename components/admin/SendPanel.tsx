@@ -16,9 +16,10 @@ type Props = {
   from: string
   replyTo: string
   problems: string[] // reasons sending is blocked
+  deposit?: { amount: string; paid: boolean; paidOn?: string } // set when this invoice collects a deposit online
 }
 
-export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, replyTo, problems }: Props) {
+export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, replyTo, problems, deposit }: Props) {
   const router = useRouter()
   const [confirming, setConfirming] = useState(false)
   const [sending, setSending] = useState(false)
@@ -54,9 +55,18 @@ export default function SendPanel({ invoiceId, number, status, signedBy, signedO
         </div>
       ) : alreadySent ? (
         <p className="flex items-center gap-2 text-green-400">
-          <CheckCircle2 size={18} /> {sent ? 'Sent! Waiting for the customer to sign.' : 'Sent. Waiting for the customer to sign.'}
+          <CheckCircle2 size={18} />{' '}
+          {deposit && !deposit.paid
+            ? `${sent ? 'Sent!' : 'Sent.'} Waiting for the customer to pay the ${deposit.amount} deposit and sign.`
+            : `${sent ? 'Sent!' : 'Sent.'} Waiting for the customer to sign.`}
         </p>
       ) : null}
+
+      {deposit && (alreadySent || signed) && deposit.paid && (
+        <p className="rounded-lg bg-green-950 p-3 text-sm text-green-200">
+          Deposit of {deposit.amount} paid through Square{deposit.paidOn ? ` on ${deposit.paidOn}` : ''}.
+        </p>
+      )}
 
       {!signed && problems.length > 0 && (
         <ul className="space-y-1 rounded-lg bg-red-950 p-3 text-sm text-red-300">

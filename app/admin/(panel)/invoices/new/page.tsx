@@ -29,6 +29,7 @@ export default async function NewInvoicePage() {
           discount: '',
           apply_tax: taxRate > 0,
           owner_signature: false,
+          collect_payment: false,
         },
         lines: [],
       }}

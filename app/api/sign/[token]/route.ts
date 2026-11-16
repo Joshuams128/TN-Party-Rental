@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { documentHash, loadInvoiceDocByToken, requestOrigin, signUrl, TOKEN_RE } from '@/lib/signing'
 import { buildInvoicePdf } from '@/lib/pdf/build'
 import { sendSignedCopies } from '@/lib/signed-email'
+import { syncPaymentForToken } from '@/lib/payment-sync'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -41,9 +42,16 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
   }
 
   const supabase = createClient()
-  const doc = await loadInvoiceDocByToken(supabase, params.token)
+  let doc = await loadInvoiceDocByToken(supabase, params.token)
   if (!doc) return fail('This signing link is not available.', 404)
   if (doc.signature) return fail('This invoice has already been signed.', 409, 'already_signed')
+
+  // An invoice that collects a deposit can only be signed once Square confirms it was paid (the database enforces this too).
+  if (doc.collect_payment && !doc.paid_at) {
+    await syncPaymentForToken(params.token).catch((e) => console.error('Payment check failed:', e))
+    doc = (await loadInvoiceDocByToken(supabase, params.token)) ?? doc
+    if (!doc.paid_at) return fail('Please pay the deposit first. You can sign right after.', 402, 'payment_required')
+  }
 
   // The customer must sign exactly what they were shown. If the owner edited it in the meantime, make them reload.
   const hash = documentHash(doc)
@@ -64,6 +72,7 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
     return fail('We could not save your signature. Please try again.', 500)
   }
   if (result === 'already_signed') return fail('This invoice has already been signed.', 409, 'already_signed')
+  if (result === 'payment_required') return fail('Please pay the deposit first. You can sign right after.', 402, 'payment_required')
   if (result !== 'ok') return fail('This signing link is not available.', 404)
 
   // Signing is done. Emailing the signed copies is best-effort and must never turn a success into an error.

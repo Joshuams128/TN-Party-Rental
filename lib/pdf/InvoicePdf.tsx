@@ -5,6 +5,7 @@ import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscoun
 import { linePeriodTexts } from '@/lib/rental'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 import { keyPoints, parseTerms, TERMS_TITLE } from '@/lib/terms'
+import { balanceDueDate, depositCents, formatLongDate } from '@/lib/payment'
 
 // Never split words with a hyphen: it would break email addresses across lines.
 Font.registerHyphenationCallback((word) => [word])
@@ -170,6 +171,16 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
             {t.discount > 0 && <View style={s.totalRow}><Text style={s.muted}>Discount</Text><Text>-{formatMoney(t.discount)}</Text></View>}
             {doc.apply_tax && <View style={s.totalRow}><Text style={s.muted}>{b.tax_label} ({doc.tax_rate}%)</Text><Text>{formatMoney(t.tax)}</Text></View>}
             <View style={s.grand}><Text>Total</Text><Text>{formatMoney(t.total)}</Text></View>
+            {doc.collect_payment && (() => {
+              const dep = doc.pay_amount_cents || depositCents(t.total)
+              const due = balanceDueDate(doc)
+              return (
+                <View style={{ marginTop: 8 }}>
+                  <View style={s.totalRow}><Text style={s.strong}>{doc.paid_at ? 'Deposit paid' : 'Deposit due now'} (50%)</Text><Text style={s.strong}>{formatMoney(dep)}</Text></View>
+                  <View style={s.totalRow}><Text style={s.muted}>Balance, due {due ? formatLongDate(due) : '7 days before the event'}</Text><Text>{formatMoney(t.total - dep)}</Text></View>
+                </View>
+              )
+            })()}
           </View>
 
           {!!doc.notes && (
