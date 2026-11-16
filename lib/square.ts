@@ -37,7 +37,7 @@ async function call<T>(method: 'GET' | 'POST', path: string, body?: unknown): Pr
   return json
 }
 
-export type PaymentLink = { url: string; orderId: string }
+export type PaymentLink = { url: string; orderId: string; linkId: string }
 
 // A one-time Square checkout page for exactly this amount. The order's reference ties it back to the invoice.
 export async function createPaymentLink(opts: {
@@ -45,15 +45,16 @@ export async function createPaymentLink(opts: {
   invoiceNumber: number
   buyerEmail: string
   redirectUrl: string
+  title?: string // what the customer sees on Square's page
 }): Promise<PaymentLink> {
-  const data = await call<{ payment_link?: { url?: string; order_id?: string } }>('POST', '/v2/online-checkout/payment-links', {
+  const data = await call<{ payment_link?: { id?: string; url?: string; order_id?: string } }>('POST', '/v2/online-checkout/payment-links', {
     idempotency_key: randomUUID(),
     order: {
       location_id: process.env.SQUARE_LOCATION_ID,
       reference_id: `invoice-${opts.invoiceNumber}`,
       line_items: [
         {
-          name: `Deposit (50%) - Invoice #${opts.invoiceNumber}`,
+          name: opts.title ?? `Deposit (50%) - Invoice #${opts.invoiceNumber}`,
           quantity: '1',
           base_price_money: { amount: opts.amountCents, currency: 'CAD' },
         },
@@ -64,7 +65,16 @@ export async function createPaymentLink(opts: {
   })
   const link = data.payment_link
   if (!link?.url || !link.order_id) throw new Error('Square did not return a payment link.')
-  return { url: link.url, orderId: link.order_id }
+  return { url: link.url, orderId: link.order_id, linkId: link.id ?? '' }
+}
+
+// Turn an older, unpaid link off when the owner sends a different one. Best effort: Square may already have removed it.
+export async function cancelPaymentLink(linkId: string): Promise<void> {
+  if (!linkId) return
+  await fetch(`${squareBaseUrl()}/v2/online-checkout/payment-links/${encodeURIComponent(linkId)}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`, 'Square-Version': SQUARE_VERSION },
+  }).catch(() => undefined)
 }
 
 type Tender = { id?: string; amount_money?: { amount?: number; currency?: string }; card_details?: { status?: string } }

@@ -173,3 +173,27 @@ export function todayISO(): string {
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
+
+// What the owner sees as an invoice's status, including how much has been paid online.
+export function invoiceStatusLabel(i: {
+  status: 'draft' | 'sent'
+  signed_at?: string | null
+  collect_payment?: boolean
+  paid_at?: string | null
+  paidCents?: number // everything paid online so far
+  totalCents?: number
+}): string {
+  const paid = i.paidCents ?? 0
+  const full = paid > 0 && (i.totalCents ?? 0) > 0 && paid >= (i.totalCents ?? 0)
+  const deposit = !!i.collect_payment && !!i.paid_at
+  if (i.signed_at) {
+    if (paid <= 0) return 'Signed'
+    return full ? 'Paid in full & signed' : deposit ? 'Deposit paid & signed' : 'Partly paid & signed'
+  }
+  if (i.status === 'sent') {
+    if (i.collect_payment && !i.paid_at) return 'Awaiting deposit & signature'
+    if (paid <= 0) return 'Awaiting signature'
+    return full ? 'Paid in full, awaiting signature' : deposit ? 'Deposit paid, awaiting signature' : 'Partly paid, awaiting signature'
+  }
+  return 'Draft'
+}

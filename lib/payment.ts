@@ -31,3 +31,28 @@ export function depositSummary(doc: Pick<InvoiceDoc, 'rental_start' | 'lines' | 
     later: `${formatMoney(rest)} balance, due ${due ? formatLongDate(due) + ' (7 days before your event)' : '7 days before your event'}`,
   }
 }
+
+// Everything paid online so far: the deposit (if the invoice collected one) plus any requested payments.
+export function paidSoFarCents(doc: Pick<InvoiceDoc, 'collect_payment' | 'paid_at' | 'paid_cents' | 'pay_amount_cents' | 'payments'>): number {
+  const dep = doc.collect_payment && doc.paid_at ? doc.paid_cents || doc.pay_amount_cents : 0
+  return dep + doc.payments.reduce((s, p) => s + (p.paid_at ? p.paid_cents || p.amount_cents : 0), 0)
+}
+
+export const remainingCents = (doc: Pick<InvoiceDoc, 'totals' | 'collect_payment' | 'paid_at' | 'paid_cents' | 'pay_amount_cents' | 'payments'>): number =>
+  Math.max(0, doc.totals.total - paidSoFarCents(doc))
+
+// The payment lines shown under an invoice's total (page, PDF): what was paid, what is due, what is left.
+export function paymentLines(
+  doc: Pick<InvoiceDoc, 'collect_payment' | 'paid_at' | 'paid_cents' | 'pay_amount_cents' | 'payments' | 'totals' | 'rental_start' | 'lines'>
+): { label: string; cents: number; strong?: boolean }[] {
+  const out: { label: string; cents: number; strong?: boolean }[] = []
+  const dep = doc.pay_amount_cents || depositCents(doc.totals.total)
+  if (doc.collect_payment) out.push({ label: `${doc.paid_at ? 'Deposit paid' : 'Deposit due now'} (50%)`, cents: dep, strong: true })
+  for (const p of doc.payments) if (p.paid_at) out.push({ label: `${p.label} paid`, cents: p.paid_cents || p.amount_cents, strong: true })
+  if (out.length === 0) return out
+  const due = balanceDueDate(doc)
+  const left = doc.collect_payment && !doc.paid_at ? doc.totals.total - dep : remainingCents(doc)
+  if (left > 0) out.push({ label: `Balance, due ${due ? formatLongDate(due) : '7 days before your event'}`, cents: left })
+  else out.push({ label: 'Paid in full', cents: 0 })
+  return out
+}
