@@ -34,6 +34,8 @@ export function documentHash(doc: InvoiceDoc): string {
     totals: doc.totals,
     // Only present when the invoice has terms, so hashes of older invoices stay the same.
     ...(doc.terms_text ? { terms: [doc.terms_key_points, doc.terms_text] } : {}),
+    // The deposit the customer is told to pay is part of what they sign.
+    ...(doc.collect_payment ? { deposit: doc.pay_amount_cents } : {}),
   })
   return createHash('sha256').update(canonical).digest('hex')
 }
@@ -62,6 +64,11 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     notes: r.notes,
     terms_key_points: r.terms_key_points ?? '',
     terms_text: r.terms_text ?? '',
+    collect_payment: !!r.collect_payment,
+    pay_amount_cents: Number(r.pay_amount_cents) || 0,
+    pay_url: r.pay_url ?? null,
+    paid_at: r.paid_at ?? null,
+    paid_cents: Number(r.paid_cents) || 0,
     apply_tax: r.apply_tax,
     owner_signature: !!r.include_owner_signature,
     sign_token: token,

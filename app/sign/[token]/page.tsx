@@ -5,6 +5,9 @@ import { createClient } from '@/lib/supabase/server'
 import { documentHash, loadInvoiceDocByToken } from '@/lib/signing'
 import InvoiceView from '@/components/InvoiceView'
 import SignForm from '@/components/SignForm'
+import { syncPaymentForToken } from '@/lib/payment-sync'
+import { depositSummary } from '@/lib/payment'
+import { formatMoney } from '@/lib/money'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,8 +18,16 @@ export const metadata: Metadata = {
   referrer: 'no-referrer',
 }
 
-export default async function SignPage({ params }: { params: { token: string } }) {
-  const doc = await loadInvoiceDocByToken(createClient(), params.token)
+export default async function SignPage({ params, searchParams }: { params: { token: string }; searchParams: { paid?: string } }) {
+  const supabase = createClient()
+  let doc = await loadInvoiceDocByToken(supabase, params.token)
+  // Deposit invoices: ask Square whether it has been paid (covers coming back from Square, and a slow webhook).
+  if (doc && doc.collect_payment && !doc.paid_at && !doc.signature) {
+    const state = await syncPaymentForToken(params.token).catch(() => 'unknown' as const)
+    if (state === 'paid') doc = (await loadInvoiceDocByToken(supabase, params.token)) ?? doc
+  }
+  const needsPayment = !!doc && doc.collect_payment && !doc.paid_at && !doc.signature
+  const deposit = doc && doc.collect_payment ? depositSummary(doc) : null
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
@@ -47,7 +58,51 @@ export default async function SignPage({ params }: { params: { token: string } }
                 </a>
               </div>
             ) : (
-              <SignForm token={params.token} hash={documentHash(doc)} number={doc.number} hasTerms={!!doc.terms_text} />
+              <>
+                {doc.collect_payment && deposit && (
+                  needsPayment ? (
+                    <div className="rounded-2xl border-2 border-[#D4AF37] bg-white p-5 shadow-sm sm:p-6">
+                      <p className="text-[11px] font-bold tracking-widest text-[#B8941F]">STEP 1 OF 2</p>
+                      <h2 className="mt-1 text-lg font-bold">Pay your deposit</h2>
+                      <p className="mt-1 text-sm text-gray-600">
+                        A {deposit.now} secures your date. The {deposit.later}. You’ll return here to sign right after paying.
+                      </p>
+                      {searchParams.paid && (
+                        <p role="status" className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+                          We haven’t received the confirmation from Square yet. This can take a moment. Please wait a few seconds, then{' '}
+                          <a href={`/sign/${params.token}?paid=1`} className="font-semibold underline">check again</a>.
+                        </p>
+                      )}
+                      {doc.pay_url ? (
+                        <a
+                          href={doc.pay_url}
+                          className="mt-4 flex h-14 w-full items-center justify-center rounded-xl bg-black text-base font-semibold text-white hover:bg-gray-800"
+                        >
+                          Pay {formatMoney(doc.pay_amount_cents)} deposit
+                        </a>
+                      ) : (
+                        <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+                          The payment link isn’t available. Please contact True North Party Rentals.
+                        </p>
+                      )}
+                      <p className="mt-2 text-center text-xs text-gray-500">Secure card payment by Square. The next step unlocks once it goes through.</p>
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-green-200 bg-green-50 p-5 text-green-900">
+                      <p className="font-bold">Deposit received: {formatMoney(doc.paid_cents || doc.pay_amount_cents)}. Thank you!</p>
+                      <p className="mt-1 text-sm">The {deposit.later}. Please sign below to finish.</p>
+                    </div>
+                  )
+                )}
+                {needsPayment ? (
+                  <div className="rounded-2xl border border-gray-200 bg-white/60 p-5 text-center text-sm text-gray-500">
+                    <p className="font-semibold text-gray-700">STEP 2 OF 2: Sign</p>
+                    <p className="mt-1">Signing unlocks as soon as your deposit has been paid.</p>
+                  </div>
+                ) : (
+                  <SignForm token={params.token} hash={documentHash(doc)} number={doc.number} hasTerms={!!doc.terms_text} />
+                )}
+              </>
             )}
           </>
         )}

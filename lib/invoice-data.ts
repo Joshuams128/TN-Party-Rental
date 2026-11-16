@@ -59,6 +59,12 @@ export type InvoiceDoc = {
   // This invoice's own copy of the payment terms (taken from Settings when it is sent), '' = none.
   terms_key_points: string
   terms_text: string
+  // Optional online deposit (Square), paid before the customer signs.
+  collect_payment: boolean
+  pay_amount_cents: number // the deposit amount, fixed when the invoice is sent
+  pay_url: string | null // where the customer pays (only while unpaid, and only on the signing page)
+  paid_at: string | null
+  paid_cents: number
   apply_tax: boolean
   owner_signature: boolean
   sign_token: string | null
@@ -131,6 +137,11 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     // A draft shows the current wording; once sent, the invoice keeps the copy it was sent with.
     terms_key_points: (inv.status === 'draft' ? settings.terms_key_points : inv.terms_key_points) ?? '',
     terms_text: (inv.status === 'draft' ? settings.terms_text : inv.terms_text) ?? '',
+    collect_payment: !!inv.collect_payment,
+    pay_amount_cents: Number(inv.pay_amount_cents) || 0,
+    pay_url: null,
+    paid_at: inv.paid_at ?? null,
+    paid_cents: Number(inv.paid_cents) || 0,
     apply_tax: inv.apply_tax,
     owner_signature: !!inv.include_owner_signature,
     sign_token: inv.sign_token ?? null,

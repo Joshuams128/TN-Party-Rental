@@ -5,6 +5,7 @@ import { loadInvoiceDoc } from '@/lib/invoice-data'
 import { formatMoney } from '@/lib/money'
 import SendPanel from '@/components/admin/SendPanel'
 import { emailRoute } from '@/lib/sender'
+import { depositCents } from '@/lib/payment'
 
 export const dynamic = 'force-dynamic'
 
@@ -59,6 +60,15 @@ export default async function ReviewPage({ params }: { params: { id: string } })
             from={emailRoute(doc.settings).fromAddress}
             replyTo={doc.settings.email}
             problems={problems}
+            deposit={
+              doc.collect_payment
+                ? {
+                    amount: formatMoney(doc.pay_amount_cents || depositCents(doc.totals.total)),
+                    paid: !!doc.paid_at,
+                    paidOn: doc.paid_at ? new Date(doc.paid_at).toLocaleString('en-CA', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Toronto' }) : undefined,
+                  }
+                : undefined
+            }
           />
         </div>
       </div>

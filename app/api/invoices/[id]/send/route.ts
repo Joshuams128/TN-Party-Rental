@@ -7,6 +7,9 @@ import { invoiceEmailHtml, invoiceEmailText, invoiceSubject } from '@/lib/invoic
 import { newSignToken, requestOrigin, signUrl } from '@/lib/signing'
 import { EMAIL_RE, emailRoute, friendlySendError } from '@/lib/sender'
 import { termsPlaceholders } from '@/lib/terms'
+import { depositCents } from '@/lib/payment'
+import { createPaymentLink, squareConfigured } from '@/lib/square'
+import { adminConfigured } from '@/lib/supabase/admin'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -63,6 +66,37 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
   const origin = requestOrigin(request.headers, request.nextUrl.origin)
   const link = signUrl(origin, token)
+
+  // Optional online deposit: one Square checkout for exactly half the total, created now so the amount is fixed.
+  if (doc.collect_payment && !doc.paid_at) {
+    if (!squareConfigured() || !adminConfigured()) {
+      return fail('Online payments aren’t set up yet. Add the Square keys and the Supabase service key in Vercel (see the setup notes), or untick “Collect the deposit online”.', 503)
+    }
+    const amount = depositCents(doc.totals.total)
+    if (amount < 100) return fail('The deposit would be under $1.00. Untick “Collect the deposit online” or check the invoice total.')
+    try {
+      const pay = await createPaymentLink({
+        amountCents: amount,
+        invoiceNumber: doc.number,
+        buyerEmail: to,
+        redirectUrl: `${link}?paid=1`,
+      })
+      const { error: payErr } = await owner.supabase
+        .from('invoices')
+        .update({ pay_amount_cents: amount, pay_url: pay.url, pay_order_id: pay.orderId })
+        .eq('id', doc.id)
+      if (payErr) {
+        console.error('Could not save payment link:', payErr)
+        return fail('Online payments aren’t set up in the database yet. Run the Square deposit database update (0011) in Supabase, then try again.', 500)
+      }
+      doc.pay_amount_cents = amount
+    } catch (e) {
+      console.error('Square payment link failed:', e)
+      return fail(`Couldn’t create the Square payment link (${e instanceof Error ? e.message : 'unknown error'}). Nothing was sent.`, 502)
+    }
+  } else if (doc.collect_payment && doc.paid_at && doc.pay_amount_cents <= 0) {
+    doc.pay_amount_cents = depositCents(doc.totals.total)
+  }
   const pdf = await buildInvoicePdf(doc, origin, { signUrl: link })
 
   const resend = new Resend(apiKey)

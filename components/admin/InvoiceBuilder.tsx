@@ -9,6 +9,7 @@ import { pruneOrphanCustomers } from '@/lib/customers'
 import { deleteInvoiceMessage } from './DeleteInvoiceButton'
 import { blankDiscount, blankRental, computeTotals, encodeDiscountType, lineDiscountCents, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
 import { formatRentalPeriod } from '@/lib/rental'
+import { depositCents } from '@/lib/payment'
 import RentalPeriodInput from './RentalPeriodInput'
 import type { Item } from '@/lib/items'
 import ItemImage from './ItemImage'
@@ -64,6 +65,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const deleted = useRef(false) // once deleted, autosave must not recreate or touch the invoice
   // The owner-signature column comes from a later migration, so only write it once the owner has used it.
   const ownerSigTouched = useRef(initial.fields.owner_signature)
+  const collectTouched = useRef(initial.fields.collect_payment)
   // Same idea for the rental period and line discounts: columns from newer migrations are only written once used.
   const knownUpdatedAt = useRef<string | null>(initial.updatedAt)
   const conflictRef = useRef(false)
@@ -106,6 +108,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       discount_cents: parseMoneyToCents(f.discount) ?? 0,
       apply_tax: f.apply_tax,
       ...(ownerSigTouched.current ? { include_owner_signature: f.owner_signature } : {}),
+      // Only written once used, so databases without the deposit update keep saving normal invoices.
+      ...(collectTouched.current ? { collect_payment: f.collect_payment } : {}),
       ...(rentalTouched.current ? { rental_start: f.rental_start || null, rental_end: f.rental_end || null } : {}),
       updated_at: new Date().toISOString(),
     }
@@ -694,6 +698,26 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               className="h-5 w-5 accent-[#D4AF37]"
             />
             <span>Include my signature <span className="text-gray-400">(save it once under Settings. The customer always signs online.)</span></span>
+          </label>
+
+          <label className="mt-1 flex min-h-[44px] items-start gap-3 py-2 text-sm">
+            <input
+              type="checkbox"
+              checked={fields.collect_payment}
+              onChange={(e) => {
+                collectTouched.current = true
+                setField('collect_payment', e.target.checked)
+              }}
+              className="mt-0.5 h-5 w-5 shrink-0 accent-[#D4AF37]"
+            />
+            <span>
+              Collect the 50% deposit online <span className="text-gray-400">(Square)</span>
+              <span className="block text-xs text-gray-400">
+                {fields.collect_payment
+                  ? `The customer pays ${formatMoney(depositCents(totals.total))} first, then signs. The other ${formatMoney(totals.total - depositCents(totals.total))} is due 7 days before the event.`
+                  : 'Off: the customer just signs, as before. Tick it to have them pay the deposit before signing.'}
+              </span>
+            </span>
           </label>
 
           {!showDetails ? (
