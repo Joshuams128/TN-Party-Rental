@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Minus, Plus, PlusCircle, Trash2, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, Minus, Plus, PlusCircle, Trash2, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { formatMoney, parseMoneyToCents } from '@/lib/money'
 import { pruneOrphanCustomers } from '@/lib/customers'
@@ -13,6 +13,7 @@ import { depositCents } from '@/lib/payment'
 import RentalPeriodInput from './RentalPeriodInput'
 import type { Item } from '@/lib/items'
 import ItemImage from './ItemImage'
+import CustomLineImage from './CustomLineImage'
 import ItemPicker from './ItemPicker'
 
 // Thrown when the invoice was saved by someone/something else since this page loaded.
@@ -289,6 +290,16 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const updateLine = (key: string, patch: Partial<Line>) =>
     setLines((ls) => ls.map((l) => (l.key === key ? { ...l, ...patch } : l)))
   const removeLine = (key: string) => setLines((ls) => ls.filter((l) => l.key !== key))
+  // Swap a line with its neighbour: the order here is the order customers see on the invoice, PDF and emails.
+  const moveLine = (key: string, dir: -1 | 1) =>
+    setLines((ls) => {
+      const i = ls.findIndex((l) => l.key === key)
+      const j = i + dir
+      if (i < 0 || j < 0 || j >= ls.length) return ls
+      const next = [...ls]
+      ;[next[i], next[j]] = [next[j], next[i]]
+      return next
+    })
 
   const quantities = useMemo(() => {
     const q: Record<string, number> = {}
@@ -427,7 +438,11 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                 // Phone: photo + name + remove on one row, quantity / price / total on the next. Desktop: a single row.
                 <li key={l.key} className="py-4 sm:py-3">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-3 sm:flex-nowrap sm:gap-y-0">
-                  <ItemImage path={l.image_path} className="h-14 w-14" />
+                  {l.item_id ? (
+                    <ItemImage path={l.image_path} className="h-14 w-14" />
+                  ) : (
+                    <CustomLineImage path={l.image_path} onChange={(image_path) => updateLine(l.key, { image_path })} />
+                  )}
                   <div className="min-w-0 flex-1 basis-0">
                     {l.item_id ? (
                       <p className="font-medium leading-snug">{l.name}</p>
@@ -640,8 +655,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                     </div>
                   ) : null}
 
-                  {(!rentalNow || !discountNow) && (
-                    <div className="mt-1 flex flex-wrap gap-x-5 sm:ml-[68px]">
+                  {(!rentalNow || !discountNow || lines.length > 1) && (
+                    <div className="mt-1 flex flex-wrap items-center gap-x-5 sm:ml-[68px]">
                       {!rentalNow && (
                         <button
                           type="button"
@@ -659,6 +674,28 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
                         >
                           + Discount this item
                         </button>
+                      )}
+                      {lines.length > 1 && (
+                        <span className="ml-auto flex items-center">
+                          <button
+                            type="button"
+                            onClick={() => moveLine(l.key, -1)}
+                            disabled={lines[0].key === l.key}
+                            aria-label={`Move ${l.name || 'this item'} up`}
+                            className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-800 hover:text-gold disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400"
+                          >
+                            <ChevronUp size={20} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => moveLine(l.key, 1)}
+                            disabled={lines[lines.length - 1].key === l.key}
+                            aria-label={`Move ${l.name || 'this item'} down`}
+                            className="flex h-11 w-11 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-800 hover:text-gold disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400"
+                          >
+                            <ChevronDown size={20} />
+                          </button>
+                        </span>
                       )}
                     </div>
                   )}
