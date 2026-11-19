@@ -67,6 +67,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   // The owner-signature column comes from a later migration, so only write it once the owner has used it.
   const ownerSigTouched = useRef(initial.fields.owner_signature)
   const collectTouched = useRef(initial.fields.collect_payment)
+  const phoneTouched = useRef(!!initial.fields.customer_phone) // the phone column comes from a newer database update
   // Same idea for the rental period and line discounts: columns from newer migrations are only written once used.
   const knownUpdatedAt = useRef<string | null>(initial.updatedAt)
   const conflictRef = useRef(false)
@@ -102,6 +103,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       customer_id: customerId,
       customer_name: name,
       customer_email: email,
+      ...(phoneTouched.current ? { customer_phone: f.customer_phone.trim() } : {}),
       customer_address: f.customer_address.trim(),
       issue_date: f.issue_date,
       due_date: f.due_date || null,
@@ -314,7 +316,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   }, [customers, fields.customer_name])
 
   function pickCustomer(c: CustomerOption) {
-    setFields((f) => ({ ...f, customer_name: c.name, customer_email: c.email, customer_address: c.address }))
+    // The event location is different for every event, so only the contact details are filled in.
+    setFields((f) => ({ ...f, customer_name: c.name, customer_email: c.email }))
     setShowSuggestions(false)
   }
 
@@ -403,8 +406,23 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               <input type="email" value={fields.customer_email} onChange={(e) => setField('customer_email', e.target.value)} className={input} placeholder="name@example.com" />
             </label>
             <label className="block text-sm font-medium sm:col-span-2">
-              Mailing address
-              <textarea value={fields.customer_address} onChange={(e) => setField('customer_address', e.target.value)} rows={2} className={input} placeholder="Street, city, province, postal code" />
+              Phone <span className="font-normal text-gray-400">(optional)</span>
+              <input
+                type="tel"
+                inputMode="tel"
+                autoComplete="off"
+                value={fields.customer_phone}
+                onChange={(e) => {
+                  phoneTouched.current = true
+                  setField('customer_phone', e.target.value)
+                }}
+                className={input}
+                placeholder="(416) 555-0100"
+              />
+            </label>
+            <label className="block text-sm font-medium sm:col-span-2">
+              Event location
+              <textarea value={fields.customer_address} onChange={(e) => setField('customer_address', e.target.value)} rows={2} className={input} placeholder="Venue name and address" />
             </label>
             <div className="sm:col-span-2">
               <p className="mb-1 text-sm font-medium">Rental period for all items <span className="font-normal text-gray-400">(optional)</span></p>

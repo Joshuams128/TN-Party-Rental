@@ -41,7 +41,8 @@ export type Line = {
 export type InvoiceFields = {
   customer_name: string
   customer_email: string
-  customer_address: string
+  customer_phone: string
+  customer_address: string // the event location
   rental_start: string // 'YYYY-MM-DDTHH:mm' local time, '' if not set
   rental_end: string
   issue_date: string

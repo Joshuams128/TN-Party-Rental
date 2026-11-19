@@ -20,6 +20,7 @@ export default async function NewInvoicePage() {
         fields: {
           customer_name: '',
           customer_email: '',
+          customer_phone: '',
           customer_address: '',
           rental_start: '',
           rental_end: '',

@@ -25,7 +25,8 @@ export const signUrl = (origin: string, token: string) => `${origin.replace(/\/$
 export function documentHash(doc: InvoiceDoc): string {
   const canonical = JSON.stringify({
     number: doc.number,
-    customer: [doc.customer_name, doc.customer_email, doc.customer_address],
+    // The phone number is only part of the fingerprint when there is one, so older invoices keep their hash.
+    customer: [doc.customer_name, doc.customer_email, doc.customer_address, ...(doc.customer_phone ? [doc.customer_phone] : [])],
     dates: [doc.issue_date, doc.due_date],
     rental: [doc.rental_start, doc.rental_end],
     notes: doc.notes,
@@ -56,6 +57,7 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     status: 'sent',
     customer_name: r.customer_name,
     customer_email: r.customer_email,
+    customer_phone: r.customer_phone ?? '',
     customer_address: r.customer_address,
     issue_date: r.issue_date,
     due_date: r.due_date,

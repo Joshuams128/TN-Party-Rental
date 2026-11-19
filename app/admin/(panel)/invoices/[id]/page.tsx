@@ -54,6 +54,7 @@ export default async function EditInvoicePage({ params }: { params: { id: string
         fields: {
           customer_name: invoice.customer_name,
           customer_email: invoice.customer_email,
+          customer_phone: invoice.customer_phone ?? '',
           customer_address: invoice.customer_address,
           rental_start: toInputValue(invoice.rental_start),
           rental_end: toInputValue(invoice.rental_end),
