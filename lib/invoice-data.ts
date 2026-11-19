@@ -60,7 +60,8 @@ export type InvoiceDoc = {
   status: 'draft' | 'sent'
   customer_name: string
   customer_email: string
-  customer_address: string
+  customer_phone: string
+  customer_address: string // the event location
   issue_date: string
   due_date: string | null
   rental_start: string | null // 'YYYY-MM-DDTHH:mm'
@@ -146,6 +147,7 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     status: inv.status,
     customer_name: inv.customer_name,
     customer_email: inv.customer_email,
+    customer_phone: inv.customer_phone ?? '',
     customer_address: inv.customer_address,
     issue_date: inv.issue_date,
     due_date: inv.due_date,

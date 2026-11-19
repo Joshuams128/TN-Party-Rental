@@ -108,7 +108,13 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
               <Text style={s.label}>BILL TO</Text>
               <Text style={[s.line, s.strong]}>{doc.customer_name || ' '}</Text>
               {!!doc.customer_email && <Text style={s.line}>{doc.customer_email}</Text>}
-              {textLines(doc.customer_address).map((l, i) => <Text key={i} style={s.line}>{l}</Text>)}
+              {!!doc.customer_phone && <Text style={s.line}>{doc.customer_phone}</Text>}
+              {!!doc.customer_address.trim() && (
+                <View style={{ marginTop: 6 }}>
+                  <Text style={[s.line, s.muted]}>Event location:</Text>
+                  {textLines(doc.customer_address).map((l, i) => <Text key={i} style={s.line}>{l}</Text>)}
+                </View>
+              )}
               <Text style={[s.line, { marginTop: 8 }]}>
                 <Text style={s.muted}>Invoice date: </Text>{formatDate(doc.issue_date)}
               </Text>

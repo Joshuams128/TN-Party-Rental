@@ -30,7 +30,13 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
         <div>
           <p className="mb-1 text-[11px] font-bold tracking-widest text-[#B8941F]">BILL TO</p>
           <p className="font-semibold">{doc.customer_name}</p>
-          {lines(doc.customer_address).map((l, i) => <p key={i}>{l}</p>)}
+          {doc.customer_phone && <p>{doc.customer_phone}</p>}
+          {doc.customer_address.trim() && (
+            <div className="mt-2">
+              <p className="text-gray-500">Event location:</p>
+              {lines(doc.customer_address).map((l, i) => <p key={i}>{l}</p>)}
+            </div>
+          )}
         </div>
         <div className="sm:text-right">
           <p><span className="text-gray-500">Invoice date: </span>{formatDateShort(doc.issue_date)}</p>
