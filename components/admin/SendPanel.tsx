@@ -16,7 +16,7 @@ type Props = {
   from: string
   replyTo: string
   problems: string[] // reasons sending is blocked
-  deposit?: { amount: string; paid: boolean; paidOn?: string } // set when this invoice collects a deposit online
+  deposit?: { amount: string; paid: boolean; paidOn?: string; full?: boolean } // set when this invoice collects payment online (full = 100%)
   statusLabel?: string // e.g. "Deposit paid & signed"
   // Ask the customer for a payment (50%, 100% or the balance), shown once the invoice has been sent.
   request?: {
@@ -97,14 +97,14 @@ export default function SendPanel({ invoiceId, number, status, signedBy, signedO
         <p className="flex items-center gap-2 text-green-400">
           <CheckCircle2 size={18} />{' '}
           {deposit && !deposit.paid
-            ? `${sent ? 'Sent!' : 'Sent.'} Waiting for the customer to pay the ${deposit.amount} deposit and sign.`
+            ? `${sent ? 'Sent!' : 'Sent.'} Waiting for the customer to pay the ${deposit.amount}${deposit.full ? '' : ' deposit'} and sign.`
             : `${sent ? 'Sent!' : 'Sent.'} Waiting for the customer to sign.`}
         </p>
       ) : null}
 
       {deposit && (alreadySent || signed) && deposit.paid && (
         <p className="rounded-lg bg-green-950 p-3 text-sm text-green-200">
-          Deposit of {deposit.amount} paid through Square{deposit.paidOn ? ` on ${deposit.paidOn.replace(/\.$/, '')}` : ''}.
+          {deposit.full ? 'Payment in full of' : 'Deposit of'} {deposit.amount} paid through Square{deposit.paidOn ? ` on ${deposit.paidOn.replace(/\.$/, '')}` : ''}.
         </p>
       )}
 

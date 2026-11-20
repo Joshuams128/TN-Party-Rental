@@ -30,7 +30,10 @@ export async function recordPaymentForOrder(orderId: string): Promise<PaymentSta
       .eq('id', dep.id)
       .is('paid_at', null)
       .select('id')
-    if (updated && updated.length > 0) await notifyOwner(db, dep.number, dep.customer_name, cents, 'Deposit')
+    if (updated && updated.length > 0) {
+      const { data: pct } = await db.from('invoices').select('collect_percent').eq('id', dep.id).maybeSingle()
+      await notifyOwner(db, dep.number, dep.customer_name, cents, Number(pct?.collect_percent) === 100 ? 'Full payment' : 'Deposit')
+    }
     return 'paid'
   }
 
@@ -78,7 +81,7 @@ export async function syncPaymentForToken(token: string): Promise<PaymentState> 
   return state
 }
 
-async function notifyOwner(db: ReturnType<typeof createAdminClient>, number: number, customer: string, cents: number, what: 'Deposit' | 'Payment') {
+async function notifyOwner(db: ReturnType<typeof createAdminClient>, number: number, customer: string, cents: number, what: 'Deposit' | 'Payment' | 'Full payment') {
   try {
     const apiKey = process.env.RESEND_API_KEY
     const settings = await loadSettings(db)
@@ -88,9 +91,9 @@ async function notifyOwner(db: ReturnType<typeof createAdminClient>, number: num
     await new Resend(apiKey).emails.send({
       from: route.from,
       to: [route.replyTo],
-      subject: `${what} received: invoice #${number} (${amount})`,
-      html: `<div style="font-family:Arial,sans-serif;line-height:1.5"><p><strong>${esc(customer || 'Your customer')}</strong> paid the ${amount} ${what.toLowerCase()} on invoice <strong>#${number}</strong> through Square.${what === 'Deposit' ? ' They can now sign the invoice.' : ' Check the invoice to see what is left, if anything.'}</p></div>`,
-      text: `${customer || 'Your customer'} paid the ${amount} ${what.toLowerCase()} on invoice #${number} through Square.${what === 'Deposit' ? ' They can now sign the invoice.' : ' Check the invoice to see what is left, if anything.'}`,
+      subject: `${what === 'Full payment' ? 'Payment' : what} received: invoice #${number} (${amount})`,
+      html: `<div style="font-family:Arial,sans-serif;line-height:1.5"><p><strong>${esc(customer || 'Your customer')}</strong> paid ${what === 'Full payment' ? `the full ${amount}` : `the ${amount} ${what.toLowerCase()}`} on invoice <strong>#${number}</strong> through Square.${what === 'Payment' ? ' Check the invoice to see what is left, if anything.' : ' They can now sign the invoice.'}</p></div>`,
+      text: `${customer || 'Your customer'} paid ${what === 'Full payment' ? `the full ${amount}` : `the ${amount} ${what.toLowerCase()}`} on invoice #${number} through Square.${what === 'Payment' ? ' Check the invoice to see what is left, if anything.' : ' They can now sign the invoice.'}`,
     })
   } catch (e) {
     console.error('Deposit notification failed:', e)

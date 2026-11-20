@@ -264,13 +264,13 @@ export const productDetails: ProductDetail[] = [
     variants: [
       {
         name: 'Marquee Letters',
-        price: '$50.00',
+        price: '$25.00',
         image: '/images/secondary/Aletter.png',
         description: '3.2ft white marquee letter (A–Z) with built-in lights.',
       },
       {
         name: 'Marquee Numbers',
-        price: '$50.00',
+        price: '$25.00',
         image: '/images/secondary/1number.png',
         description: '3.2ft white marquee number (0–9) with built-in lights.',
       },

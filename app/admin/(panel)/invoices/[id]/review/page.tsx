@@ -5,7 +5,7 @@ import { loadInvoiceDoc } from '@/lib/invoice-data'
 import { formatMoney } from '@/lib/money'
 import SendPanel from '@/components/admin/SendPanel'
 import { emailRoute } from '@/lib/sender'
-import { depositCents, paidSoFarCents, remainingCents } from '@/lib/payment'
+import { depositCents, paidSoFarCents, remainingCents, upfrontCents } from '@/lib/payment'
 import { invoiceStatusLabel } from '@/lib/invoice'
 
 export const dynamic = 'force-dynamic'
@@ -79,7 +79,7 @@ export default async function ReviewPage({ params }: { params: { id: string } })
                     restAmount: formatMoney(remainingCents(doc)),
                     restLabel: paidSoFarCents(doc) > 0 ? 'Remaining balance' : 'Full amount (100%)',
                     history: [
-                      ...(doc.collect_payment && doc.paid_at ? [{ text: `Deposit ${formatMoney(doc.paid_cents || doc.pay_amount_cents)} paid ${when(doc.paid_at)}`, paid: true }] : []),
+                      ...(doc.collect_payment && doc.paid_at ? [{ text: `${doc.collect_percent === 100 ? 'Payment in full' : 'Deposit'} ${formatMoney(doc.paid_cents || doc.pay_amount_cents)} paid ${when(doc.paid_at)}`, paid: true }] : []),
                       ...doc.payments.map((p) =>
                         p.paid_at
                           ? { text: `${p.label} ${formatMoney(p.paid_cents || p.amount_cents)} paid ${when(p.paid_at)}`, paid: true }
@@ -92,7 +92,8 @@ export default async function ReviewPage({ params }: { params: { id: string } })
             deposit={
               doc.collect_payment
                 ? {
-                    amount: formatMoney(doc.pay_amount_cents || depositCents(doc.totals.total)),
+                    amount: formatMoney(doc.pay_amount_cents || upfrontCents(doc.totals.total, doc.collect_percent)),
+                    full: doc.collect_percent === 100,
                     paid: !!doc.paid_at,
                     paidOn: doc.paid_at ? new Date(doc.paid_at).toLocaleString('en-CA', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Toronto' }) : undefined,
                   }

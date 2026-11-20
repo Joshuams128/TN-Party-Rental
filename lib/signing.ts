@@ -51,6 +51,7 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
   const r = data as Raw
   const lines = ((r.lines ?? []) as Partial<DocLine>[]).map(withDiscountDefaults)
   const taxRate = Number(r.tax_rate)
+  const totals = breakdownFromRows(lines, r.discount_cents, r.apply_tax, taxRate)
   return {
     id: r.id,
     number: r.number,
@@ -67,6 +68,8 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     terms_key_points: r.terms_key_points ?? '',
     terms_text: r.terms_text ?? '',
     collect_payment: !!r.collect_payment,
+    // Asked to pay the whole invoice up front = 100%; otherwise the 50% deposit.
+    collect_percent: Number(r.pay_amount_cents) > 0 && Number(r.pay_amount_cents) >= totals.total ? 100 : 50,
     pay_amount_cents: Number(r.pay_amount_cents) || 0,
     pay_url: r.pay_url ?? null,
     paid_at: r.paid_at ?? null,
@@ -88,7 +91,7 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
       : null,
     tax_rate: taxRate,
     lines,
-    totals: breakdownFromRows(lines, r.discount_cents, r.apply_tax, taxRate),
+    totals,
     settings: { ...DEFAULT_SETTINGS, ...(r.settings ?? {}), tax_rate: Number(r.settings?.tax_rate ?? taxRate) },
   }
 }

@@ -31,6 +31,7 @@ export default async function NewInvoicePage() {
           apply_tax: taxRate > 0,
           owner_signature: false,
           collect_payment: false,
+          collect_percent: 50 as const,
         },
         lines: [],
       }}

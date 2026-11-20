@@ -51,7 +51,8 @@ export type InvoiceFields = {
   discount: string // dollars as typed
   apply_tax: boolean
   owner_signature: boolean
-  collect_payment: boolean // customer pays a 50% deposit online (Square) before signing
+  collect_payment: boolean // customer pays online (Square) before signing
+  collect_percent: 50 | 100 // how much: the 50% deposit, or everything up front
 }
 
 export type InvoiceStatus = 'draft' | 'sent'
@@ -192,7 +193,7 @@ export function invoiceStatusLabel(i: {
     return full ? 'Paid in full & signed' : deposit ? 'Deposit paid & signed' : 'Partly paid & signed'
   }
   if (i.status === 'sent') {
-    if (i.collect_payment && !i.paid_at) return 'Awaiting deposit & signature'
+    if (i.collect_payment && !i.paid_at) return 'Awaiting payment & signature'
     if (paid <= 0) return 'Awaiting signature'
     return full ? 'Paid in full, awaiting signature' : deposit ? 'Deposit paid, awaiting signature' : 'Partly paid, awaiting signature'
   }
