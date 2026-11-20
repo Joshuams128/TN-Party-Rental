@@ -134,6 +134,11 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, se
       ...(cashTouched.current ? { cash_payment: f.cash_payment } : {}),
       ...(securityTouched.current ? { security_deposit_cents: f.security_deposit_cents } : {}),
       ...(securityOnlineTouched.current ? { security_online: f.security_online && f.security_deposit_cents > 0 } : {}),
+      // A sent invoice whose security deposit was changed needs a fresh Square link: the old one is switched off until it is sent again.
+      ...(initial.status === 'sent' && (securityTouched.current || securityOnlineTouched.current) &&
+      (f.security_deposit_cents !== initial.fields.security_deposit_cents || f.security_online !== initial.fields.security_online)
+        ? { security_pay_url: null }
+        : {}),
       ...(rentalTouched.current ? { rental_start: f.rental_start || null, rental_end: f.rental_end || null } : {}),
       updated_at: new Date().toISOString(),
     }

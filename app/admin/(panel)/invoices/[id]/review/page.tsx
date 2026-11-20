@@ -6,7 +6,7 @@ import { formatMoney } from '@/lib/money'
 import SendPanel from '@/components/admin/SendPanel'
 import RestoreInvoiceButton from '@/components/admin/RestoreInvoiceButton'
 import { emailRoute } from '@/lib/sender'
-import { depositCents, paidSoFarCents, remainingCents, upfrontCents } from '@/lib/payment'
+import { depositCents, payLinkStale, paidSoFarCents, remainingCents, upfrontDueCents } from '@/lib/payment'
 import { invoiceStatusLabel } from '@/lib/invoice'
 
 export const dynamic = 'force-dynamic'
@@ -87,6 +87,7 @@ export default async function ReviewPage({ params }: { params: { id: string } })
                   }
                 : undefined
             }
+            outdatedLink={doc.status === 'sent' && !doc.signature && payLinkStale(doc)}
             statusLabel={invoiceStatusLabel({
               status: doc.status,
               signed_at: doc.signature?.signedAt,
@@ -116,7 +117,7 @@ export default async function ReviewPage({ params }: { params: { id: string } })
             deposit={
               doc.collect_payment
                 ? {
-                    amount: formatMoney(doc.pay_amount_cents || upfrontCents(doc.totals.total, doc.collect_percent)),
+                    amount: formatMoney(upfrontDueCents(doc)),
                     full: doc.collect_percent === 100,
                     paid: !!doc.paid_at,
                     paidOn: doc.paid_at ? new Date(doc.paid_at).toLocaleString('en-CA', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Toronto' }) : undefined,
