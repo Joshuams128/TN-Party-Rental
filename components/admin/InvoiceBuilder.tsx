@@ -67,6 +67,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   // The owner-signature column comes from a later migration, so only write it once the owner has used it.
   const ownerSigTouched = useRef(initial.fields.owner_signature)
   const collectTouched = useRef(initial.fields.collect_payment)
+  const percentTouched = useRef(initial.fields.collect_percent !== 50) // the column comes from a newer database update
   const phoneTouched = useRef(!!initial.fields.customer_phone) // the phone column comes from a newer database update
   // Same idea for the rental period and line discounts: columns from newer migrations are only written once used.
   const knownUpdatedAt = useRef<string | null>(initial.updatedAt)
@@ -113,6 +114,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       ...(ownerSigTouched.current ? { include_owner_signature: f.owner_signature } : {}),
       // Only written once used, so databases without the deposit update keep saving normal invoices.
       ...(collectTouched.current ? { collect_payment: f.collect_payment } : {}),
+      ...(percentTouched.current ? { collect_percent: f.collect_percent } : {}),
       ...(rentalTouched.current ? { rental_start: f.rental_start || null, rental_end: f.rental_end || null } : {}),
       updated_at: new Date().toISOString(),
     }
@@ -766,14 +768,51 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
               className="mt-0.5 h-5 w-5 shrink-0 accent-[#D4AF37]"
             />
             <span>
-              Collect the 50% deposit online <span className="text-gray-400">(Square)</span>
+              Collect payment online <span className="text-gray-400">(Square)</span>
               <span className="block text-xs text-gray-400">
                 {fields.collect_payment
-                  ? `The customer pays ${formatMoney(depositCents(totals.total))} first, then signs. The other ${formatMoney(totals.total - depositCents(totals.total))} is due 7 days before the event.`
-                  : 'Off: the customer just signs, as before. Tick it to have them pay the deposit before signing.'}
+                  ? 'The customer pays first, then signs. Choose how much:'
+                  : 'Off: the customer just signs, as before. Tick it to have them pay before signing.'}
               </span>
             </span>
           </label>
+          {fields.collect_payment && (
+            <fieldset className="mb-1 ml-8 space-y-1">
+              <legend className="sr-only">How much the customer pays before signing</legend>
+              <label className="flex min-h-[44px] items-center gap-3 text-sm">
+                <input
+                  type="radio"
+                  name="collectPercent"
+                  checked={fields.collect_percent === 50}
+                  onChange={() => {
+                    percentTouched.current = true
+                    setField('collect_percent', 50)
+                  }}
+                  className="h-5 w-5 accent-[#D4AF37]"
+                />
+                <span>
+                  50% deposit: <strong>{formatMoney(depositCents(totals.total))}</strong> now
+                  <span className="block text-xs text-gray-400">The other {formatMoney(totals.total - depositCents(totals.total))} is due 7 days before the event.</span>
+                </span>
+              </label>
+              <label className="flex min-h-[44px] items-center gap-3 text-sm">
+                <input
+                  type="radio"
+                  name="collectPercent"
+                  checked={fields.collect_percent === 100}
+                  onChange={() => {
+                    percentTouched.current = true
+                    setField('collect_percent', 100)
+                  }}
+                  className="h-5 w-5 accent-[#D4AF37]"
+                />
+                <span>
+                  100% in full: <strong>{formatMoney(totals.total)}</strong> now
+                  <span className="block text-xs text-gray-400">Nothing left to pay afterwards.</span>
+                </span>
+              </label>
+            </fieldset>
+          )}
 
           {!showDetails ? (
             <button type="button" onClick={() => setShowDetails(true)} className="mt-2 min-h-[44px] text-sm text-gray-300 hover:text-gold">

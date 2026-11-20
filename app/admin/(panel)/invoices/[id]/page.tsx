@@ -65,6 +65,7 @@ export default async function EditInvoicePage({ params }: { params: { id: string
           apply_tax: invoice.apply_tax,
           owner_signature: !!invoice.include_owner_signature,
           collect_payment: !!invoice.collect_payment,
+          collect_percent: (Number(invoice.collect_percent) === 100 ? 100 : 50) as 50 | 100,
         },
         lines,
       }}

@@ -72,6 +72,7 @@ export type InvoiceDoc = {
   terms_text: string
   // Optional online deposit (Square), paid before the customer signs.
   collect_payment: boolean
+  collect_percent: 50 | 100 // 100 = the whole invoice is paid up front
   pay_amount_cents: number // the deposit amount, fixed when the invoice is sent
   pay_url: string | null // where the customer pays (only while unpaid, and only on the signing page)
   paid_at: string | null
@@ -158,6 +159,7 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     terms_key_points: (inv.status === 'draft' ? settings.terms_key_points : inv.terms_key_points) ?? '',
     terms_text: (inv.status === 'draft' ? settings.terms_text : inv.terms_text) ?? '',
     collect_payment: !!inv.collect_payment,
+    collect_percent: Number(inv.collect_percent) === 100 ? 100 : 50,
     pay_amount_cents: Number(inv.pay_amount_cents) || 0,
     pay_url: null,
     paid_at: inv.paid_at ?? null,

@@ -50,7 +50,7 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
   if (doc.collect_payment && !doc.paid_at) {
     await syncPaymentForToken(params.token).catch((e) => console.error('Payment check failed:', e))
     doc = (await loadInvoiceDocByToken(supabase, params.token)) ?? doc
-    if (!doc.paid_at) return fail('Please pay the deposit first. You can sign right after.', 402, 'payment_required')
+    if (!doc.paid_at) return fail('Please pay first. You can sign right after.', 402, 'payment_required')
   }
 
   // The customer must sign exactly what they were shown. If the owner edited it in the meantime, make them reload.
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
     return fail('We could not save your signature. Please try again.', 500)
   }
   if (result === 'already_signed') return fail('This invoice has already been signed.', 409, 'already_signed')
-  if (result === 'payment_required') return fail('Please pay the deposit first. You can sign right after.', 402, 'payment_required')
+  if (result === 'payment_required') return fail('Please pay first. You can sign right after.', 402, 'payment_required')
   if (result !== 'ok') return fail('This signing link is not available.', 404)
 
   // Signing is done. Emailing the signed copies is best-effort and must never turn a success into an error.
