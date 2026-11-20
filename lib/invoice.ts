@@ -55,6 +55,7 @@ export type InvoiceFields = {
   collect_percent: 50 | 100 // how much: the 50% deposit, or everything up front
   cash_payment: boolean // the customer will pay with cash (just a note on the invoice)
   security_deposit_cents: number // refundable security deposit, 0 = none; not part of the total
+  security_online: boolean // the customer pays the security deposit through Square, before signing
 }
 
 export type InvoiceStatus = 'draft' | 'sent'

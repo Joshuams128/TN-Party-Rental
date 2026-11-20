@@ -77,6 +77,11 @@ export type InvoiceDoc = {
   collect_percent: 50 | 100 // 100 = the whole invoice is paid up front
   cash_payment: boolean // the customer will pay with cash
   security_deposit_cents: number // refundable, separate from the invoice total; 0 = none
+  // Paid online through Square as its own payment (so it can be refunded on its own), before signing.
+  security_online: boolean
+  security_pay_url: string | null // only on the customer's signing page, while unpaid
+  security_paid_at: string | null
+  security_paid_cents: number
   pay_amount_cents: number // the deposit amount, fixed when the invoice is sent
   pay_url: string | null // where the customer pays (only while unpaid, and only on the signing page)
   paid_at: string | null
@@ -169,6 +174,10 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     collect_percent: Number(inv.collect_percent) === 100 ? 100 : 50,
     cash_payment: !!inv.cash_payment,
     security_deposit_cents: Number(inv.security_deposit_cents) || 0,
+    security_online: !!inv.security_online && Number(inv.security_deposit_cents) > 0,
+    security_pay_url: null,
+    security_paid_at: inv.security_paid_at ?? null,
+    security_paid_cents: Number(inv.security_paid_cents) || 0,
     pay_amount_cents: Number(inv.pay_amount_cents) || 0,
     pay_url: null,
     paid_at: inv.paid_at ?? null,

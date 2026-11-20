@@ -72,6 +72,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, se
   const percentTouched = useRef(initial.fields.collect_percent !== 50) // the column comes from a newer database update
   const cashTouched = useRef(initial.fields.cash_payment) // same idea: only written once cash is chosen
   const securityTouched = useRef(initial.fields.security_deposit_cents > 0)
+  const securityOnlineTouched = useRef(initial.fields.security_online) // only written once 'pay online' is chosen
   const phoneTouched = useRef(!!initial.fields.customer_phone) // the phone column comes from a newer database update
   // Same idea for the rental period and line discounts: columns from newer migrations are only written once used.
   const knownUpdatedAt = useRef<string | null>(initial.updatedAt)
@@ -132,6 +133,7 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, se
       ...(percentTouched.current ? { collect_percent: f.collect_percent } : {}),
       ...(cashTouched.current ? { cash_payment: f.cash_payment } : {}),
       ...(securityTouched.current ? { security_deposit_cents: f.security_deposit_cents } : {}),
+      ...(securityOnlineTouched.current ? { security_online: f.security_online && f.security_deposit_cents > 0 } : {}),
       ...(rentalTouched.current ? { rental_start: f.rental_start || null, rental_end: f.rental_end || null } : {}),
       updated_at: new Date().toISOString(),
     }
@@ -842,7 +844,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, se
               value={fields.security_deposit_cents}
               onChange={(e) => {
                 securityTouched.current = true
-                setField('security_deposit_cents', Number(e.target.value))
+                const cents = Number(e.target.value)
+                setFields((f) => ({ ...f, security_deposit_cents: cents, security_online: cents > 0 ? f.security_online : false }))
               }}
               className={`${input} sm:w-72`}
             >
@@ -853,6 +856,27 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, se
             </select>
             <span className="mt-1 block text-xs font-normal text-gray-400">The amounts come from Settings, where they can be changed any time.</span>
           </label>
+          {fields.security_deposit_cents > 0 && (
+            <label className="mt-1 flex min-h-[44px] items-start gap-3 py-2 text-sm">
+              <input
+                type="checkbox"
+                checked={fields.security_online}
+                onChange={(e) => {
+                  securityOnlineTouched.current = true
+                  setField('security_online', e.target.checked)
+                }}
+                className="mt-0.5 h-5 w-5 shrink-0 accent-[#D4AF37]"
+              />
+              <span>
+                Customer pays the security deposit online <span className="text-gray-400">(Square)</span>
+                <span className="block text-xs text-gray-400">
+                  {fields.security_online
+                    ? `They pay ${formatMoney(fields.security_deposit_cents)} before signing, as its own separate payment, so it can be refunded on its own later.`
+                    : 'Off: the security deposit is only noted on the invoice and you collect it another way.'}
+                </span>
+              </span>
+            </label>
+          )}
 
           {!showDetails ? (
             <button type="button" onClick={() => setShowDetails(true)} className="mt-2 min-h-[44px] text-sm text-gray-300 hover:text-gold">

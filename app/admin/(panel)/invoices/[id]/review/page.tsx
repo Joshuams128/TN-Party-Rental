@@ -63,6 +63,16 @@ export default async function ReviewPage({ params }: { params: { id: string } })
             from={emailRoute(doc.settings).fromAddress}
             replyTo={doc.settings.email}
             problems={problems}
+            security={
+              doc.security_deposit_cents > 0
+                ? {
+                    amount: formatMoney(doc.security_deposit_cents),
+                    online: doc.security_online,
+                    paid: !!doc.security_paid_at,
+                    paidOn: doc.security_paid_at ? new Date(doc.security_paid_at).toLocaleString('en-CA', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Toronto' }) : undefined,
+                  }
+                : undefined
+            }
             statusLabel={invoiceStatusLabel({
               status: doc.status,
               signed_at: doc.signature?.signedAt,

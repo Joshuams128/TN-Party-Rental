@@ -1,6 +1,6 @@
 import type { InvoiceDoc } from '@/lib/invoice-data'
 import { formatMoney } from '@/lib/money'
-import { SECURITY_DEPOSIT_NOTE } from '@/lib/security-deposit'
+import { securityDepositNote } from '@/lib/security-deposit'
 
 // The deposit is half of the invoice total (tax included), as the payment terms say.
 export const DEPOSIT_PERCENT = 50
@@ -67,9 +67,15 @@ export function paymentLines(
 }
 
 // Notes shown with the invoice's payment details: a cash payment, and the refundable security deposit.
-export function extraPaymentNotes(doc: Pick<InvoiceDoc, 'cash_payment' | 'security_deposit_cents'>): { label: string; amount?: number; note: string }[] {
+export function extraPaymentNotes(doc: Pick<InvoiceDoc, 'cash_payment' | 'security_deposit_cents' | 'security_online' | 'security_paid_at'>): { label: string; amount?: number; note: string }[] {
   const out: { label: string; amount?: number; note: string }[] = []
   if (doc.cash_payment) out.push({ label: 'Payment method: Cash', note: 'The customer will pay with cash.' })
-  if (doc.security_deposit_cents > 0) out.push({ label: 'Refundable security deposit', amount: doc.security_deposit_cents, note: SECURITY_DEPOSIT_NOTE })
+  if (doc.security_deposit_cents > 0) {
+    out.push({
+      label: doc.security_online && doc.security_paid_at ? 'Refundable security deposit (paid)' : 'Refundable security deposit',
+      amount: doc.security_deposit_cents,
+      note: securityDepositNote({ online: doc.security_online, paid: !!doc.security_paid_at }),
+    })
+  }
   return out
 }

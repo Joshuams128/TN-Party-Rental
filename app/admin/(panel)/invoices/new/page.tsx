@@ -35,6 +35,7 @@ export default async function NewInvoicePage() {
           collect_percent: 50 as const,
           cash_payment: false,
           security_deposit_cents: 0,
+          security_online: false,
         },
         lines: [],
       }}

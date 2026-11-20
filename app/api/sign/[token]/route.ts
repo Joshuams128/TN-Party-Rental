@@ -47,10 +47,12 @@ export async function POST(request: NextRequest, { params }: { params: { token: 
   if (doc.signature) return fail('This invoice has already been signed.', 409, 'already_signed')
 
   // An invoice that collects a deposit can only be signed once Square confirms it was paid (the database enforces this too).
-  if (doc.collect_payment && !doc.paid_at) {
+  const unpaid = (d: { collect_payment: boolean; paid_at: string | null; security_online: boolean; security_paid_at: string | null }) =>
+    (d.collect_payment && !d.paid_at) || (d.security_online && !d.security_paid_at)
+  if (unpaid(doc)) {
     await syncPaymentForToken(params.token).catch((e) => console.error('Payment check failed:', e))
     doc = (await loadInvoiceDocByToken(supabase, params.token)) ?? doc
-    if (!doc.paid_at) return fail('Please pay first. You can sign right after.', 402, 'payment_required')
+    if (unpaid(doc)) return fail('Please pay first. You can sign right after.', 402, 'payment_required')
   }
 
   // The customer must sign exactly what they were shown. If the owner edited it in the meantime, make them reload.

@@ -98,6 +98,34 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   } else if (doc.collect_payment && doc.paid_at && doc.pay_amount_cents <= 0) {
     doc.pay_amount_cents = upfrontCents(doc.totals.total, doc.collect_percent)
   }
+  // Optional online security deposit: its own Square checkout (not mixed into the invoice payment), so a refund later is
+  // a clean full refund of that one payment. Created now so the amount is fixed.
+  if (doc.security_online && doc.security_deposit_cents > 0 && !doc.security_paid_at) {
+    if (!squareConfigured() || !adminConfigured()) {
+      return fail('Online payments aren’t set up yet. Add the Square keys and the Supabase service key in Vercel, or untick “Customer pays the security deposit online”.', 503)
+    }
+    try {
+      const sec = await createPaymentLink({
+        amountCents: doc.security_deposit_cents,
+        invoiceNumber: doc.number,
+        buyerEmail: to,
+        redirectUrl: `${link}?sec=1`,
+        title: `Security deposit (refundable) - Invoice #${doc.number}`,
+      })
+      const { error: secErr } = await owner.supabase
+        .from('invoices')
+        .update({ security_pay_url: sec.url, security_order_id: sec.orderId })
+        .eq('id', doc.id)
+      if (secErr) {
+        console.error('Could not save security deposit link:', secErr)
+        return fail('Online security deposits aren’t set up in the database yet. Run the cash and security deposit database update (0015) in Supabase, then try again.', 500)
+      }
+    } catch (e) {
+      console.error('Square security deposit link failed:', e)
+      return fail(`Couldn’t create the Square payment link for the security deposit (${e instanceof Error ? e.message : 'unknown error'}). Nothing was sent.`, 502)
+    }
+  }
+
   const pdf = await buildInvoicePdf(doc, origin, { signUrl: link })
 
   const resend = new Resend(apiKey)

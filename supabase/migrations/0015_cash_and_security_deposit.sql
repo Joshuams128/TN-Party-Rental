@@ -1,9 +1,18 @@
--- Cash payment note + refundable security deposit (amounts the owner can change in Settings).
+-- Cash payment note + refundable security deposit (amounts the owner can change in Settings), optionally paid
+-- online through Square as its own separate payment (so it can be refunded on its own).
 -- Run in the Supabase SQL editor BEFORE deploying the matching code. Safe to run more than once.
 
 alter table invoices
   add column if not exists cash_payment boolean not null default false,
-  add column if not exists security_deposit_cents integer not null default 0;
+  add column if not exists security_deposit_cents integer not null default 0,
+  add column if not exists security_online boolean not null default false,
+  add column if not exists security_pay_url text,
+  add column if not exists security_order_id text,
+  add column if not exists security_square_payment_id text,
+  add column if not exists security_paid_at timestamptz,
+  add column if not exists security_paid_cents integer not null default 0;
+
+create index if not exists invoices_security_order_id_idx on invoices (security_order_id) where security_order_id is not null;
 
 -- The owner's list of security deposit options (null = use the standard list in the app).
 alter table business_settings
@@ -44,6 +53,10 @@ begin
     'collect_payment', inv.collect_payment,
     'cash_payment', inv.cash_payment,
     'security_deposit_cents', inv.security_deposit_cents,
+    'security_online', inv.security_online,
+    'security_pay_url', case when inv.security_paid_at is null then inv.security_pay_url else null end,
+    'security_paid_at', inv.security_paid_at,
+    'security_paid_cents', inv.security_paid_cents,
     'pay_amount_cents', inv.pay_amount_cents,
     'pay_url', case when inv.paid_at is null then inv.pay_url else null end,
     'paid_at', inv.paid_at,
@@ -90,7 +103,47 @@ begin
 end;
 $$;
 
+-- Signing is locked until every payment the invoice asks for online (the deposit and/or the security deposit) is paid.
+create or replace function public.sign_invoice(
+  p_token text, p_name text, p_type text, p_image text, p_ip text, p_user_agent text, p_hash text
+)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if p_token is null or length(p_token) < 32 then
+    return 'not_found';
+  end if;
+
+  update invoices
+     set signed_at = now(), signer_name = p_name, signature_type = p_type, signature_image = p_image,
+         signer_ip = p_ip, signer_user_agent = p_user_agent, signed_hash = p_hash
+   where sign_token = p_token and status = 'sent' and signed_at is null
+     and (collect_payment = false or paid_at is not null)
+     and (security_online = false or security_paid_at is not null);
+  if found then
+    return 'ok';
+  end if;
+
+  if exists (select 1 from invoices where sign_token = p_token and signed_at is not null) then
+    return 'already_signed';
+  end if;
+  if exists (
+    select 1 from invoices
+     where sign_token = p_token and status = 'sent'
+       and ((collect_payment and paid_at is null) or (security_online and security_paid_at is null))
+  ) then
+    return 'payment_required';
+  end if;
+  return 'not_found';
+end;
+$$;
+
 revoke all on function public.get_invoice_for_signing(text) from public;
 grant execute on function public.get_invoice_for_signing(text) to anon, authenticated;
+revoke all on function public.sign_invoice(text, text, text, text, text, text, text) from public;
+grant execute on function public.sign_invoice(text, text, text, text, text, text, text) to anon, authenticated;
 
 notify pgrst, 'reload schema';

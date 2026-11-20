@@ -23,3 +23,13 @@ export const tierText = (t: SecurityTier): string => `${t.label ? `${t.label}: `
 
 export const SECURITY_DEPOSIT_NOTE =
   'Not included in the total above. Refundable: returned after pickup, less any charges for damage or loss, as described in the payment terms.'
+
+const REFUNDABLE = 'Refundable: returned after pickup, less any charges for damage or loss, as described in the payment terms.'
+
+// What the invoice says about the security deposit, depending on whether it is paid online through Square.
+export function securityDepositNote(opts: { online: boolean; paid: boolean }): string {
+  if (!opts.online) return SECURITY_DEPOSIT_NOTE
+  return opts.paid
+    ? `Paid online through Square. Not included in the total above. ${REFUNDABLE}`
+    : `Paid online through Square before signing, as a separate payment. Not included in the total above. ${REFUNDABLE}`
+}

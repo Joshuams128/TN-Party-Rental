@@ -69,6 +69,7 @@ export default async function EditInvoicePage({ params }: { params: { id: string
           collect_percent: (Number(invoice.collect_percent) === 100 ? 100 : 50) as 50 | 100,
           cash_payment: !!invoice.cash_payment,
           security_deposit_cents: Number(invoice.security_deposit_cents) || 0,
+          security_online: !!invoice.security_online,
         },
         lines,
       }}
