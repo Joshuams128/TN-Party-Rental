@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { breakdownFromRows, type DiscountSign, type DiscountTypeRaw } from '@/lib/invoice'
 import { linePeriodTexts, toInputValue } from '@/lib/rental'
+import { DEFAULT_SECURITY_TIERS, parseSecurityTiers, type SecurityTier } from '@/lib/security-deposit'
 
 export type BusinessSettings = {
   business_name: string
@@ -15,6 +16,7 @@ export type BusinessSettings = {
   owner_signature_image: string // PNG data URL, '' if none
   terms_key_points: string // short points shown on the invoice itself, one per line
   terms_text: string // the full payment terms; '' = no terms with invoices
+  security_deposit_options: SecurityTier[] // the amounts offered on an invoice (editable in Settings)
 }
 
 export type Signature = {
@@ -73,6 +75,14 @@ export type InvoiceDoc = {
   // Optional online deposit (Square), paid before the customer signs.
   collect_payment: boolean
   collect_percent: 50 | 100 // 100 = the whole invoice is paid up front
+  cash_payment: boolean // the customer will pay with cash
+  security_deposit_cents: number // refundable, separate from the invoice total; 0 = none
+  // Paid online through Square as its own payment (so it can be refunded on its own), before signing.
+  security_online: boolean
+  deleted_at: string | null // set when the owner deleted it: kept for records, hidden from the lists
+  security_pay_url: string | null // only on the customer's signing page, while unpaid
+  security_paid_at: string | null
+  security_paid_cents: number
   pay_amount_cents: number // the deposit amount, fixed when the invoice is sent
   pay_url: string | null // where the customer pays (only while unpaid, and only on the signing page)
   paid_at: string | null
@@ -105,6 +115,7 @@ export const DEFAULT_SETTINGS: BusinessSettings = {
   owner_signature_image: '',
   terms_key_points: '',
   terms_text: '',
+  security_deposit_options: DEFAULT_SECURITY_TIERS,
 }
 
 // Rows saved before line discounts existed (or before the migration) simply have no discount.
@@ -124,7 +135,9 @@ export function withDiscountDefaults(r: Partial<DocLine>): DocLine {
 
 export async function loadSettings(supabase: SupabaseClient): Promise<BusinessSettings> {
   const { data } = await supabase.from('business_settings').select('*').eq('id', 1).maybeSingle()
-  return data ? { ...DEFAULT_SETTINGS, ...data, tax_rate: Number(data.tax_rate) } : DEFAULT_SETTINGS
+  return data
+    ? { ...DEFAULT_SETTINGS, ...data, tax_rate: Number(data.tax_rate), security_deposit_options: parseSecurityTiers(data.security_deposit_options) }
+    : DEFAULT_SETTINGS
 }
 
 export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Promise<InvoiceDoc | null> {
@@ -160,6 +173,13 @@ export async function loadInvoiceDoc(supabase: SupabaseClient, id: string): Prom
     terms_text: (inv.status === 'draft' ? settings.terms_text : inv.terms_text) ?? '',
     collect_payment: !!inv.collect_payment,
     collect_percent: Number(inv.collect_percent) === 100 ? 100 : 50,
+    cash_payment: !!inv.cash_payment,
+    security_deposit_cents: Number(inv.security_deposit_cents) || 0,
+    security_online: !!inv.security_online && Number(inv.security_deposit_cents) > 0,
+    deleted_at: inv.deleted_at ?? null,
+    security_pay_url: null,
+    security_paid_at: inv.security_paid_at ?? null,
+    security_paid_cents: Number(inv.security_paid_cents) || 0,
     pay_amount_cents: Number(inv.pay_amount_cents) || 0,
     pay_url: null,
     paid_at: inv.paid_at ?? null,

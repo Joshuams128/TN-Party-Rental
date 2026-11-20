@@ -5,7 +5,7 @@ import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscoun
 import { linePeriodTexts } from '@/lib/rental'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 import { keyPoints, parseTerms, TERMS_TITLE } from '@/lib/terms'
-import { paymentLines } from '@/lib/payment'
+import { extraPaymentNotes, paymentLines } from '@/lib/payment'
 
 // Never split words with a hyphen: it would break email addresses across lines.
 Font.registerHyphenationCallback((word) => [word])
@@ -188,6 +188,20 @@ export default function InvoicePdf({ doc, logo, thumbs, customerSignature, owner
               </View>
             )}
           </View>
+
+          {extraPaymentNotes(doc).length > 0 && (
+            <View style={s.keyTerms} wrap={false}>
+              {extraPaymentNotes(doc).map((n, i) => (
+                <View key={i} style={{ marginBottom: i < extraPaymentNotes(doc).length - 1 ? 6 : 0 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={s.strong}>{n.label}</Text>
+                    {n.amount !== undefined && <Text style={s.strong}>{formatMoney(n.amount)}</Text>}
+                  </View>
+                  <Text style={[s.muted, { fontSize: 8.5, marginTop: 1 }]}>{n.note}</Text>
+                </View>
+              ))}
+            </View>
+          )}
 
           {!!doc.notes && (
             <View style={s.notes} wrap={false}>

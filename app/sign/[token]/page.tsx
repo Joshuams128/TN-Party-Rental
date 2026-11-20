@@ -21,18 +21,23 @@ export const metadata: Metadata = {
 // What is left after paying this one (the current page's amount).
 const remainingAfter = (d: NonNullable<Awaited<ReturnType<typeof loadInvoiceDocByToken>>>, amount: number) => remainingCents(d) - amount
 
-export default async function SignPage({ params, searchParams }: { params: { token: string }; searchParams: { paid?: string; pay?: string } }) {
+export default async function SignPage({ params, searchParams }: { params: { token: string }; searchParams: { paid?: string; pay?: string; sec?: string } }) {
   const supabase = createClient()
   let doc = await loadInvoiceDocByToken(supabase, params.token)
   // Deposit invoices: ask Square whether it has been paid (covers coming back from Square, and a slow webhook).
   // Also covers payment links the owner emailed later (50%, 100% or the balance).
   const hasOpenRequests = (d: typeof doc) => !!d && d.payments.some((x) => x.url && !x.paid_at)
-  if (doc && ((doc.collect_payment && !doc.paid_at && !doc.signature) || hasOpenRequests(doc))) {
+  if (doc && ((doc.collect_payment && !doc.paid_at && !doc.signature) || (doc.security_online && !doc.security_paid_at && !doc.signature) || hasOpenRequests(doc))) {
     await syncPaymentForToken(params.token).catch(() => 'unknown' as const)
     doc = (await loadInvoiceDocByToken(supabase, params.token)) ?? doc
   }
   const needsPayment = !!doc && doc.collect_payment && !doc.paid_at && !doc.signature
+  const needsSecurity = !!doc && doc.security_online && !doc.security_paid_at && !doc.signature
+  const locked = needsPayment || needsSecurity
   const deposit = doc && doc.collect_payment ? depositSummary(doc) : null
+  // Steps shown to the customer: the payment (if any), the security deposit (if paid online), then signing.
+  const stepsTotal = doc ? (doc.collect_payment ? 1 : 0) + (doc.security_online ? 1 : 0) + 1 : 1
+  const securityStep = doc && doc.collect_payment ? 2 : 1
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
@@ -88,7 +93,7 @@ export default async function SignPage({ params, searchParams }: { params: { tok
                 {doc.collect_payment && deposit && (
                   needsPayment ? (
                     <div className="rounded-2xl border-2 border-[#D4AF37] bg-white p-5 shadow-sm sm:p-6">
-                      <p className="text-[11px] font-bold tracking-widest text-[#B8941F]">STEP 1 OF 2</p>
+                      <p className="text-[11px] font-bold tracking-widest text-[#B8941F]">STEP 1 OF {stepsTotal}</p>
                       <h2 className="mt-1 text-lg font-bold">{doc.collect_percent === 100 ? 'Pay in full' : 'Pay your deposit'}</h2>
                       <p className="mt-1 text-sm text-gray-600">
                         {doc.collect_percent === 100
@@ -123,10 +128,46 @@ export default async function SignPage({ params, searchParams }: { params: { tok
                     </div>
                   )
                 )}
-                {needsPayment ? (
+                {doc.security_online && (
+                  needsSecurity ? (
+                    <div className="rounded-2xl border-2 border-[#D4AF37] bg-white p-5 shadow-sm sm:p-6">
+                      <p className="text-[11px] font-bold tracking-widest text-[#B8941F]">STEP {securityStep} OF {stepsTotal}</p>
+                      <h2 className="mt-1 text-lg font-bold">Pay the refundable security deposit</h2>
+                      <p className="mt-1 text-sm text-gray-600">
+                        {formatMoney(doc.security_deposit_cents)} is held as a security deposit and is refundable: it is returned after pickup, less any
+                        charges for damage or loss, as described in the payment terms. It is a separate payment from the invoice total.
+                      </p>
+                      {searchParams.sec && (
+                        <p role="status" className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+                          We haven’t received the confirmation from Square yet. Please wait a few seconds, then{' '}
+                          <a href={`/sign/${params.token}?sec=1`} className="font-semibold underline">check again</a>.
+                        </p>
+                      )}
+                      {doc.security_pay_url ? (
+                        <a
+                          href={doc.security_pay_url}
+                          className="mt-4 flex h-14 w-full items-center justify-center rounded-xl bg-black text-base font-semibold text-white hover:bg-gray-800"
+                        >
+                          Pay {formatMoney(doc.security_deposit_cents)} security deposit
+                        </a>
+                      ) : (
+                        <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+                          The payment link isn’t available. Please contact True North Party Rentals.
+                        </p>
+                      )}
+                      <p className="mt-2 text-center text-xs text-gray-500">Secure card payment by Square. The next step unlocks once it goes through.</p>
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-green-200 bg-green-50 p-5 text-green-900">
+                      <p className="font-bold">Security deposit received: {formatMoney(doc.security_paid_cents || doc.security_deposit_cents)}. Thank you!</p>
+                      <p className="mt-1 text-sm">It is refundable after pickup, less any charges for damage or loss.</p>
+                    </div>
+                  )
+                )}
+                {locked ? (
                   <div className="rounded-2xl border border-gray-200 bg-white/60 p-5 text-center text-sm text-gray-500">
-                    <p className="font-semibold text-gray-700">STEP 2 OF 2: Sign</p>
-                    <p className="mt-1">Signing unlocks as soon as your payment has gone through.</p>
+                    <p className="font-semibold text-gray-700">STEP {stepsTotal} OF {stepsTotal}: Sign</p>
+                    <p className="mt-1">Signing unlocks as soon as your {needsPayment && needsSecurity ? 'payments have' : 'payment has'} gone through.</p>
                   </div>
                 ) : (
                   <SignForm token={params.token} hash={documentHash(doc)} number={doc.number} hasTerms={!!doc.terms_text} />

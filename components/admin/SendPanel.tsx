@@ -18,6 +18,8 @@ type Props = {
   problems: string[] // reasons sending is blocked
   deposit?: { amount: string; paid: boolean; paidOn?: string; full?: boolean } // set when this invoice collects payment online (full = 100%)
   statusLabel?: string // e.g. "Deposit paid & signed"
+  // The refundable security deposit, when the invoice has one.
+  security?: { amount: string; online: boolean; paid: boolean; paidOn?: string }
   // Ask the customer for a payment (50%, 100% or the balance), shown once the invoice has been sent.
   request?: {
     canHalf: boolean
@@ -28,7 +30,7 @@ type Props = {
   }
 }
 
-export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, replyTo, problems, deposit, statusLabel, request }: Props) {
+export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, replyTo, problems, deposit, statusLabel, request, security }: Props) {
   const router = useRouter()
   const [confirming, setConfirming] = useState(false)
   const [sending, setSending] = useState(false)
@@ -105,6 +107,16 @@ export default function SendPanel({ invoiceId, number, status, signedBy, signedO
       {deposit && (alreadySent || signed) && deposit.paid && (
         <p className="rounded-lg bg-green-950 p-3 text-sm text-green-200">
           {deposit.full ? 'Payment in full of' : 'Deposit of'} {deposit.amount} paid through Square{deposit.paidOn ? ` on ${deposit.paidOn.replace(/\.$/, '')}` : ''}.
+        </p>
+      )}
+
+      {security && (alreadySent || signed) && (
+        <p className={`rounded-lg p-3 text-sm ${security.online && security.paid ? 'bg-green-950 text-green-200' : 'bg-gray-950 text-gray-300'}`}>
+          {security.online
+            ? security.paid
+              ? `Security deposit of ${security.amount} paid through Square${security.paidOn ? ` on ${security.paidOn.replace(/\.$/, '')}` : ''}. After pickup, refund it in Square (a full refund of that one payment), less any charges.`
+              : `Security deposit of ${security.amount}: waiting for the customer to pay it online before they can sign.`
+            : `Security deposit of ${security.amount} is noted on the invoice. Collect it yourself.`}
         </p>
       )}
 

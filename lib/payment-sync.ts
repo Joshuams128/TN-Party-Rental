@@ -37,6 +37,26 @@ export async function recordPaymentForOrder(orderId: string): Promise<PaymentSta
     return 'paid'
   }
 
+  // The refundable security deposit (best effort: these columns come from a newer database update).
+  const { data: sec } = await db
+    .from('invoices')
+    .select('id, number, customer_name, security_deposit_cents, security_paid_at')
+    .eq('security_order_id', orderId)
+    .maybeSingle()
+  if (sec) {
+    if (sec.security_paid_at) return 'paid'
+    const { cents, paymentId } = await paidOnOrder(orderId)
+    if (sec.security_deposit_cents <= 0 || cents < sec.security_deposit_cents) return 'unpaid'
+    const { data: updated } = await db
+      .from('invoices')
+      .update({ security_paid_at: new Date().toISOString(), security_paid_cents: cents, security_square_payment_id: paymentId })
+      .eq('id', sec.id)
+      .is('security_paid_at', null)
+      .select('id')
+    if (updated && updated.length > 0) await notifyOwner(db, sec.number, sec.customer_name, cents, 'Security deposit')
+    return 'paid'
+  }
+
   const { data: req } = await db
     .from('invoice_payments')
     .select('id, invoice_id, label, amount_cents, paid_at')
@@ -71,6 +91,10 @@ export async function syncPaymentForToken(token: string): Promise<PaymentState> 
     state = inv.paid_at ? 'paid' : inv.pay_order_id ? await recordPaymentForOrder(inv.pay_order_id) : 'unknown'
   }
 
+  // The security deposit, if it is collected online and still unpaid (best effort, newer columns).
+  const { data: secRow } = await db.from('invoices').select('security_order_id, security_paid_at').eq('sign_token', token).maybeSingle()
+  if (secRow && secRow.security_order_id && !secRow.security_paid_at) await recordPaymentForOrder(secRow.security_order_id).catch(() => undefined)
+
   // Payment requests the owner emailed (50%, 100%, balance). Best effort: the table comes from a newer database update,
   // so a failure here must never affect the deposit.
   const { data: invId } = await db.from('invoices').select('id').eq('sign_token', token).maybeSingle()
@@ -81,7 +105,7 @@ export async function syncPaymentForToken(token: string): Promise<PaymentState> 
   return state
 }
 
-async function notifyOwner(db: ReturnType<typeof createAdminClient>, number: number, customer: string, cents: number, what: 'Deposit' | 'Payment' | 'Full payment') {
+async function notifyOwner(db: ReturnType<typeof createAdminClient>, number: number, customer: string, cents: number, what: 'Deposit' | 'Payment' | 'Full payment' | 'Security deposit') {
   try {
     const apiKey = process.env.RESEND_API_KEY
     const settings = await loadSettings(db)
@@ -92,8 +116,8 @@ async function notifyOwner(db: ReturnType<typeof createAdminClient>, number: num
       from: route.from,
       to: [route.replyTo],
       subject: `${what === 'Full payment' ? 'Payment' : what} received: invoice #${number} (${amount})`,
-      html: `<div style="font-family:Arial,sans-serif;line-height:1.5"><p><strong>${esc(customer || 'Your customer')}</strong> paid ${what === 'Full payment' ? `the full ${amount}` : `the ${amount} ${what.toLowerCase()}`} on invoice <strong>#${number}</strong> through Square.${what === 'Payment' ? ' Check the invoice to see what is left, if anything.' : ' They can now sign the invoice.'}</p></div>`,
-      text: `${customer || 'Your customer'} paid ${what === 'Full payment' ? `the full ${amount}` : `the ${amount} ${what.toLowerCase()}`} on invoice #${number} through Square.${what === 'Payment' ? ' Check the invoice to see what is left, if anything.' : ' They can now sign the invoice.'}`,
+      html: `<div style="font-family:Arial,sans-serif;line-height:1.5"><p><strong>${esc(customer || 'Your customer')}</strong> paid ${what === 'Full payment' ? `the full ${amount}` : `the ${amount} ${what.toLowerCase()}`} on invoice <strong>#${number}</strong> through Square.${what === 'Payment' ? ' Check the invoice to see what is left, if anything.' : what === 'Security deposit' ? ' It is refundable: refund it in Square after pickup, less any charges.' : ' They can now sign the invoice.'}</p></div>`,
+      text: `${customer || 'Your customer'} paid ${what === 'Full payment' ? `the full ${amount}` : `the ${amount} ${what.toLowerCase()}`} on invoice #${number} through Square.${what === 'Payment' ? ' Check the invoice to see what is left, if anything.' : what === 'Security deposit' ? ' It is refundable: refund it in Square after pickup, less any charges.' : ' They can now sign the invoice.'}`,
     })
   } catch (e) {
     console.error('Deposit notification failed:', e)

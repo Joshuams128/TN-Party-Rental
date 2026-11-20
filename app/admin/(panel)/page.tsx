@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import InvoiceListItem from '@/components/admin/InvoiceListItem'
 import { invoiceStatusLabel, totalFromRows, type LineRow } from '@/lib/invoice'
 import { loadRequestedPaidTotals } from '@/lib/invoice-data'
+import { fetchInvoiceRows } from '@/lib/invoice-lists'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,11 +27,8 @@ type Row = {
 export default async function DashboardPage() {
   const supabase = createClient()
   const requestedPaidPromise = loadRequestedPaidTotals(supabase)
-  const { data } = await supabase
-    .from('invoices')
-    .select('id, number, status, signed_at, collect_payment, paid_at, paid_cents, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)')
-    .order('number', { ascending: false })
-  const invoices = (data ?? []) as Row[]
+  const { rows, error } = await fetchInvoiceRows<Row>(supabase, 'id, number, status, signed_at, collect_payment, paid_at, paid_cents, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)', 'active')
+  const invoices = rows
   const requestedPaid = await requestedPaidPromise
   const drafts = invoices.filter((i) => i.status === 'draft').length
   const signed = invoices.filter((i) => i.signed_at).length

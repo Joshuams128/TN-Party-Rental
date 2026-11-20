@@ -2,7 +2,7 @@ import { formatMoney } from '@/lib/money'
 import { discountLabel, discountSignChar, formatDateShort, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
 import { linePeriodTexts } from '@/lib/rental'
 import { keyPoints, parseTerms, TERMS_TITLE } from '@/lib/terms'
-import { paymentLines } from '@/lib/payment'
+import { extraPaymentNotes, paymentLines } from '@/lib/payment'
 import { itemImageUrl } from '@/lib/items'
 import type { InvoiceDoc } from '@/lib/invoice-data'
 
@@ -86,6 +86,15 @@ export default function InvoiceView({ doc }: { doc: InvoiceDoc }) {
         {t.discount > 0 && <div className="flex justify-between"><span className="text-gray-500">Discount</span><span>-{formatMoney(t.discount)}</span></div>}
         {doc.apply_tax && <div className="flex justify-between"><span className="text-gray-500">{b.tax_label} ({doc.tax_rate}%)</span><span>{formatMoney(t.tax)}</span></div>}
         <div className="flex justify-between border-t border-gray-200 pt-2 text-lg font-bold"><span>Total</span><span>{formatMoney(t.total)}</span></div>
+        {extraPaymentNotes(doc).map((n, i) => (
+          <div key={i} className="mt-2 rounded-lg bg-[#faf8f0] p-3 text-sm">
+            <p className="flex justify-between gap-3 font-semibold">
+              <span>{n.label}</span>
+              {n.amount !== undefined && <span className="shrink-0">{formatMoney(n.amount)}</span>}
+            </p>
+            <p className="mt-0.5 text-xs text-gray-600">{n.note}</p>
+          </div>
+        ))}
         {paymentLines(doc).length > 0 && (
           <div className="mt-2 space-y-1 rounded-lg bg-[#faf8f0] p-3 text-sm">
             {paymentLines(doc).map((l, i) => (
