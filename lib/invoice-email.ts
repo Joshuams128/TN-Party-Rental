@@ -5,9 +5,9 @@ import { itemImageUrl } from '@/lib/items'
 import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
 import { rentalSummary, type InvoiceDoc } from '@/lib/invoice-data'
 import { keyPoints } from '@/lib/terms'
-import { balanceDueDate, extraPaymentNotes, formatLongDate, upfrontCents } from '@/lib/payment'
+import { balanceDueDate, extraPaymentNotes, formatLongDate, upfrontDueCents } from '@/lib/payment'
 
-const depositFor = (doc: InvoiceDoc) => doc.pay_amount_cents || upfrontCents(doc.totals.total, doc.collect_percent)
+const depositFor = (doc: InvoiceDoc) => upfrontDueCents(doc)
 const balanceWhen = (doc: InvoiceDoc) => {
   const d = balanceDueDate(doc)
   return d ? `${formatLongDate(d)} (7 days before your event)` : '7 days before your event'

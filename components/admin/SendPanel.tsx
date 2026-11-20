@@ -17,6 +17,7 @@ type Props = {
   replyTo: string
   problems: string[] // reasons sending is blocked
   deposit?: { amount: string; paid: boolean; paidOn?: string; full?: boolean } // set when this invoice collects payment online (full = 100%)
+  outdatedLink?: boolean // the invoice was edited after it was sent: its payment link is for an older amount
   statusLabel?: string // e.g. "Deposit paid & signed"
   // The refundable security deposit, when the invoice has one.
   security?: { amount: string; online: boolean; paid: boolean; paidOn?: string }
@@ -30,7 +31,7 @@ type Props = {
   }
 }
 
-export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, replyTo, problems, deposit, statusLabel, request, security }: Props) {
+export default function SendPanel({ invoiceId, number, status, signedBy, signedOn, to, from, replyTo, problems, deposit, statusLabel, request, security, outdatedLink }: Props) {
   const router = useRouter()
   const [confirming, setConfirming] = useState(false)
   const [sending, setSending] = useState(false)
@@ -107,6 +108,13 @@ export default function SendPanel({ invoiceId, number, status, signedBy, signedO
       {deposit && (alreadySent || signed) && deposit.paid && (
         <p className="rounded-lg bg-green-950 p-3 text-sm text-green-200">
           {deposit.full ? 'Payment in full of' : 'Deposit of'} {deposit.amount} paid through Square{deposit.paidOn ? ` on ${deposit.paidOn.replace(/\.$/, '')}` : ''}.
+        </p>
+      )}
+
+      {outdatedLink && !signed && (
+        <p role="alert" className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200">
+          You changed this invoice after it was sent, so the customer&apos;s payment link is for the old amount and is switched off. Send it again to give
+          them a new link with the right amount.
         </p>
       )}
 

@@ -6,7 +6,7 @@ import { documentHash, loadInvoiceDocByToken } from '@/lib/signing'
 import InvoiceView from '@/components/InvoiceView'
 import SignForm from '@/components/SignForm'
 import { syncPaymentForToken } from '@/lib/payment-sync'
-import { depositSummary, remainingCents } from '@/lib/payment'
+import { depositSummary, payLinkStale, remainingCents } from '@/lib/payment'
 import { formatMoney } from '@/lib/money'
 
 export const dynamic = 'force-dynamic'
@@ -107,7 +107,12 @@ export default async function SignPage({ params, searchParams }: { params: { tok
                           <a href={`/sign/${params.token}?paid=1`} className="font-semibold underline">check again</a>.
                         </p>
                       )}
-                      {doc.pay_url ? (
+                      {payLinkStale(doc) ? (
+                        <p role="status" className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+                          This invoice was just updated. True North Party Rentals will email you a new link with the correct amount, or contact them and
+                          they will send it right away.
+                        </p>
+                      ) : doc.pay_url ? (
                         <a
                           href={doc.pay_url}
                           className="mt-4 flex h-14 w-full items-center justify-center rounded-xl bg-black text-base font-semibold text-white hover:bg-gray-800"

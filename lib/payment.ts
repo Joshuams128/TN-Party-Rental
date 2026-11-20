@@ -8,6 +8,23 @@ export const depositCents = (totalCents: number): number => Math.round((totalCen
 // What the customer pays online before signing: half (the deposit) or everything.
 export const upfrontCents = (totalCents: number, percent: 50 | 100): number => (percent === 100 ? totalCents : depositCents(totalCents))
 
+// What the customer is asked to pay up front RIGHT NOW. Until it has been paid this always follows the invoice's current
+// total (so editing a sent invoice can never leave an old, wrong amount behind); once paid it is what was actually paid.
+export function upfrontDueCents(
+  doc: Pick<InvoiceDoc, 'collect_payment' | 'collect_percent' | 'paid_at' | 'paid_cents' | 'pay_amount_cents' | 'totals'>
+): number {
+  if (doc.collect_payment && doc.paid_at) return doc.paid_cents || doc.pay_amount_cents
+  return upfrontCents(doc.totals.total, doc.collect_percent)
+}
+
+// The Square link was made for an older total (the invoice was edited after it was sent). It must not be used:
+// the invoice has to be sent again, which makes a new link for the right amount.
+export function payLinkStale(
+  doc: Pick<InvoiceDoc, 'collect_payment' | 'collect_percent' | 'paid_at' | 'pay_amount_cents' | 'totals'>
+): boolean {
+  return doc.collect_payment && !doc.paid_at && doc.pay_amount_cents > 0 && doc.pay_amount_cents !== upfrontCents(doc.totals.total, doc.collect_percent)
+}
+
 export const balanceCents = (totalCents: number): number => totalCents - depositCents(totalCents)
 
 // "Balance due 7 days before the event": the earliest rental start on the invoice, minus 7 days. null if no date is set.
@@ -26,8 +43,8 @@ export function formatLongDate(iso: string): string {
 }
 
 // One sentence describing what is due now and later, used on the page, PDF and emails.
-export function depositSummary(doc: Pick<InvoiceDoc, 'rental_start' | 'lines' | 'totals' | 'pay_amount_cents' | 'collect_percent'>): { now: string; later: string } {
-  const now = doc.pay_amount_cents > 0 ? doc.pay_amount_cents : upfrontCents(doc.totals.total, doc.collect_percent)
+export function depositSummary(doc: Pick<InvoiceDoc, 'rental_start' | 'lines' | 'totals' | 'pay_amount_cents' | 'collect_percent' | 'collect_payment' | 'paid_at' | 'paid_cents'>): { now: string; later: string } {
+  const now = upfrontDueCents(doc)
   const rest = doc.totals.total - now
   const due = balanceDueDate(doc)
   if (doc.collect_percent === 100) return { now: `${formatMoney(now)} payment in full`, later: '' }
@@ -51,7 +68,7 @@ export function paymentLines(
   doc: Pick<InvoiceDoc, 'collect_payment' | 'collect_percent' | 'paid_at' | 'paid_cents' | 'pay_amount_cents' | 'payments' | 'totals' | 'rental_start' | 'lines'>
 ): { label: string; cents: number; strong?: boolean }[] {
   const out: { label: string; cents: number; strong?: boolean }[] = []
-  const dep = doc.pay_amount_cents || upfrontCents(doc.totals.total, doc.collect_percent)
+  const dep = upfrontDueCents(doc)
   // Paying everything up front: one line says it all.
   if (doc.collect_payment && doc.collect_percent === 100) {
     return [{ label: doc.paid_at ? 'Paid in full (100%)' : 'Payment due now (100%)', cents: dep, strong: true }]
