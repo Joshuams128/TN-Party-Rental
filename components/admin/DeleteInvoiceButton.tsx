@@ -14,13 +14,11 @@ type Props = {
   redirectTo?: string // go here after deleting; otherwise just refresh the current page
 }
 
+// A draft nobody ever received can simply be erased. Anything that was sent (or signed) is a record you may need for
+// taxes, so "delete" only moves it to the Deleted invoices list, where it is kept and can be restored.
 export function deleteInvoiceMessage(number: number, status: 'draft' | 'sent' | 'signed') {
-  if (status === 'signed') {
-    return `Delete invoice #${number}?\n\nThe customer has SIGNED this invoice. Deleting permanently removes the signed record (and their signature) from this app. Download the signed PDF first if you need to keep it.\n\nThis can't be undone.`
-  }
-  return status === 'sent'
-    ? `Delete invoice #${number}?\n\nIt was already emailed to the customer. Deleting removes it from your records here, but it can't unsend that email.\n\nThis can't be undone.`
-    : `Delete draft invoice #${number}? This can't be undone.`
+  if (status === 'draft') return `Delete draft invoice #${number}? This can't be undone.`
+  return `Delete invoice #${number}?\n\nIt is NOT erased: it moves to “Deleted invoices” so you still have it for your records and taxes, and you can restore it any time. The customer's link will stop working.`
 }
 
 export default function DeleteInvoiceButton({ id, number, status, variant = 'icon', redirectTo }: Props) {
@@ -33,12 +31,15 @@ export default function DeleteInvoiceButton({ id, number, status, variant = 'ico
     setBusy(true)
     setError('')
     const supabase = createClient()
-    const { error: dbErr } = await supabase.from('invoices').delete().eq('id', id)
+    const { error: dbErr } =
+      status === 'draft'
+        ? await supabase.from('invoices').delete().eq('id', id)
+        : await supabase.from('invoices').update({ deleted_at: new Date().toISOString() }).eq('id', id)
     if (dbErr) {
       setBusy(false)
-      return setError(dbErr.message)
+      return setError(/deleted_at/.test(dbErr.message) ? 'Run the “keep deleted invoices” database update (0016) in Supabase first, then try again.' : dbErr.message)
     }
-    await pruneOrphanCustomers(supabase)
+    if (status === 'draft') await pruneOrphanCustomers(supabase)
     if (redirectTo) router.push(redirectTo)
     router.refresh()
   }

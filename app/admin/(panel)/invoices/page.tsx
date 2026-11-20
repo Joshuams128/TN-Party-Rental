@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { invoiceStatusLabel, totalFromRows, type LineRow } from '@/lib/invoice'
 import { loadRequestedPaidTotals } from '@/lib/invoice-data'
+import { fetchInvoiceRows } from '@/lib/invoice-lists'
 import InvoiceListItem from '@/components/admin/InvoiceListItem'
 
 export const dynamic = 'force-dynamic'
@@ -26,12 +27,12 @@ type Row = {
 export default async function InvoicesPage() {
   const supabase = createClient()
   const requestedPaidPromise = loadRequestedPaidTotals(supabase)
-  const { data, error } = await supabase
-    .from('invoices')
-    .select('id, number, status, signed_at, collect_payment, paid_at, paid_cents, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)')
-    .order('number', { ascending: false })
-  const invoices = (data ?? []) as Row[]
+  const { rows, error } = await fetchInvoiceRows<Row>(supabase, 'id, number, status, signed_at, collect_payment, paid_at, paid_cents, customer_name, issue_date, discount_cents, apply_tax, tax_rate, invoice_lines(unit_price_cents, quantity, discount_type, discount_value)', 'active')
+  const invoices = rows
   const requestedPaid = await requestedPaidPromise
+  // Records: deleted invoices are kept (not erased), and everything can be exported for taxes.
+  const { rows: deletedRows } = await fetchInvoiceRows<{ id: string }>(supabase, 'id', 'deleted')
+  const years = Array.from(new Set(invoices.map((i) => i.issue_date.slice(0, 4)))).sort().reverse()
 
   return (
     <div className="space-y-5">
@@ -42,7 +43,7 @@ export default async function InvoicesPage() {
         </Link>
       </div>
 
-      {error && <p className="rounded-lg bg-red-950 p-3 text-sm text-red-300">Couldn&apos;t load invoices: {error.message}</p>}
+      {error && <p className="rounded-lg bg-red-950 p-3 text-sm text-red-300">Couldn&apos;t load invoices: {error}</p>}
 
       {invoices.length === 0 && !error ? (
         <p className="py-10 text-center text-gray-400">No invoices yet. Create your first one.</p>
@@ -64,6 +65,25 @@ export default async function InvoicesPage() {
           ))}
         </ul>
       )}
+
+      <section aria-labelledby="records-heading" className="space-y-3 rounded-xl border border-gray-800 bg-gray-900 p-4">
+        <h2 id="records-heading" className="font-semibold">Records</h2>
+        <p className="text-sm text-gray-400">
+          Every invoice you send is kept. Deleting one only moves it to Deleted invoices, so it is still here for taxes. Download a spreadsheet of your
+          invoices (subtotal, HST, total, what was paid) to give your accountant.
+        </p>
+        <form action="/api/invoices/export" method="get" className="flex flex-wrap items-center gap-2">
+          <label className="sr-only" htmlFor="export-year">Year</label>
+          <select id="export-year" name="year" defaultValue="all" className="min-h-[44px] rounded-lg border border-gray-700 bg-gray-800 px-3 text-white">
+            <option value="all">All years</option>
+            {years.map((y) => <option key={y} value={y}>{y}</option>)}
+          </select>
+          <button type="submit" className="min-h-[44px] rounded-lg bg-gold px-4 font-semibold text-black hover:bg-gold-dark">Download spreadsheet (CSV)</button>
+        </form>
+        <Link href="/admin/invoices/deleted" className="inline-flex min-h-[44px] items-center text-sm text-gray-300 hover:text-gold">
+          Deleted invoices{deletedRows.length > 0 ? ` (${deletedRows.length})` : ''} →
+        </Link>
+      </section>
     </div>
   )
 }

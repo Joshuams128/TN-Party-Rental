@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { loadInvoiceDoc } from '@/lib/invoice-data'
 import { formatMoney } from '@/lib/money'
 import SendPanel from '@/components/admin/SendPanel'
+import RestoreInvoiceButton from '@/components/admin/RestoreInvoiceButton'
 import { emailRoute } from '@/lib/sender'
 import { depositCents, paidSoFarCents, remainingCents, upfrontCents } from '@/lib/payment'
 import { invoiceStatusLabel } from '@/lib/invoice'
@@ -53,6 +54,19 @@ export default async function ReviewPage({ params }: { params: { id: string } })
           </a>
         </div>
         <div className="order-1 lg:order-2">
+          {doc.deleted_at ? (
+            <div className="space-y-3 rounded-xl border border-amber-500/40 bg-amber-500/10 p-5">
+              <p className="font-semibold text-amber-200">This invoice is deleted</p>
+              <p className="text-sm text-amber-100/80">
+                It is kept for your records and is not in your normal lists. The customer&apos;s link no longer works. Restore it to use it again, or just download the PDF.
+              </p>
+              <div className="flex flex-wrap items-center gap-x-4">
+                <RestoreInvoiceButton id={doc.id} number={doc.number} redirectTo={`/admin/invoices/${doc.id}/review`} />
+                <a href={`/api/invoices/${doc.id}/pdf?download=1`} className="flex min-h-[44px] items-center text-sm text-gold hover:underline">Download PDF</a>
+                <Link href="/admin/invoices/deleted" className="flex min-h-[44px] items-center text-sm text-gray-300 hover:text-gold">All deleted invoices</Link>
+              </div>
+            </div>
+          ) : (
           <SendPanel
             invoiceId={doc.id}
             number={doc.number}
@@ -110,6 +124,7 @@ export default async function ReviewPage({ params }: { params: { id: string } })
                 : undefined
             }
           />
+          )}
         </div>
       </div>
     </div>

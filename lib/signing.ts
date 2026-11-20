@@ -75,6 +75,7 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     cash_payment: !!r.cash_payment,
     security_deposit_cents: Number(r.security_deposit_cents) || 0,
     security_online: !!r.security_online && Number(r.security_deposit_cents) > 0,
+    deleted_at: null,
     security_pay_url: r.security_pay_url ?? null,
     security_paid_at: r.security_paid_at ?? null,
     security_paid_cents: Number(r.security_paid_cents) || 0,

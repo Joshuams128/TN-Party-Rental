@@ -352,12 +352,16 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, se
     deleted.current = true
     clearTimeout(timer.current)
     while (saving.current) await new Promise((r) => setTimeout(r, 100))
-    const { error } = await supabase.from('invoices').delete().eq('id', invoiceId)
+    // A draft is erased; an invoice that was already sent is only moved to "Deleted invoices" (kept for records).
+    const { error } =
+      initial.status === 'draft'
+        ? await supabase.from('invoices').delete().eq('id', invoiceId)
+        : await supabase.from('invoices').update({ deleted_at: new Date().toISOString() }).eq('id', invoiceId)
     if (error) {
       deleted.current = false
-      return setSaveError(error.message)
+      return setSaveError(/deleted_at/.test(error.message) ? 'Run the “keep deleted invoices” database update (0016) in Supabase first, then try again.' : error.message)
     }
-    await pruneOrphanCustomers(supabase)
+    if (initial.status === 'draft') await pruneOrphanCustomers(supabase)
     router.push('/admin/invoices')
     router.refresh()
   }
