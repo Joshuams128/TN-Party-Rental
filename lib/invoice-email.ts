@@ -5,7 +5,7 @@ import { itemImageUrl } from '@/lib/items'
 import { discountLabel, discountSignChar, rowDiscountCents, rowPriceAfterDiscountCents } from '@/lib/invoice'
 import { rentalSummary, type InvoiceDoc } from '@/lib/invoice-data'
 import { keyPoints } from '@/lib/terms'
-import { balanceDueDate, formatLongDate, upfrontCents } from '@/lib/payment'
+import { balanceDueDate, extraPaymentNotes, formatLongDate, upfrontCents } from '@/lib/payment'
 
 const depositFor = (doc: InvoiceDoc) => doc.pay_amount_cents || upfrontCents(doc.totals.total, doc.collect_percent)
 const balanceWhen = (doc: InvoiceDoc) => {
@@ -78,6 +78,7 @@ export function invoiceEmailHtml(doc: InvoiceDoc, signLink: string): string {
     </table>
     ${doc.terms_text ? `<div style="margin:16px 0;padding:10px 14px;background:#faf8f0;border-left:4px solid #D4AF37;border-radius:4px;font-size:14px"><div style="font-size:11px;font-weight:bold;letter-spacing:1px;color:#B8941F;margin-bottom:4px">KEY TERMS</div><ul style="margin:0;padding-left:18px">${keyPoints(doc.terms_key_points).map((k) => `<li>${esc(k)}</li>`).join('')}</ul><div style="margin-top:6px">The full payment terms are in the attached PDF and on the signing page. <strong>By signing, you agree to the invoice and these terms.</strong></div></div>` : ''}
     ${doc.collect_payment ? `<p style="margin:12px 0;padding:10px 14px;background:#f6f3e8;border-left:4px solid #D4AF37;border-radius:4px">${esc(upfrontSentence(doc))}</p>` : ''}
+    ${extraPaymentNotes(doc).map((n) => `<p style="margin:12px 0;padding:10px 14px;background:#f6f3e8;border-left:4px solid #D4AF37;border-radius:4px"><strong>${esc(n.label)}${n.amount !== undefined ? `: ${formatMoney(n.amount)}` : ''}</strong><br><span style="font-size:13px;color:#555">${esc(n.note)}</span></p>`).join('')}
     ${doc.due_date ? `<p><strong>Due:</strong> ${formatDate(doc.due_date)}</p>` : ''}
     ${doc.notes ? `<p style="white-space:pre-line">${esc(doc.notes)}</p>` : ''}
     <p style="margin:24px 0 8px"><a href="${esc(signLink)}" style="display:inline-block;background:#D4AF37;color:#000;text-decoration:none;font-weight:bold;padding:14px 28px;border-radius:8px">Review &amp; sign invoice</a></p>
@@ -96,6 +97,7 @@ export function invoiceEmailText(doc: InvoiceDoc, signLink: string): string {
     `Total: ${formatMoney(doc.totals.total)}`,
     ...(rentalSummary(doc).length ? ['Rental period:', ...rentalSummary(doc).map((r) => `  ${r}`)] : []),
     ...(doc.collect_payment ? [upfrontSentence(doc)] : []),
+    ...extraPaymentNotes(doc).map((n) => `${n.label}${n.amount !== undefined ? `: ${formatMoney(n.amount)}` : ''}. ${n.note}`),
     doc.due_date ? `Due: ${formatDate(doc.due_date)}` : '',
     ...(doc.terms_text ? ['', 'Key terms:', ...keyPoints(doc.terms_key_points).map((k) => `  - ${k}`), 'The full payment terms are in the attached PDF and on the signing page. By signing, you agree to the invoice and these terms.'] : []),
     doc.notes ? `\n${doc.notes}` : '',

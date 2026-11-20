@@ -4,6 +4,8 @@ import { useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { BusinessSettings } from '@/lib/invoice-data'
 import { DEFAULT_KEY_POINTS, DEFAULT_TERMS, termsPlaceholders } from '@/lib/terms'
+import { DEFAULT_SECURITY_TIERS } from '@/lib/security-deposit'
+import { parseMoneyToCents } from '@/lib/money'
 
 const input = 'mt-1 min-h-[44px] w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-500'
 
@@ -20,12 +22,31 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
   }
   const blanks = termsPlaceholders(s.terms_text + '\n' + s.terms_key_points)
 
+  // Security deposit options: one row per amount, editable. Only written once the owner changes them.
+  type Row = { id: string; label: string; amount: string }
+  const toRows = (tiers: { label: string; cents: number }[]): Row[] => tiers.map((t) => ({ id: crypto.randomUUID(), label: t.label, amount: String(t.cents / 100) }))
+  const [tiers, setTiers] = useState<Row[]>(() => toRows(initial.security_deposit_options))
+  const tiersTouched = useRef(false)
+  const editTiers = (fn: (rows: Row[]) => Row[]) => {
+    tiersTouched.current = true
+    setTiers(fn)
+    setState('idle')
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault()
     const rate = Number(s.tax_rate)
     if (!Number.isFinite(rate) || rate < 0 || rate > 100) return setError('Tax rate must be between 0 and 100.')
     const fromValue = s.send_from_email.trim()
     if (fromValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fromValue)) return setError('“Send invoices from” must be a valid email address.')
+    // Security deposit options: every row needs a positive dollar amount.
+    const tierRows: { label: string; cents: number }[] = []
+    for (const r of tiers) {
+      const cents = parseMoneyToCents(r.amount)
+      if (cents === null || cents <= 0) return setError('Each security deposit option needs an amount greater than $0.')
+      tierRows.push({ label: r.label.trim().slice(0, 40), cents })
+    }
+    tierRows.sort((a, b) => a.cents - b.cents)
     setError('')
     setState('saving')
     const { error: dbErr } = await createClient()
@@ -41,6 +62,7 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
         tax_rate: rate,
         invoice_footer: s.invoice_footer.trim(),
         ...(termsTouched.current ? { terms_key_points: s.terms_key_points.trim(), terms_text: s.terms_text.trim() } : {}),
+        ...(tiersTouched.current ? { security_deposit_options: tierRows } : {}),
       })
       .eq('id', 1)
     if (dbErr) {
@@ -130,6 +152,64 @@ export default function SettingsForm({ initial }: { initial: BusinessSettings })
             final wording, for example {blanks.slice(0, 2).join(' and ')}. Invoices can’t be sent until none are left.
           </p>
         )}
+      </div>
+
+      <div className="space-y-3 border-t border-gray-800 pt-5">
+        <h2 className="text-lg font-semibold">Security deposit options</h2>
+        <p className="text-xs text-gray-400">
+          The refundable amounts offered in the “Security deposit” dropdown on every invoice, for example more for fragile or high-value
+          rentals. Change, rename, add or remove them any time. Each invoice keeps the amount it was saved with, so changing this list
+          never alters an invoice that was already sent.
+        </p>
+        <ul className="space-y-2">
+          {tiers.map((r, i) => (
+            <li key={r.id} className="flex items-center gap-2">
+              <input
+                value={r.label}
+                onChange={(e) => editTiers((rows) => rows.map((x) => (x.id === r.id ? { ...x, label: e.target.value } : x)))}
+                aria-label={`Name for option ${i + 1} (optional)`}
+                placeholder="Name (optional)"
+                maxLength={40}
+                className={`${input} mt-0 min-w-0 flex-1`}
+              />
+              <label className="relative w-28 shrink-0">
+                <span className="sr-only">Amount for option {i + 1}</span>
+                <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                <input
+                  inputMode="decimal"
+                  value={r.amount}
+                  onChange={(e) => editTiers((rows) => rows.map((x) => (x.id === r.id ? { ...x, amount: e.target.value } : x)))}
+                  className={`${input} mt-0 pl-6 text-right`}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => editTiers((rows) => rows.filter((x) => x.id !== r.id))}
+                aria-label={`Remove option ${i + 1}`}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-800 hover:text-red-400"
+              >
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
+        {tiers.length === 0 && <p className="text-sm text-gray-400">No options: the dropdown on invoices will only show “None”.</p>}
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => editTiers((rows) => [...rows, { id: crypto.randomUUID(), label: '', amount: '' }])}
+            className="min-h-[44px] rounded-lg border border-gray-700 px-4 text-sm hover:bg-gray-800"
+          >
+            + Add an option
+          </button>
+          <button
+            type="button"
+            onClick={() => editTiers(() => toRows(DEFAULT_SECURITY_TIERS))}
+            className="min-h-[44px] rounded-lg px-4 text-sm text-gray-400 hover:text-gold"
+          >
+            Reset to $50 – $2,000
+          </button>
+        </div>
       </div>
 
       {error && <p role="alert" className="text-sm text-red-400">{error}</p>}

@@ -37,6 +37,9 @@ export function documentHash(doc: InvoiceDoc): string {
     ...(doc.terms_text ? { terms: [doc.terms_key_points, doc.terms_text] } : {}),
     // The deposit the customer is told to pay is part of what they sign.
     ...(doc.collect_payment ? { deposit: doc.pay_amount_cents } : {}),
+    // The cash note and security deposit are part of what the customer signs, but only when present.
+    ...(doc.cash_payment ? { cash: true } : {}),
+    ...(doc.security_deposit_cents > 0 ? { security: doc.security_deposit_cents } : {}),
   })
   return createHash('sha256').update(canonical).digest('hex')
 }
@@ -68,6 +71,8 @@ export async function loadInvoiceDocByToken(supabase: SupabaseClient, token: str
     terms_key_points: r.terms_key_points ?? '',
     terms_text: r.terms_text ?? '',
     collect_payment: !!r.collect_payment,
+    cash_payment: !!r.cash_payment,
+    security_deposit_cents: Number(r.security_deposit_cents) || 0,
     // Asked to pay the whole invoice up front = 100%; otherwise the 50% deposit.
     collect_percent: Number(r.pay_amount_cents) > 0 && Number(r.pay_amount_cents) >= totals.total ? 100 : 50,
     pay_amount_cents: Number(r.pay_amount_cents) || 0,

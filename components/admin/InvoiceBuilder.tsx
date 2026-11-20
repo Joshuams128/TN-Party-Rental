@@ -10,6 +10,7 @@ import { deleteInvoiceMessage } from './DeleteInvoiceButton'
 import { blankDiscount, blankRental, computeTotals, encodeDiscountType, lineDiscountCents, lineTotalCents, type InvoiceFields, type Line } from '@/lib/invoice'
 import { formatRentalPeriod } from '@/lib/rental'
 import { depositCents } from '@/lib/payment'
+import { tierText, type SecurityTier } from '@/lib/security-deposit'
 import RentalPeriodInput from './RentalPeriodInput'
 import type { Item } from '@/lib/items'
 import ItemImage from './ItemImage'
@@ -26,6 +27,7 @@ type Props = {
   customers: CustomerOption[]
   taxLabel: string
   taxRate: number
+  securityTiers: SecurityTier[] // the refundable security deposit amounts from Settings
   initial: {
     id: string | null
     number: number | null
@@ -41,7 +43,7 @@ const card = 'rounded-xl border border-gray-800 bg-gray-900 p-4 sm:p-5'
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 
-export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, initial }: Props) {
+export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, securityTiers, initial }: Props) {
   const router = useRouter()
   const supabase = useMemo(() => createClient(), [])
 
@@ -68,6 +70,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const ownerSigTouched = useRef(initial.fields.owner_signature)
   const collectTouched = useRef(initial.fields.collect_payment)
   const percentTouched = useRef(initial.fields.collect_percent !== 50) // the column comes from a newer database update
+  const cashTouched = useRef(initial.fields.cash_payment) // same idea: only written once cash is chosen
+  const securityTouched = useRef(initial.fields.security_deposit_cents > 0)
   const phoneTouched = useRef(!!initial.fields.customer_phone) // the phone column comes from a newer database update
   // Same idea for the rental period and line discounts: columns from newer migrations are only written once used.
   const knownUpdatedAt = useRef<string | null>(initial.updatedAt)
@@ -76,6 +80,17 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
   const rentalTouched = useRef(!!(initial.fields.rental_start || initial.fields.rental_end))
 
   const totals = computeTotals(lines, fields.discount, fields.apply_tax, taxRate)
+  const payMode: 'none' | 'online' | 'cash' = fields.cash_payment ? 'cash' : fields.collect_payment ? 'online' : 'none'
+  function setPayMode(m: 'none' | 'online' | 'cash') {
+    collectTouched.current = true
+    if (m === 'cash') cashTouched.current = true // the cash column is only written once cash has been chosen
+    setFields((f) => ({ ...f, collect_payment: m === 'online', cash_payment: m === 'cash' }))
+  }
+  // An amount saved on this invoice stays selectable even if the list in Settings has since changed.
+  const securityOptions: SecurityTier[] =
+    fields.security_deposit_cents > 0 && !securityTiers.some((t) => t.cents === fields.security_deposit_cents)
+      ? [...securityTiers, { label: 'Saved on this invoice', cents: fields.security_deposit_cents }].sort((a, b) => a.cents - b.cents)
+      : securityTiers
   const [discountOpen, setDiscountOpen] = useState<Record<string, boolean>>({})
   const [rentalOpen, setRentalOpen] = useState<Record<string, boolean>>({})
   const [secondOpen, setSecondOpen] = useState<Record<string, boolean>>({})
@@ -115,6 +130,8 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
       // Only written once used, so databases without the deposit update keep saving normal invoices.
       ...(collectTouched.current ? { collect_payment: f.collect_payment } : {}),
       ...(percentTouched.current ? { collect_percent: f.collect_percent } : {}),
+      ...(cashTouched.current ? { cash_payment: f.cash_payment } : {}),
+      ...(securityTouched.current ? { security_deposit_cents: f.security_deposit_cents } : {}),
       ...(rentalTouched.current ? { rental_start: f.rental_start || null, rental_end: f.rental_end || null } : {}),
       updated_at: new Date().toISOString(),
     }
@@ -757,62 +774,85 @@ export default function InvoiceBuilder({ items, customers, taxLabel, taxRate, in
             <span>Include my signature <span className="text-gray-400">(save it once under Settings. The customer always signs online.)</span></span>
           </label>
 
-          <label className="mt-1 flex min-h-[44px] items-start gap-3 py-2 text-sm">
-            <input
-              type="checkbox"
-              checked={fields.collect_payment}
-              onChange={(e) => {
-                collectTouched.current = true
-                setField('collect_payment', e.target.checked)
-              }}
-              className="mt-0.5 h-5 w-5 shrink-0 accent-[#D4AF37]"
-            />
-            <span>
-              Collect payment online <span className="text-gray-400">(Square)</span>
-              <span className="block text-xs text-gray-400">
-                {fields.collect_payment
-                  ? 'The customer pays first, then signs. Choose how much:'
-                  : 'Off: the customer just signs, as before. Tick it to have them pay before signing.'}
+          {/* How the customer pays: just sign, pay online (Square) first, or cash (a note on the invoice). */}
+          <fieldset className="mt-3 space-y-1">
+            <legend className="mb-1 text-sm font-medium">Payment</legend>
+            <label className="flex min-h-[44px] items-start gap-3 py-2 text-sm">
+              <input type="radio" name="payMode" checked={payMode === 'none'} onChange={() => setPayMode('none')} className="mt-0.5 h-5 w-5 shrink-0 accent-[#D4AF37]" />
+              <span>
+                Signing only
+                <span className="block text-xs text-gray-400">The customer just signs. Nothing is collected here.</span>
               </span>
-            </span>
+            </label>
+            <label className="flex min-h-[44px] items-start gap-3 py-2 text-sm">
+              <input type="radio" name="payMode" checked={payMode === 'online'} onChange={() => setPayMode('online')} className="mt-0.5 h-5 w-5 shrink-0 accent-[#D4AF37]" />
+              <span>
+                Collect payment online <span className="text-gray-400">(Square)</span>
+                <span className="block text-xs text-gray-400">The customer pays first, then signs.</span>
+              </span>
+            </label>
+            {payMode === 'online' && (
+              <div className="mb-1 ml-8 space-y-1">
+                <label className="flex min-h-[44px] items-center gap-3 text-sm">
+                  <input
+                    type="radio"
+                    name="collectPercent"
+                    checked={fields.collect_percent === 50}
+                    onChange={() => {
+                      percentTouched.current = true
+                      setField('collect_percent', 50)
+                    }}
+                    className="h-5 w-5 accent-[#D4AF37]"
+                  />
+                  <span>
+                    50% deposit: <strong>{formatMoney(depositCents(totals.total))}</strong> now
+                    <span className="block text-xs text-gray-400">The other {formatMoney(totals.total - depositCents(totals.total))} is due 7 days before the event.</span>
+                  </span>
+                </label>
+                <label className="flex min-h-[44px] items-center gap-3 text-sm">
+                  <input
+                    type="radio"
+                    name="collectPercent"
+                    checked={fields.collect_percent === 100}
+                    onChange={() => {
+                      percentTouched.current = true
+                      setField('collect_percent', 100)
+                    }}
+                    className="h-5 w-5 accent-[#D4AF37]"
+                  />
+                  <span>
+                    100% in full: <strong>{formatMoney(totals.total)}</strong> now
+                    <span className="block text-xs text-gray-400">Nothing left to pay afterwards.</span>
+                  </span>
+                </label>
+              </div>
+            )}
+            <label className="flex min-h-[44px] items-start gap-3 py-2 text-sm">
+              <input type="radio" name="payMode" checked={payMode === 'cash'} onChange={() => setPayMode('cash')} className="mt-0.5 h-5 w-5 shrink-0 accent-[#D4AF37]" />
+              <span>
+                Customer will pay with cash
+                <span className="block text-xs text-gray-400">Noted on the invoice. Nothing is charged online.</span>
+              </span>
+            </label>
+          </fieldset>
+
+          <label className="mt-2 block text-sm font-medium">
+            Security deposit <span className="font-normal text-gray-400">(refundable, not part of the total)</span>
+            <select
+              value={fields.security_deposit_cents}
+              onChange={(e) => {
+                securityTouched.current = true
+                setField('security_deposit_cents', Number(e.target.value))
+              }}
+              className={`${input} sm:w-72`}
+            >
+              <option value={0}>None</option>
+              {securityOptions.map((t) => (
+                <option key={t.cents} value={t.cents}>{tierText(t)}</option>
+              ))}
+            </select>
+            <span className="mt-1 block text-xs font-normal text-gray-400">The amounts come from Settings, where they can be changed any time.</span>
           </label>
-          {fields.collect_payment && (
-            <fieldset className="mb-1 ml-8 space-y-1">
-              <legend className="sr-only">How much the customer pays before signing</legend>
-              <label className="flex min-h-[44px] items-center gap-3 text-sm">
-                <input
-                  type="radio"
-                  name="collectPercent"
-                  checked={fields.collect_percent === 50}
-                  onChange={() => {
-                    percentTouched.current = true
-                    setField('collect_percent', 50)
-                  }}
-                  className="h-5 w-5 accent-[#D4AF37]"
-                />
-                <span>
-                  50% deposit: <strong>{formatMoney(depositCents(totals.total))}</strong> now
-                  <span className="block text-xs text-gray-400">The other {formatMoney(totals.total - depositCents(totals.total))} is due 7 days before the event.</span>
-                </span>
-              </label>
-              <label className="flex min-h-[44px] items-center gap-3 text-sm">
-                <input
-                  type="radio"
-                  name="collectPercent"
-                  checked={fields.collect_percent === 100}
-                  onChange={() => {
-                    percentTouched.current = true
-                    setField('collect_percent', 100)
-                  }}
-                  className="h-5 w-5 accent-[#D4AF37]"
-                />
-                <span>
-                  100% in full: <strong>{formatMoney(totals.total)}</strong> now
-                  <span className="block text-xs text-gray-400">Nothing left to pay afterwards.</span>
-                </span>
-              </label>
-            </fieldset>
-          )}
 
           {!showDetails ? (
             <button type="button" onClick={() => setShowDetails(true)} className="mt-2 min-h-[44px] text-sm text-gray-300 hover:text-gold">

@@ -5,13 +5,14 @@ import { todayISO } from '@/lib/invoice'
 export const dynamic = 'force-dynamic'
 
 export default async function NewInvoicePage() {
-  const { items, customers, taxLabel, taxRate } = await loadBuilderData()
+  const { items, customers, taxLabel, taxRate, securityTiers } = await loadBuilderData()
   return (
     <InvoiceBuilder
       items={items}
       customers={customers}
       taxLabel={taxLabel}
       taxRate={taxRate}
+      securityTiers={securityTiers}
       initial={{
         id: null,
         number: null,
@@ -32,6 +33,8 @@ export default async function NewInvoicePage() {
           owner_signature: false,
           collect_payment: false,
           collect_percent: 50 as const,
+          cash_payment: false,
+          security_deposit_cents: 0,
         },
         lines: [],
       }}

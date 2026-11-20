@@ -46,6 +46,7 @@ export default async function EditInvoicePage({ params }: { params: { id: string
       customers={builder.customers}
       taxLabel={builder.taxLabel}
       taxRate={builder.taxRate}
+      securityTiers={builder.securityTiers}
       initial={{
         id: invoice.id,
         number: invoice.number,
@@ -66,6 +67,8 @@ export default async function EditInvoicePage({ params }: { params: { id: string
           owner_signature: !!invoice.include_owner_signature,
           collect_payment: !!invoice.collect_payment,
           collect_percent: (Number(invoice.collect_percent) === 100 ? 100 : 50) as 50 | 100,
+          cash_payment: !!invoice.cash_payment,
+          security_deposit_cents: Number(invoice.security_deposit_cents) || 0,
         },
         lines,
       }}
