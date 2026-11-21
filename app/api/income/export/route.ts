@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
   return new NextResponse(buffer, {
     headers: {
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': `attachment; filename="income-${period}.xlsx"`,
+      'Content-Disposition': `attachment; filename="job-tracker-${period}.xlsx"`,
       'Cache-Control': 'no-store',
     },
   })

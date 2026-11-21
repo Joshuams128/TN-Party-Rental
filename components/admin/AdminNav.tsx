@@ -7,7 +7,7 @@ import { FileText, LayoutDashboard, Package, Settings, TrendingUp } from 'lucide
 const nav = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/invoices', label: 'Invoices', icon: FileText },
-  { href: '/admin/income', label: 'Income', icon: TrendingUp },
+  { href: '/admin/income', label: 'Tracker', icon: TrendingUp },
   { href: '/admin/items', label: 'Items', icon: Package },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]
@@ -24,7 +24,7 @@ export default function AdminNav() {
             key={href}
             href={href}
             aria-current={active ? 'page' : undefined}
-            className={`flex min-h-[3.25rem] flex-col items-center justify-center gap-1 rounded-lg px-2 text-xs font-medium sm:min-h-0 sm:flex-row sm:gap-2 sm:px-3 sm:py-2 sm:text-sm ${
+            className={`flex min-h-[3.25rem] flex-col items-center justify-center gap-1 rounded-lg px-0.5 text-[11px] font-medium min-[360px]:px-2 min-[360px]:text-xs sm:min-h-0 sm:flex-row sm:gap-2 sm:px-3 sm:py-2 sm:text-sm ${
               active ? 'bg-gray-800 text-gold' : 'text-gray-300 hover:bg-gray-800'
             }`}
           >

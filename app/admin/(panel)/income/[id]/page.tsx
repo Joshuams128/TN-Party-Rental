@@ -21,7 +21,7 @@ export default async function JobPage({ params }: { params: { id: string } }) {
   return (
     <div className="space-y-5">
       <Link href="/admin/income" className="inline-flex min-h-[44px] items-center gap-1 text-sm text-gray-400 hover:text-gold">
-        <ArrowLeft size={14} /> Income
+        <ArrowLeft size={14} /> Job tracker
       </Link>
       <div>
         <h1 className="text-2xl font-bold">{j.customer || 'No name'} <span className="text-lg font-normal text-gray-400">#{j.number}</span></h1>
@@ -33,7 +33,7 @@ export default async function JobPage({ params }: { params: { id: string } }) {
 
       {setupNeeded && (
         <p role="status" className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200">
-          Run the “income tracker” database update (0017) in Supabase to record payments and expenses.
+          Run the “job tracker” database update (0017) in Supabase to record payments and expenses.
         </p>
       )}
 

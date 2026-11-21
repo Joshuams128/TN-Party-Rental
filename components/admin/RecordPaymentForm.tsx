@@ -27,7 +27,7 @@ export default function RecordPaymentForm({ invoiceId, defaultAmount, today }: {
     setError('')
     const { error: dbErr } = await createClient().from('job_payments').insert({ invoice_id: invoiceId, amount_cents: cents, received_on: date, method, note: note.trim() })
     setBusy(false)
-    if (dbErr) return setError(/job_payments/.test(dbErr.message) ? 'Run the “income tracker” database update (0017) in Supabase first, then try again.' : dbErr.message)
+    if (dbErr) return setError(/job_payments/.test(dbErr.message) ? 'Run the “job tracker” database update (0017) in Supabase first, then try again.' : dbErr.message)
     setNote('')
     setAmount('')
     router.refresh()
