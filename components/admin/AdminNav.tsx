@@ -2,20 +2,21 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { FileText, LayoutDashboard, Package, Settings } from 'lucide-react'
+import { FileText, LayoutDashboard, Package, Settings, TrendingUp } from 'lucide-react'
 
 const nav = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/invoices', label: 'Invoices', icon: FileText },
+  { href: '/admin/income', label: 'Income', icon: TrendingUp },
   { href: '/admin/items', label: 'Items', icon: Package },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]
 
-// Four equal tabs that always fit on a phone (icon above label); a row of pills on wider screens.
+// Five equal tabs that always fit on a phone (icon above label); a row of pills on wider screens.
 export default function AdminNav() {
   const pathname = usePathname()
   return (
-    <nav aria-label="Admin" className="mb-6 grid grid-cols-4 gap-1 border-b border-gray-800 pb-3 sm:flex sm:gap-2">
+    <nav aria-label="Admin" className="mb-6 grid grid-cols-5 gap-1 border-b border-gray-800 pb-3 sm:flex sm:gap-2">
       {nav.map(({ href, label, icon: Icon }) => {
         const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href)
         return (
