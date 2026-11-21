@@ -29,8 +29,8 @@ export default async function IncomePage({ searchParams }: { searchParams: { yea
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Income</h1>
-          <p className="text-sm text-gray-400">Every job that has been paid, filled in from your invoices and payments.</p>
+          <h1 className="text-2xl font-bold">Job tracker</h1>
+          <p className="text-sm text-gray-400">Every job that has been paid: what came in, what is still owed, expenses and profit. Filled in from your invoices and payments.</p>
         </div>
         <a
           href={`/api/income/export?${query}`}
@@ -42,7 +42,7 @@ export default async function IncomePage({ searchParams }: { searchParams: { yea
 
       {setupNeeded && (
         <p role="status" className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-amber-200">
-          To record payments and expenses, run the “income tracker” database update (0017) in Supabase. Until then this page shows Square payments only.
+          To record payments and expenses, run the “job tracker” database update (0017) in Supabase. Until then this page shows Square payments only.
         </p>
       )}
 
