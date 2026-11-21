@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import ExcelJS from 'exceljs'
 import { requireOwner } from '@/lib/auth'
-import { filterJobs, loadIncome, parseFilter, totalsOf } from '@/lib/income'
-import { todayISO } from '@/lib/invoice'
+import { filterJobs, loadIncome, parseFilter, paymentsInPeriod, totalsOf } from '@/lib/income'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -29,8 +28,7 @@ export async function GET(request: NextRequest) {
   if (!owner) return NextResponse.json({ message: 'Please sign in again.' }, { status: 401 })
 
   const sp = request.nextUrl.searchParams
-  const thisYear = todayISO().slice(0, 4)
-  const f = parseFilter({ year: sp.get('year') ?? undefined, month: sp.get('month') ?? undefined, unpaid: sp.get('unpaid') ?? undefined }, thisYear)
+  const f = parseFilter({ year: sp.get('year') ?? undefined, month: sp.get('month') ?? undefined, unpaid: sp.get('unpaid') ?? undefined })
   const { jobs: all } = await loadIncome(owner.supabase)
   const jobs = filterJobs(all, f)
   const t = totalsOf(jobs)
@@ -84,13 +82,13 @@ export async function GET(request: NextRequest) {
   mtot.border = { top: { style: 'thin' } }
   styleSheet(ms, [3, 4, 5, 6, 7, 8], [18, 8, 20, 12, 16, 14, 13, 20])
 
-  // ---- Payments
+  // ---- Payments: money that actually came in during the period, by the date it arrived (whatever the event date is)
   const ps = wb.addWorksheet('Payments')
-  ps.columns = [{ header: 'Date received' }, { header: 'Invoice #' }, { header: 'Customer' }, { header: 'Amount' }, { header: 'How' }, { header: 'Source' }, { header: 'Note' }]
-  const payRows = jobs.flatMap((j) => j.payments.map((p) => ({ j, p }))).sort((a, b) => a.p.date.localeCompare(b.p.date))
-  for (const { j, p } of payRows) ps.addRow([p.date ? asDate(p.date) : '', j.number, j.customer, dollars(p.amountCents), p.method, p.source, p.note])
-  styleSheet(ps, [4], [14, 11, 28, 14, 18, 12, 40])
+  ps.columns = [{ header: 'Date received' }, { header: 'Invoice #' }, { header: 'Customer' }, { header: 'Event date' }, { header: 'Amount' }, { header: 'How' }, { header: 'Source' }, { header: 'Note' }]
+  for (const { job, payment } of paymentsInPeriod(all, f)) ps.addRow([payment.date ? asDate(payment.date) : '', job.number, job.customer, asDate(job.eventDate), dollars(payment.amountCents), payment.method, payment.source, payment.note])
+  styleSheet(ps, [5], [14, 11, 28, 14, 14, 18, 12, 40])
   ps.getColumn(1).numFmt = 'mmm d, yyyy'
+  ps.getColumn(4).numFmt = 'mmm d, yyyy'
 
   // ---- Expenses
   const es = wb.addWorksheet('Expenses')

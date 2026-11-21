@@ -137,10 +137,34 @@ export function totalsOf(jobs: IncomeJob[]) {
   }
 }
 
-export function parseFilter(sp: { year?: string; month?: string; unpaid?: string }, thisYear: string): IncomeFilter {
+// The default is ALL years, so a job whose event is next year (but whose deposit has already come in) is never hidden.
+export function parseFilter(sp: { year?: string; month?: string; unpaid?: string }): IncomeFilter {
   return {
-    year: sp.year === 'all' ? 'all' : /^\d{4}$/.test(sp.year ?? '') ? (sp.year as string) : thisYear,
+    year: /^\d{4}$/.test(sp.year ?? '') ? (sp.year as string) : 'all',
     month: /^(0?[1-9]|1[0-2])$/.test(sp.month ?? '') ? (sp.month as string) : 'all',
     showUnpaid: sp.unpaid === '1',
   }
+}
+
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+export const periodLabel = (f: IncomeFilter): string =>
+  f.year === 'all' && f.month === 'all' ? 'all time' : `${f.month === 'all' ? '' : `${MONTH_NAMES[Number(f.month) - 1]} `}${f.year === 'all' ? '(any year)' : f.year}`.trim()
+
+export const isWholeRange = (f: IncomeFilter): boolean => f.year === 'all' && f.month === 'all'
+
+// A date (YYYY-MM-DD) is in the chosen period?
+export function inPeriod(date: string, f: IncomeFilter): boolean {
+  if (!date) return false
+  if (f.year !== 'all' && !date.startsWith(f.year)) return false
+  if (f.month !== 'all' && date.slice(5, 7) !== f.month.padStart(2, '0')) return false
+  return true
+}
+
+// Money that actually came in during the period, by the date each payment arrived (whatever the event date is).
+export function paymentsInPeriod(all: IncomeJob[], f: IncomeFilter): { job: IncomeJob; payment: JobPayment }[] {
+  return all
+    .flatMap((job) => job.payments.map((payment) => ({ job, payment })))
+    .filter(({ payment }) => (isWholeRange(f) ? true : inPeriod(payment.date, f)))
+    .sort((a, b) => a.payment.date.localeCompare(b.payment.date))
 }

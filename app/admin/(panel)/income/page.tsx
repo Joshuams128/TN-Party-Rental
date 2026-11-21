@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Download } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { filterJobs, loadIncome, parseFilter, totalsOf } from '@/lib/income'
+import { filterJobs, isWholeRange, loadIncome, parseFilter, paymentsInPeriod, periodLabel, totalsOf } from '@/lib/income'
 import { formatMoney } from '@/lib/money'
 import { formatDateShort, todayISO } from '@/lib/invoice'
 
@@ -15,9 +15,13 @@ const select = 'min-h-[44px] rounded-lg border border-gray-700 bg-gray-800 px-3 
 export default async function IncomePage({ searchParams }: { searchParams: { year?: string; month?: string; unpaid?: string } }) {
   const { jobs: all, setupNeeded } = await loadIncome(createClient())
   const thisYear = todayISO().slice(0, 4)
-  const f = parseFilter(searchParams, thisYear)
+  const f = parseFilter(searchParams)
   const jobs = filterJobs(all, f)
   const t = totalsOf(jobs)
+  // Jobs are grouped by event date. Say so when paid jobs (or payments) fall outside the period being looked at.
+  const outside = isWholeRange(f) ? [] : all.filter((j) => j.receivedCents > 0 && !jobs.includes(j))
+  const inPeriodPayments = isWholeRange(f) ? [] : paymentsInPeriod(all, f)
+  const moneyIn = inPeriodPayments.reduce((s, x) => s + x.payment.amountCents, 0)
   const years = Array.from(new Set([thisYear, ...all.map((j) => j.eventDate.slice(0, 4))])).sort().reverse()
   const query = new URLSearchParams({ year: f.year, month: f.month, ...(f.showUnpaid ? { unpaid: '1' } : {}) }).toString()
 
@@ -63,6 +67,26 @@ export default async function IncomePage({ searchParams }: { searchParams: { yea
         </label>
         <button type="submit" className="min-h-[44px] rounded-lg border border-gray-700 px-4 text-sm hover:bg-gray-800">Show</button>
       </form>
+
+      {!isWholeRange(f) && (
+        <div role="status" className="space-y-1 rounded-lg border border-gray-800 bg-gray-900 p-3 text-sm">
+          <p>
+            <span className="font-medium">Money received in {periodLabel(f)}</span> (by the date each payment arrived):{' '}
+            <span className="font-semibold text-green-400">{formatMoney(moneyIn)}</span>
+            <span className="text-gray-400"> · {inPeriodPayments.length} payment{inPeriodPayments.length === 1 ? '' : 's'}</span>
+          </p>
+          {outside.length > 0 && (
+            <p className="text-gray-400">
+              Jobs are listed by their event date. {outside.length} paid job{outside.length === 1 ? ' is' : 's are'} for events outside this period:{' '}
+              {outside.slice(0, 4).map((j) => `${j.customer || 'No name'} (${formatDateShort(j.eventDate)})`).join(', ')}
+              {outside.length > 4 ? '…' : ''}.
+            </p>
+          )}
+          {outside.length > 0 && (
+            <Link href="/admin/income?year=all" className="inline-flex min-h-[44px] items-center text-gold underline">Show all years</Link>
+          )}
+        </div>
+      )}
 
       <section aria-label="Totals" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <div className={card}><p className="text-xs text-gray-400">Received</p><p className="text-lg font-bold text-green-400">{formatMoney(t.received)}</p></div>
